@@ -1,0 +1,1 @@
+{"version":3,"file":"canUseNewCanvasBlendModes.js","names":["canUseNewCanvasBlendModes"],"sources":["../../../../src/renderers/canvas/utils/canUseNewCanvasBlendModes.js"],"sourcesContent":["export default function canUseNewCanvasBlendModes() {\n  return true;\n}\n"],"mappings":";;;;;;AAAe,SAASA,yBAAyB,GAAG;EAClD,OAAO,IAAI;AACb"}
