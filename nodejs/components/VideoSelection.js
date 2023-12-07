@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';                                                                                                                                                     
 import {Gallery} from 'react-grid-gallery';                                                                                                                                                                          
-import YouTube from 'react-youtube';                                                                                                                                                                                 
-import Modal from 'react-modal';
+import YouTube from 'react-youtube';   
 import VideoModal from './VideoModal';  
 import Modal from 'react-modal';    
 
