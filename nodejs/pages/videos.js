@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Gallery from 'react-grid-gallery';
+import {Gallery} from 'react-grid-gallery';
 import YouTube from 'react-youtube';
 
 const videos = [
@@ -31,13 +31,13 @@ function createGalleryItems(videos, onSelect) {
     const thumbnailUrl = videoUrl.thumbnail.thumbnails[0].url;
 
     return {
-      src: videoUrl,
+      src: thumbnailUrl,
       thumbnail: thumbnailUrl,
       thumbnailWidth: 320,
       thumbnailHeight: 180,
       customOverlay: (
         <div style={{ position: 'absolute', bottom: 0, right: 0 }}>
-          <button onClick={() => onSelect(videoUrl)}>Select</button>
+          <button onClick={() => onSelect(videoId)}>Select</button>
         </div>
       ),
     };
@@ -46,16 +46,20 @@ function createGalleryItems(videos, onSelect) {
 
 function Videos() {
   const [selectedVideo, setSelectedVideo] = useState(null);
+  console.log("🚀 ~ file: videos.js:49 ~ Videos ~ selectedVideo:", selectedVideo)
 
   const handleVideoSelect = (videoUrl) => {
+    console.log("🚀 ~ file: videos.js:51 ~ handleVideoSelect ~ videoUrl:", videoUrl)
     setSelectedVideo(videoUrl);
     // Make a call to send the selected video
   };
 
   const galleryItems = createGalleryItems(videos, handleVideoSelect);
+  console.log("🚀 ~ file: videos.js:56 ~ Videos ~ galleryItems:", galleryItems)
 
   return (
     <div>
+        pratheesh
       <Gallery images={galleryItems} enableImageSelection={false} />
       {selectedVideo && (
         <div>
