@@ -17,7 +17,33 @@ function createGalleryItems(videos, onSelect) {
     };                                                                                                                                                                                                               
   });                                                                                                                                                                                                                
 }                                                                                                                                                                                                                    
-
+const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      maxWidth: '600px', // Adjust as needed
+      width: '90%', // Adjust as needed
+    },
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    },
+  };
+//const customStyles = {}
+/* {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
+ */
 function VideoSelection() {                                   
   const [selectedVideo, setSelectedVideo] = useState(null);                                                                                                                                                            
   const [selectedVideos, setSelectedVideos] = useState([]);                                                                                                                                                          
@@ -96,7 +122,6 @@ function VideoSelection() {
     // Make a call with the selected video IDs                                                                                                                                                                         
   };                                                                                                                                                                                                                   
          
-  const appElementRef = useRef(null);
 
   useEffect(() => {
     Modal.setAppElement(document.getElementById('__next'));
@@ -104,16 +129,20 @@ function VideoSelection() {
   console.log("🚀 ~ file: VideoSelection.js:109 ~ VideoSelection ~ showModal:", showModal)
 
   return (
-    <div className="p-4" ref={appElementRef}>
-      <Modal
+    <div className="p-4">
+      <div
         isOpen={showModal}
         onRequestClose={handleClose}
+        style={customStyles}
         contentLabel="Video Modal"
         className="ReactModal__Content"
         overlayClassName="ReactModal__Overlay"
       >
-        <VideoModal showModal={showModal} handleClose={handleClose} selectedVideo={selectedVideo} />
-      </Modal>
+        <div>Pratheesh Here
+            <VideoModal showModal={showModal} handleClose={handleClose} selectedVideo={selectedVideo} />    
+        </div>
+        
+      </div>
       <div className="flex space-x-4 mb-4">                                                                                                                                                                           
         <input                                                                                                                                                                                                     
           type="text"                                                                                                                                                                                              
