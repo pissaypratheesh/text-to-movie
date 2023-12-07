@@ -21,12 +21,13 @@ function createGalleryItems(videos, onSelect) {
 function Videos() {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videos, setVideos] = useState([]);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     fetch('http://localhost:3000/api/fetchshorts?query=elephant%20and%20turtle')
       .then((response) => response.json())
       .then((data) => setVideos(data));
-  }, []);
+  }, [query]);
 
   console.log("🚀 ~ file: videos.js:49 ~ Videos ~ selectedVideo:", selectedVideo)
 
@@ -61,8 +62,23 @@ function Videos() {
     );
   }, [handleVideoSelect, setSelectedVideo]);
 
+  const handleSearchClick = () => {
+    fetch(`http://localhost:3000/api/fetchshorts?query=${encodeURIComponent(query)}`)
+      .then((response) => response.json())
+      .then((data) => setVideos(data));
+  };
+
   return (
     <div>
+      <div>
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Enter your search query"
+        />
+        <button onClick={handleSearchClick}>Search</button>
+      </div>
       <Gallery
         images={galleryItems}
         enableImageSelection={false}
