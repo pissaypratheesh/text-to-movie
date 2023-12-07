@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import {Gallery} from 'react-grid-gallery';
 import YouTube from 'react-youtube';
 
-const [videos, setVideos] = useState([]);
 
 function createGalleryItems(videos, onSelect) {
   return videos.map((videoUrl, index) => {
