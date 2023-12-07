@@ -4,7 +4,7 @@ import { Gallery } from "react-grid-gallery";
 import Lightbox from 'react-18-image-lightbox';
 
                                                                                                                                                                                                                      
-function ImageSelection({ q }) {                                                                                                                                                                                          
+function ImageSelection({ q, onImageSelect }) {                                                                                                                                                                                          
   console.log("🚀 ~ file: ImageSelection.js:6 ~ ImageSelection ~ q:", q)
   const [images, setImages] = useState([]);                                                                                                                                                                                                               
   const [query, setQuery] = useState(q || '');     
