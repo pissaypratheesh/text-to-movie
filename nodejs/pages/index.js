@@ -12,13 +12,34 @@ function HomePage() {
     setQuery(urlQuery);                                             
   },[])
   
-  if(!query){
+  const [selectedImages, setSelectedImages] = useState({});
+  const [selectedVideos, setSelectedVideos] = useState({});
+
+  const sentences = query.split('.').filter(sentence => sentence.trim().length > 0);
+
+  if (!sentences.length) {
     return <div> add query</div>
   }
+
   return (
     <div className="m-4">
-      <ImageSelection q={query} />
-      <VideoSelection q={query} />
+      {sentences.map((sentence, index) => (
+        <details key={index} className="mb-4">
+          <summary className="cursor-pointer text-xl font-semibold">{sentence}</summary>
+          <div className="mt-4">
+            <ImageSelection
+              q={sentence}
+              selectedImage={selectedImages[index]}
+              onImageSelect={image => setSelectedImages({ ...selectedImages, [index]: image })}
+            />
+            <VideoSelection
+              q={sentence}
+              selectedVideo={selectedVideos[index]}
+              onVideoSelect={video => setSelectedVideos({ ...selectedVideos, [index]: video })}
+            />
+          </div>
+        </details>
+      ))}
     </div>
   );
 }
