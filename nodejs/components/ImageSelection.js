@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';                                                                                                                                                                  
+import React, { useEffect, useState, useCallback } from 'react';                                                                                                                                                                  
 import axios from 'axios';                                                                                                                                                                                           
 import { Gallery } from "react-grid-gallery";                                                                                                                                                                        
                                                                                                                                                                                                                      
@@ -28,7 +28,28 @@ function ImageSelection({ q }) {
    // setQuery(urlQuery);                                                                                                                                                                                                                                             
    fetchImages()                                                                                                                                                                                                   
   },[])                                                                                                                                                                                                              
-                                                                                                                                                                                                                     
+              
+  const CustomThumbnail = useCallback(({ item }) => {                                                                                                                                                                  
+    const handleCopyClick = (e) => {                                                                                                                                                                                   
+      e.stopPropagation();                                                                                                                                                                                             
+      navigator.clipboard.writeText(item.src);                                                                                                                                                                         
+    };                                                                                                                                                                                                                 
+                                                                                                                                                                                                                       
+    return (                                                                                                                                                                                                           
+      <div>                                                                                                                                                                                                            
+        <img src={item.thumbnail} alt={item.src} />                                                                                                                                                                    
+        <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px' }}>                                                                                                                                   
+          <button                                                                                                                                                                                                      
+            onClick={handleCopyClick}                                                                                                                                                                                  
+            className="bg-green-500 text-white px-4 py-2 rounded focus:outline-none focus:shadow-outline m-2"                                                                                                          
+          >                                                                                                                                                                                                            
+            Copy URL                                                                                                                                                                                                   
+          </button>                                                                                                                                                                                                    
+        </div>                                                                                                                                                                                                         
+      </div>                                                                                                                                                                                                           
+    );                                                                                                                                                                                                                 
+  }, []); 
+
   const onImageSelected = async (index, image) => {                                                                                                                                                                  
    if(images){                                                                                                                                                                                                       
     try {                                                                                                                                                                                                            
@@ -87,9 +108,13 @@ function ImageSelection({ q }) {
           Update Selected
         </button>
       </div>
-      {images.length > 0 && (
-        <Gallery images={images} onSelect={handleSelect} />
-      )}
+      {images.length > 0 && (                                                                                                                                                                                        
+         <Gallery                                                                                                                                                                                                     
+           images={images}                                                                                                                                                                                            
+           onSelect={handleSelect}                                                                                                                                                                                    
+           thumbnailImageComponent={CustomThumbnail}                                                                                                                                                                  
+         />                                                                                                                                                                                                           
+       )}  
     </div>                                                                                                                                                                                                         
   );                                                                                                                                                                                                                 
 }                                                                                                                                                                                                                    
