@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';                                                                                                                                                     
+import React, { useState, useCallback, useEffect, useRef } from 'react';                                                                                                                                                     
 import {Gallery} from 'react-grid-gallery';                                                                                                                                                                          
 import YouTube from 'react-youtube';   
 import VideoModal from './VideoModal';  
@@ -96,8 +96,14 @@ function VideoSelection() {
     // Make a call with the selected video IDs                                                                                                                                                                         
   };                                                                                                                                                                                                                   
          
-  return (                                                                                                                                                                                                           
-    <div className="p-4">                                                                                                                                                                                             
+  const appElementRef = useRef(null);
+
+  useEffect(() => {
+    Modal.setAppElement(appElementRef.current);
+  }, []);
+
+  return (
+    <div className="p-4" ref={appElementRef}>
       <Modal
         isOpen={showModal}
         onRequestClose={handleClose}
