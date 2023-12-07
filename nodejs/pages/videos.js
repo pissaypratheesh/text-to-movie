@@ -151,11 +151,11 @@ function Videos() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Enter your search query"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4 flex-grow"
+            className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 text-lg leading-tight focus:outline-none focus:shadow-outline mb-4 flex-grow"
           />
           <button
             onClick={handleSearchClick}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 text-lg rounded focus:outline-none focus:shadow-outline mb-4"
           >
             Search
           </button>
