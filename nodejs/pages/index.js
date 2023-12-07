@@ -20,6 +20,7 @@ function HomePage() {
   
   const [selectedImages, setSelectedImages] = useState({});
   const [selectedVideos, setSelectedVideos] = useState({});
+  console.log("🚀 ~ file: index.js:22 ~ HomePage ~ selectedImages:", selectedImages,selectedVideos)
 
 
   if (!sentences.length) {
