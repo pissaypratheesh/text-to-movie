@@ -2,13 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';                                                                                                                                                                                           
 import { Gallery } from "react-grid-gallery";                                                                                                                                                                        
                                                                                                                                                                                                                      
-function ImageSelection({ query }) {                                                                                                                                                                                          
-  const [images, setImages] = useState([{                                                                                                                                                                            
-    src: "https://player.vimeo.com/video/207276482?title=0&portrait=0&byline=0&autoplay=1&muted=true",                                                                                                               
-    height:1080,                                                                                                                                                                                                     
-    width:1920,                                                                                                                                                                                                      
-  }]);                                                                                                                                                                                                               
-  const [query, setQuery] = useState('elephant');                                                                                                                                                                    
+function ImageSelection({ q }) {                                                                                                                                                                                          
+  console.log("🚀 ~ file: ImageSelection.js:6 ~ ImageSelection ~ q:", q)
+  const [images, setImages] = useState([]);                                                                                                                                                                                                               
+  const [query, setQuery] = useState(q || '');                                                                                                                                                                    
   const hasSelected = images.some((image) => image.isSelected);                                                                                                                                                      
   const fetchImages = async () => {                                                                                                                                                                                  
     try {                                                                                                                                                                                                            
@@ -25,8 +22,11 @@ function ImageSelection({ query }) {
     }                                                                                                                                                                                                                
   };                                                                                                                                                                                                                 
                                                                                                                                                                                                                      
-  useEffect(() => {                                                                                                                                                                                                  
-   //fetchImages()                                                                                                                                                                                                   
+  useEffect(() => {  
+    // const urlParams = new URLSearchParams(window.location.search);                                                                                                                                                   
+    // const urlQuery = urlParams.get('q') || 'elephant and turtle';                                                                                                                                                
+   // setQuery(urlQuery);                                                                                                                                                                                                                                             
+   fetchImages()                                                                                                                                                                                                   
   },[])                                                                                                                                                                                                              
                                                                                                                                                                                                                      
   const onImageSelected = async (index, image) => {                                                                                                                                                                  
@@ -58,23 +58,35 @@ function ImageSelection({ query }) {
   };                                                                                                                                                                                                                 
                                                                                                                                                                                                                      
   return (                                                                                                                                                                                                           
-    <div>                                                                                                                                                                                                            
-      <input type="text" value={query} onChange={e => setQuery(e.target.value)} />                                                                                                                                   
-      <button onClick={fetchImages}>Fetch Images</button>                                                                                                                                                            
-      <button onClick={handleSelectAllClick}>                                                                                                                                                                        
-          {hasSelected ? "Clear selection" : "Select all"}                                                                                                                                                           
-      </button>                                                                                                                                                                                                      
-      <button onClick={onImageSelected}>                                                                                                                                                                             
-          Update Selected                                                                                                                                                                                            
-      </button>                                                                                                                                                                                                      
-      {images.length > 0 && (                                                                                                                                                                                        
-                                                                                                                                                                                                                     
-        <Gallery                                                                                                                                                                                                     
-          images={images}                                                                                                                                                                                            
-          onSelect={handleSelect}                                                                                                                                                                                    
-        />                                                                                                                                                                                                           
-      )}                                                                                                                                                                                                             
-    </div>                                                                                                                                                                                                           
+    <div className="p-4">
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        className="w-full mb-4 p-2 rounded border border-gray-300"
+      />
+      <button
+        onClick={fetchImages}
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+      >
+        Fetch Images
+      </button>
+      <button
+        onClick={handleSelectAllClick}
+        className="bg-blue-500 text-white px-4 py-2 rounded ml-4"
+      >
+        {hasSelected ? "Clear selection" : "Select all"}
+      </button>
+      <button
+        onClick={onImageSelected}
+        className="bg-blue-500 text-white px-4 py-2 rounded ml-4"
+      >
+        Update Selected
+      </button>
+      {images.length > 0 && (
+        <Gallery images={images} onSelect={handleSelect} />
+      )}
+    </div>                                                                                                                                                                                                         
   );                                                                                                                                                                                                                 
 }                                                                                                                                                                                                                    
                                                                                                                                                                                                                      
