@@ -59,30 +59,34 @@ function ImageSelection({ q }) {
                                                                                                                                                                                                                      
   return (                                                                                                                                                                                                           
     <div className="p-4">
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="w-full mb-4 p-2 rounded border border-gray-300"
-      />
-      <button
-        onClick={fetchImages}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Fetch Images
-      </button>
-      <button
-        onClick={handleSelectAllClick}
-        className="bg-blue-500 text-white px-4 py-2 rounded ml-4"
-      >
-        {hasSelected ? "Clear selection" : "Select all"}
-      </button>
-      <button
-        onClick={onImageSelected}
-        className="bg-blue-500 text-white px-4 py-2 rounded ml-4"
-      >
-        Update Selected
-      </button>
+      <div className="flex space-x-4 mb-4">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="shadow appearance-none border rounded w-2/3 py-3 px-4 text-gray-700 text-lg leading-tight focus:outline-none focus:shadow-outline flex-grow"
+        />
+        <button
+          onClick={fetchImages}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Fetch Images
+        </button>
+      </div>
+      <div className="flex space-x-4 mb-4">
+        <button
+          onClick={handleSelectAllClick}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          {hasSelected ? "Clear selection" : "Select all"}
+        </button>
+        <button
+          onClick={onImageSelected}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Update Selected
+        </button>
+      </div>
       {images.length > 0 && (
         <Gallery images={images} onSelect={handleSelect} />
       )}
