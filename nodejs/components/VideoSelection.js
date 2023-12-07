@@ -19,13 +19,12 @@ function createGalleryItems(videos, onSelect) {
 }                                                                                                                                                                                                                    
 const customStyles = {
     content: {
-      top: '50%',
-      left: '50%',
+      top: '20%',
+      left: '10%',
       right: 'auto',
       bottom: 'auto',
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
-      maxWidth: '600px', // Adjust as needed
       width: '90%', // Adjust as needed
     },
     overlay: {
@@ -44,18 +43,18 @@ const customStyles = {
     },
   };
  */
-function VideoSelection({ query }) {                                   
+function VideoSelection({ q }) {                                   
   const [selectedVideo, setSelectedVideo] = useState(null);                                                                                                                                                            
   const [selectedVideos, setSelectedVideos] = useState([]);                                                                                                                                                          
   const [showModal, setShowModal] = useState(false);                                                                                                                                                                 
   const [videos, setVideos] = useState([]);                                                                                                                                                                          
-  const [query, setQuery] = useState('');                                                                                                                                                                            
+  const [query, setQuery] = useState(q);                                                                                                                                                                            
 
   useEffect(() => {                                                                                                                                                                                                  
-    const urlParams = new URLSearchParams(window.location.search);                                                                                                                                                   
-    const urlQuery = urlParams.get('query') || 'elephant and turtle';                                                                                                                                                
-    setQuery(urlQuery);                                                                                                                                                                                              
-    fetch(`http://localhost:3000/api/fetchshorts?query=${encodeURIComponent(urlQuery)}`)                                                                                                                             
+    // const urlParams = new URLSearchParams(window.location.search);                                                                                                                                                   
+    // const urlQuery = urlParams.get(q) || 'elephant and turtle';                                                                                                                                                
+    // setQuery(urlQuery);                                                                                                                                                                                              
+    fetch(`http://localhost:3000/api/fetchshorts?query=${encodeURIComponent(query)}`)                                                                                                                             
       .then((response) => response.json())                                                                                                                                                                           
       .then((data) => setVideos(data));                                                                                                                                                                              
   }, []);                                                                                                                                                                                                            
@@ -107,7 +106,7 @@ function VideoSelection({ query }) {
   }, [handleVideoSelect, setSelectedVideo]);                                                                                                                                                                         
 
   const handleSearchClick = () => {                                                                                                                                                                                  
-    window.history.pushState({}, '', `?query=${encodeURIComponent(query)}`);                                                                                                                                         
+    //window.history.pushState({}, '', `?query=${encodeURIComponent(query)}`);                                                                                                                                         
     fetch(`http://localhost:3000/api/fetchshorts?query=${encodeURIComponent(query)}`)                                                                                                                                
       .then((response) => response.json())                                                                                                                                                                           
       .then((data) => setVideos(data));                                                                                                                                                                              
@@ -133,12 +132,12 @@ function VideoSelection({ query }) {
       <div
         isOpen={showModal}
         onRequestClose={handleClose}
-        style={customStyles}
+        style={{}}
         contentLabel="Video Modal"
         className="ReactModal__Content"
         overlayClassName="ReactModal__Overlay"
       >
-        <div>Pratheesh Here
+        <div>
             <VideoModal showModal={showModal} handleClose={handleClose} selectedVideo={selectedVideo} />    
         </div>
         
@@ -158,13 +157,13 @@ function VideoSelection({ query }) {
           Search                                                                                                                                                                                                             
         </button>                                                                                                                                                                                                            
         <span className="ml-4 text-lg">                                                                                                                                                                                      
-            Selected videos: {selectedVideos.length}                                                                                                                                                                           
+            Selected: {selectedVideos.length}                                                                                                                                                                           
         </span>   
         <button                                                                                                                                                                                                              
             onClick={handleMultiSelectClick}                                                                                                                                                                                   
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 text-lg rounded focus:outline-none focus:shadow-outline mt-4"                                                                            
             >                                                                                                                                                                                                                    
-            Make a call with selected videos                                                                                                                                                                                   
+            UpdateSelected                                                                                                                                                                                  
         </button>                                                                                                                                                                                                
       </div>    
                                                                                                                                                                                                           
