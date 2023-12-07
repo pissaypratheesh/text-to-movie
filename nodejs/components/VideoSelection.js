@@ -43,7 +43,7 @@ const customStyles = {
     },
   };
  */
-function VideoSelection({ q }) {                                   
+function VideoSelection({ q, onVideoSelect }) {                                   
   const [selectedVideo, setSelectedVideo] = useState(null);                                                                                                                                                            
   const [selectedVideos, setSelectedVideos] = useState([]);                                                                                                                                                          
   const [showModal, setShowModal] = useState(false);                                                                                                                                                                 
@@ -67,7 +67,10 @@ function VideoSelection({ q }) {
       } else {                                                                                                                                                                                                         
         return [...prevSelectedVideos, videoId];                                                                                                                                                                       
       }                                                                                                                                                                                                                
-    });                                                                                                                                                                                                                
+    });     
+    if (onVideoSelect) {                                                                                                                                                                                               
+      onVideoSelect(videoId);                                                                                                                                                                                          
+    }                                                                                                                                                                                                            
   };                                                                                                                                                                                                                
 
   const galleryItems = createGalleryItems(videos, handleVideoSelect);                                                                                                                                                
