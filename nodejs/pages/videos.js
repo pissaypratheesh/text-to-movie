@@ -1,29 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {Gallery} from 'react-grid-gallery';
 import YouTube from 'react-youtube';
 
-const videos = [
-  {
-    "title": "😌Tweet Reels😜❤️ #shorts #tweetreels #aesthetic #faketweet #funny #memes #viral #reels #youtube",
-    "thumbnail": {
-      "thumbnails": [
-        {
-          "url": "https://i.ytimg.com/vi/Od5Xvu-PFYQ/hq720_2.jpg?sqp=-oaymwE9COgCEMoBSFryq4qpAy8IARUAAAAAGAAlAADIQj0AgKJDeAHwAQH4Ac4FgAKACooCDAgAEAEYQSBLKGUwDw==&rs=AOn4CLDHBq5VinmLkomI9ZW9pssjyDgsmQ",
-          "width": 360,
-          "height": 202
-        },
-        {
-          "url": "https://i.ytimg.com/vi/Od5Xvu-PFYQ/hq720_2.jpg?sqp=-oaymwExCNAFEJQDSFryq4qpAyMIARUAAIhCGADwAQH4Ac4FgAKACooCDAgAEAEYQSBLKGUwDw==&rs=AOn4CLDo7SQoEVBNtJ3dRetnKxzn1_ItGw",
-          "width": 720,
-          "height": 404
-        }
-      ]
-    },
-    "videoId": "Od5Xvu-PFYQ",
-    "link": "https://www.youtube.com/shorts/Od5Xvu-PFYQ"
-  },
-  // Add more video objects here
-];
+const [videos, setVideos] = useState([]);
 
 function createGalleryItems(videos, onSelect) {
   return videos.map((videoUrl, index) => {
@@ -42,6 +21,14 @@ function createGalleryItems(videos, onSelect) {
 
 function Videos() {
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videos, setVideos] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/fetchshorts?query=elephant%20and%20turtle')
+      .then((response) => response.json())
+      .then((data) => setVideos(data));
+  }, []);
+
   console.log("🚀 ~ file: videos.js:49 ~ Videos ~ selectedVideo:", selectedVideo)
 
   const handleVideoSelect = (videoUrl) => {
