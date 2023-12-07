@@ -37,7 +37,8 @@ function createGalleryItems(videos, onSelect) {
       thumbnailHeight: 180,
       customOverlay: (
         <div style={{ position: 'absolute', bottom: 0, right: 0 }}>
-          <button onClick={() => onSelect(videoId)}>Select</button>
+          <button onClick={() => handleVideoSelect(videoId)}>Select</button>
+          <button onClick={() => setSelectedVideo(videoId)}>Play</button>
         </div>
       ),
     };
