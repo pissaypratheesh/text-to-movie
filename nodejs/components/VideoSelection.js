@@ -86,7 +86,7 @@ function VideoSelection({ q }) {
 
     return (                                                                                                                                                                                                         
       <div>                                                                                                                                                                                                          
-        <img src={item.thumbnail} alt={item.videoId} />                                                                                                                                                              
+        <img src={item.thumbnail} alt={item.videoId} style={selectedVideos.includes(item.videoId) ? { border: '2px solid red' } : {}} />                                                                                                                                                              
         <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px' }}>                                                                                                                                 
           <button                                                                                                                                                                                                    
             onClick={handleSelectClick}                                                                                                                                                                              
