@@ -5,7 +5,7 @@ function HomePage() {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-    fetch('/api/fetchImages')
+    fetch('/api/fetch/bingimages')
       .then(response => response.json())
       .then(data => setImages(data.images));
   }, []);
