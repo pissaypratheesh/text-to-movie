@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Gallery } from "react-grid-gallery";
 
 function HomePage() {
+  const [step, setStep] = useState(0);
   const [images, setImages] = useState([{
     src: "https://player.vimeo.com/video/207276482?title=0&portrait=0&byline=0&autoplay=1&muted=true",
     height:1080,
@@ -58,25 +59,33 @@ function HomePage() {
     setImages(nextImages);
   };
 
-  return (
-    <div>
-      <input type="text" value={query} onChange={e => setQuery(e.target.value)} />
-      <button onClick={fetchImages}>Fetch Images</button>
-      <button onClick={handleSelectAllClick}>
-          {hasSelected ? "Clear selection" : "Select all"}
-      </button>
-      <button onClick={onImageSelected}>
-          Update Selected
-      </button>
-      {images.length > 0 && (
-        
-        <Gallery
-          images={images}
-          onSelect={handleSelect}
+const handleNextStep = () => {
+  setStep(step + 1);
+};
+
+return (
+  <div>
+    {step === 0 && (
+      <>
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
         />
-      )}
-    </div>
-  );
+        <button onClick={fetchImages}>Fetch Images</button>
+        <button onClick={handleSelectAllClick}>
+          {hasSelected ? "Clear selection" : "Select all"}
+        </button>
+        <button onClick={onImageSelected}>Update Selected</button>
+        {images.length > 0 && (
+          <Gallery images={images} onSelect={handleSelect} />
+        )}
+        <button onClick={handleNextStep}>Next</button>
+      </>
+    )}
+    {step === 1 && <Videos />}
+  </div>
+);
 }
 
 export default HomePage;
