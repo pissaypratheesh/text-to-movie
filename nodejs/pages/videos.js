@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { Modal } from 'react-bootstrap';
 import {Gallery} from 'react-grid-gallery';
 import YouTube from 'react-youtube';
 
@@ -20,6 +21,7 @@ function createGalleryItems(videos, onSelect) {
 
 function Videos() {
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [videos, setVideos] = useState([]);
   const [query, setQuery] = useState('');
 
@@ -47,6 +49,7 @@ function Videos() {
     };
 
     const handlePlayClick = (e) => {
+      setShowModal(true);
       e.stopPropagation();
       setSelectedVideo(item.videoId);
     };
@@ -68,8 +71,20 @@ function Videos() {
       .then((data) => setVideos(data));
   };
 
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
   return (
     <div>
+      <Modal show={showModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Video Player</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedVideo && <YouTube videoId={selectedVideo.split('/').pop()} />}
+        </Modal.Body>
+      </Modal>
       <div>
         <input
           type="text"
@@ -84,12 +99,6 @@ function Videos() {
         enableImageSelection={false}
         thumbnailImageComponent={CustomThumbnail}
       />
-      {selectedVideo && (
-        <div>
-          <h2>Selected Video:</h2>
-          <YouTube videoId={selectedVideo.split('/').pop()} />
-        </div>
-      )}
     </div>
   );
 }
