@@ -30,6 +30,7 @@ function ImageSelection({ q }) {
   },[])                                                                                                                                                                                                              
               
   const CustomThumbnail = useCallback(({ item }) => {                                                                                                                                                                  
+    console.log("🚀 ~ file: ImageSelection.js:33 ~ CustomThumbnail ~ item:", item)
     const handleCopyClick = (e) => {                                                                                                                                                                                   
       e.stopPropagation();                                                                                                                                                                                             
       navigator.clipboard.writeText(item.src);                                                                                                                                                                         
@@ -37,7 +38,7 @@ function ImageSelection({ q }) {
                                                                                                                                                                                                                        
     return (                                                                                                                                                                                                           
       <div>                                                                                                                                                                                                            
-        <img src={item.thumbnail} alt={item.src} />                                                                                                                                                                    
+        <img src={item.url || item.src} alt={item.src} />                                                                                                                                                                    
         <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px' }}>                                                                                                                                   
           <button                                                                                                                                                                                                      
             onClick={handleCopyClick}                                                                                                                                                                                  
