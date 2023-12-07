@@ -125,7 +125,6 @@ function VideoSelection({ q }) {
   useEffect(() => {
     Modal.setAppElement(document.getElementById('__next'));
   }, []);
-  console.log("🚀 ~ file: VideoSelection.js:109 ~ VideoSelection ~ showModal:", showModal)
 
   return (
     <div className="p-4">
