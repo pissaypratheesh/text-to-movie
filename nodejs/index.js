@@ -1,6 +1,6 @@
 const express = require('express');
 const { fetchNewsSummaryAssets,fetchImageByPrompt } = require("./fetch_data")
-const {  downloadShorts , fetchShorts, downloadMultipleShorts, fetchShortsNDownloadRelevant} = require('./shorts');
+const {  downloadShorts , fetchShorts, downloadMultipleShorts, fetchShortsNDownloadRelevant} = require('./others/shorts');
 const {getBingImages} = require('./assets_scraper')
 const app = express();
 const fs = require('fs');

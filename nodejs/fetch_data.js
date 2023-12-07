@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { fetchMinimumDetails } = require('./json_formatter');
 const { createClient } = require('pexels');
-const {fetchShortsNDownloadRelevant} = require('./shorts');
+const {fetchShortsNDownloadRelevant} = require('./others/shorts');
 var _ = require('underscore');
 const cheerio = require('cheerio');
 _.mixin(require('./mixins'));

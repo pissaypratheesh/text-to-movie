@@ -7,15 +7,18 @@ import Lightbox from 'react-18-image-lightbox';
 function ImageSelection({ q }) {                                                                                                                                                                                          
   console.log("🚀 ~ file: ImageSelection.js:6 ~ ImageSelection ~ q:", q)
   const [images, setImages] = useState([]);                                                                                                                                                                                                               
-  const [query, setQuery] = useState(q || '');                                                                                                                                                                    
+  const [query, setQuery] = useState(q || '');     
+  const [index, setIndex] = useState(-1);                                                                                                                                                                  
   const hasSelected = images.some((image) => image.isSelected);                                                                                                                                                      
   const fetchImages = async () => {                                                                                                                                                                                  
     try {                                                                                                                                                                                                            
       const response = await axios.get(`/api/fetch/bingimages?query=${query}`);                                                                                                                                      
-      console.log("🚀 ~ file: index.js:13 ~ fetchImages ~ response.data:", response.data)                                                                                                                            
-      if(response.data){                                                                                                                                                                                             
-         setImages(response.data.map(img => {                                                                                                                                                                        
-           img.src = img.url;                                                                                                                                                                                        
+      if(response.data){     
+                                                                                                                              
+      console.log("🚀 ~ file: index.js:13 ~ fetchImages ~ response.data:", response.data)  ;                                                                                                                                                                                            
+         setImages(response.data.map((img,i) => {                                                                                                                                                                        
+           img.src = img.url;  
+           img.i = i;                                                                                                                                                                                      
            return img                                                                                                                                                                                                
          }));                                                                                                                                                                                                        
       }                                                                                                                                                                                                              
@@ -31,13 +34,19 @@ function ImageSelection({ q }) {
    fetchImages()                                                                                                                                                                                                   
   },[])                                                                                                                                                                                                              
               
-  const CustomThumbnail = useCallback(({ item }) => {  
-    const [isClicked, setIsClicked] = useState(false);   
+  const CustomThumbnail = useCallback(({ item }) => {   
+    const [isClicked, setIsClicked] = useState(false);  
+    //const isClicked = images.length > 0 && images[index].isSelected;                                                                                                                                                                      
+    // const handleButtonClick = (e) => {                                                                                                                                                                               
+    //   e.stopPropagation();                                                                                                                                                                                           
+    //   setIndex(index);                                                                                                                                                                                               
+    // };   
     const handleButtonClick = (e) => {                                                                                                                                                                                 
-        e.stopPropagation();                                                                                                                                                                                             
-        setIsClicked(!isClicked);                                                                                                                                                                                        
-        navigator.clipboard.writeText(item.src);                                                                                                                                                                         
-      };                                                                                                                                                                    
+        e.stopPropagation();        
+        console.log("🚀 ~ file: ImageSelection.js:44 ~ handleButtonClick ~ i:",item)
+        setIndex(item.i);                                                                                                                                                                                       
+                                                                                                                                                                              
+    };                                                                                                                                                                    
     // const handleCopyClick = (e) => {                                                                                                                                                                                   
     //   e.stopPropagation();                                                                                                                                                                                             
     //   navigator.clipboard.writeText(item.src);                                                                                                                                                                         
@@ -48,11 +57,21 @@ function ImageSelection({ q }) {
         <img src={item.url || item.src} alt={item.src} />                                                                                                                                                                    
         <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px' }}>                                                                                                                                   
           <button                                                                                                                                                                                                      
-            onClick={handleButtonClick}                                                                                                                                                                                  
-            className={`bg-${isClicked ? 'blue' : 'gray'}-500 text-white px-2 py-1 rounded focus:outline-none focus:shadow-outline m-2 opacity-75 backdrop-blur-md text-sm`}                                                                                                                
+            onClick={(e)=>{
+                e.stopPropagation();
+                setIsClicked(!isClicked)
+                navigator.clipboard.writeText(item.src);  
+            }}                                                                                                                                                                                  
+            className={`bg-${isClicked ? 'blue' : 'gray'}-500 text-white px-2 py-1 rounded focus:outline-none focus:shadow-outline m-1 opacity-75 backdrop-blur-md text-sm`}                                                                                                                
           >                                                                                                                                                                                                            
             <i className="fa fa-copy"></i>                                                                                                                                                                                                 
-          </button>                                                                                                                                                                                                    
+          </button>  
+          <button                                                                                                                                                                                                      
+            onClick={handleButtonClick}                                                                                                                                                                                  
+            className={`bg-${'gray'}-500 text-white px-2 py-1 rounded focus:outline-none focus:shadow-outline m-1 opacity-75 backdrop-blur-md text-sm`}                                                                                                                
+          >                                                                                                                                                                                                            
+            <i className="fa fa-eye"></i>                                                                                                                                                                                                 
+          </button>                                                                                                                                                                                                   
         </div>                                                                                                                                                                                                         
       </div>                                                                                                                                                                                                           
     );                                                                                                                                                                                                                 
@@ -123,6 +142,16 @@ function ImageSelection({ q }) {
            thumbnailImageComponent={CustomThumbnail}                                                                                                                                                                  
          />                                                                                                                                                                                                           
        )}  
+       {index !== -1 && images.length > 0 && (                                                                                                                                                                                             
+         <Lightbox                                                                                                                                                                                                    
+           mainSrc={images[index].src}                                                                                                                                                                                
+           nextSrc={images[(index + 1) % images.length].src}                                                                                                                                                          
+           prevSrc={images[(index + images.length - 1) % images.length].src}                                                                                                                                          
+           onCloseRequest={() => setIndex(-1)}                                                                                                                                                                        
+           onMovePrevRequest={() => setIndex((index + images.length - 1) % images.length)}                                                                                                                            
+           onMoveNextRequest={() => setIndex((index + 1) % images.length)}                                                                                                                                            
+         />                                                                                                                                                                                                           
+       )}        
     </div>                                                                                                                                                                                                         
   );                                                                                                                                                                                                                 
 }                                                                                                                                                                                                                    

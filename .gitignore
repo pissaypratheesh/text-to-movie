@@ -2,3 +2,4 @@ nodejs/node_modules
 .aider*
 OAI_CONFIG_LIST_AZURE
 OAI_CONFIG_LIST
+nodejs/.next

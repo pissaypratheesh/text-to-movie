@@ -5,8 +5,8 @@ const ytdl = require('ytdl-core');
 const readline = require('readline');
 const path = require('path');
 var _ = require('underscore');
-const { fileExists } = require('./utils');
-_.mixin(require('./mixins'));
+const { fileExists } = require('../utils');
+_.mixin(require('../mixins'));
 
 async function fetchRelevantShorts(shorts) {
   return new Promise((resolve, reject) => {

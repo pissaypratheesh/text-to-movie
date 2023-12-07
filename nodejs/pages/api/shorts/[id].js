@@ -1,4 +1,4 @@
-import { fetchShorts } from '../../../shorts';
+import { fetchShorts } from '../../../others/shorts';
 import fs from 'fs';
 import path from 'path';
 

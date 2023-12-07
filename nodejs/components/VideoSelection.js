@@ -72,13 +72,10 @@ function VideoSelection({ q }) {
 
   const galleryItems = createGalleryItems(videos, handleVideoSelect);                                                                                                                                                
 
-  const CustomThumbnail = useCallback(({ item }) => {      
-    const [isCheckClicked, setIsCheckClicked] = useState(false);                                                                                                                                                       
+  const CustomThumbnail = useCallback(({ item }) => {                                                                                                                                                          
                                                                                                                                                                                                                       
     const handleCheckClick = (e) => {                                                                                                                                                                                  
-      console.log("🚀 ~ file: VideoSelection.js:79 ~ handleCheckClick ~ e:", e)
-      e.stopPropagation();                                                                                                                                                                                             
-      setIsCheckClicked(!isCheckClicked);                                                                                                                                                                              
+      e.stopPropagation();                                                                                                                                                                                               
       handleVideoSelect(item.videoId);                                                                                                                                                                                 
     };    
     const handlePlayClick = (e) => {                                                                                                                                                                                 
@@ -93,7 +90,7 @@ function VideoSelection({ q }) {
         <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px' }}>                                                                                                                                 
           <button                                                                                                                                                                                                    
             onClick={handleCheckClick}                                                                                                                                                                              
-            className={`bg-${isCheckClicked ? 'blue' : 'gray'}-500 text-white px-2 py-1 rounded focus:outline-none focus:shadow-outline m-2 opacity-75 backdrop-blur-md text-sm`}                                                                            
+            className={`bg-${selectedVideos.includes(item.videoId) ? 'blue' : 'gray'}-500 text-white px-2 py-1 rounded focus:outline-none focus:shadow-outline m-2 opacity-75 backdrop-blur-md text-sm`}                                                                            
           >                                                                                                                                                                                                          
              <i className="fa fa-check mr-1"></i>                                                                                                                                                                                                    
           </button>                                                                                                                                                                                                  
@@ -161,9 +158,19 @@ function VideoSelection({ q }) {
         </button>                                                                                                                                                                                                            
       </div>
       <div className="flex space-x-4 mb-4">
-        <span className="text-lg">
-          Selected: {selectedVideos.length}
-        </span>
+        <button
+          onClick={(e)=>{
+            e.stopPropagation();
+            if(selectedVideos.length > 0){
+              setSelectedVideos([]);
+            }else{
+              setSelectedVideos(videos.map((video) => video.videoId));
+            }
+          }}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 text-lg rounded focus:outline-none focus:shadow-outline"
+        >
+          { selectedVideos.length > 0 ? `Clear: ${selectedVideos.length}` : 'Select All'}
+        </button>
         <button
           onClick={handleMultiSelectClick}
           className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 text-lg rounded focus:outline-none focus:shadow-outline"

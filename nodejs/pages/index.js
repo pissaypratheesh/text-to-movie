@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ImageSelection from '../components/ImageSelection';
 import VideoSelection from '../components/VideoSelection';
 
 function HomePage() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const query = urlParams.get('query') || '';
-
+  const [query, setQuery] = useState('');
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);      
+                                                                                                                                                 
+    const urlQuery = urlParams.get('q') ||  urlParams.get('query') ||  urlParams.get('prompt') ||  urlParams.get('p') ;                                                                                                                                                
+    console.log("🚀 ~ file: index.js:112 ~ useEffect ~ urlQuery:", urlQuery,window.location.search,urlParams)
+    setQuery(urlQuery);                                             
+  },[])
+  
+  if(!query){
+    return <div> add query</div>
+  }
   return (
-    <div>
-      <ImageSelection query={query} />
-      <VideoSelection query={query} />
+    <div className="m-4">
+      <ImageSelection q={query} />
+      <VideoSelection q={query} />
     </div>
   );
 }
