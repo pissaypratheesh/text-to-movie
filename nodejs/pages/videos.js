@@ -60,7 +60,11 @@ function Videos() {
   return (
     <div>
         pratheesh
-      <Gallery images={galleryItems} enableImageSelection={false} />
+      <Gallery
+        images={galleryItems}
+        enableImageSelection={false}
+        onClickThumbnail={(index) => handleVideoSelect(videos[index].videoId)}
+      />
       {selectedVideo && (
         <div>
           <h2>Selected Video:</h2>
