@@ -4,6 +4,7 @@ import Gallery from 'react-grid-gallery';
 
 function HomePage() {
   const [images, setImages] = useState([]);
+  console.log("🚀 ~ file: index.js:7 ~ HomePage ~ images:", images)
 
   useEffect(() => {
     const fetchImages = async () => {
