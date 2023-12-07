@@ -118,9 +118,11 @@ function Videos() {
                       Video Player
                     </h3>
                     <div className="mt-2">
-                      {selectedVideo && (
-                        <YouTube videoId={selectedVideo.split('/').pop()} />
-                      )}
+                      <div className="mt-2">
+                        {selectedVideo && (
+                          <YouTube videoId={selectedVideo.split('/').pop()} />
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
