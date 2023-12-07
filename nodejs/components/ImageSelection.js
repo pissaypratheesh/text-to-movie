@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';                                                                                                                                                                  
 import axios from 'axios';                                                                                                                                                                                           
-import { Gallery } from "react-grid-gallery";                                                                                                                                                                        
+import { Gallery } from "react-grid-gallery";     
+import Lightbox from 'react-18-image-lightbox';
+
                                                                                                                                                                                                                      
 function ImageSelection({ q }) {                                                                                                                                                                                          
   console.log("🚀 ~ file: ImageSelection.js:6 ~ ImageSelection ~ q:", q)
@@ -29,20 +31,25 @@ function ImageSelection({ q }) {
    fetchImages()                                                                                                                                                                                                   
   },[])                                                                                                                                                                                                              
               
-  const CustomThumbnail = useCallback(({ item }) => {                                                                                                                                                                  
-    console.log("🚀 ~ file: ImageSelection.js:33 ~ CustomThumbnail ~ item:", item)
-    const handleCopyClick = (e) => {                                                                                                                                                                                   
-      e.stopPropagation();                                                                                                                                                                                             
-      navigator.clipboard.writeText(item.src);                                                                                                                                                                         
-    };                                                                                                                                                                                                                 
+  const CustomThumbnail = useCallback(({ item }) => {  
+    const [isClicked, setIsClicked] = useState(false);   
+    const handleButtonClick = (e) => {                                                                                                                                                                                 
+        e.stopPropagation();                                                                                                                                                                                             
+        setIsClicked(!isClicked);                                                                                                                                                                                        
+        navigator.clipboard.writeText(item.src);                                                                                                                                                                         
+      };                                                                                                                                                                    
+    // const handleCopyClick = (e) => {                                                                                                                                                                                   
+    //   e.stopPropagation();                                                                                                                                                                                             
+    //   navigator.clipboard.writeText(item.src);                                                                                                                                                                         
+    // };                                                                                                                                                                                                                 
                                                                                                                                                                                                                        
     return (                                                                                                                                                                                                           
       <div>                                                                                                                                                                                                            
         <img src={item.url || item.src} alt={item.src} />                                                                                                                                                                    
         <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px' }}>                                                                                                                                   
           <button                                                                                                                                                                                                      
-            onClick={handleCopyClick}                                                                                                                                                                                  
-            className="bg-gray-500 text-white px-2 py-1 rounded focus:outline-none focus:shadow-outline m-2 opacity-75 backdrop-blur-md text-sm"                                                                                                          
+            onClick={handleButtonClick}                                                                                                                                                                                  
+            className={`bg-${isClicked ? 'blue' : 'gray'}-500 text-white px-2 py-1 rounded focus:outline-none focus:shadow-outline m-2 opacity-75 backdrop-blur-md text-sm`}                                                                                                                
           >                                                                                                                                                                                                            
             <i className="fa fa-copy"></i>                                                                                                                                                                                                 
           </button>                                                                                                                                                                                                    
