@@ -94,7 +94,10 @@ function ImageSelection({ q }) {
     const nextImages = images.map((image, i) =>                                                                                                                                                                      
       i === index ? { ...image, isSelected: !image.isSelected } : image                                                                                                                                              
     );                                                                                                                                                                                                               
-    setImages(nextImages);                                                                                                                                                                                           
+    setImages(nextImages);   
+    if (onImageSelect) {                                                                                                                                                                                               
+        onImageSelect(item.src);                                                                                                                                                                                         
+    }                                                                                                                                                                                          
   };                                                                                                                                                                                                                 
                                                                                                                                                                                                                      
   const handleSelectAllClick = () => {                                                                                                                                                                               
