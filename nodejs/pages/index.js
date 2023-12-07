@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Gallery from 'react-grid-gallery';
 
 function HomePage() {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-    fetch('/api/fetch/bingimages?query=coronavirus')
-      .then(response => response.json())
-      .then(data => setImages(data.images));
+    const fetchImages = async () => {
+      try {
+        const response = await axios.get('/api/fetch/bingimages?query=coronavirus');
+        setImages(response.data.images);
+      } catch (error) {
+        console.error('Failed to fetch images:', error);
+      }
+    };
+
+    fetchImages();
   }, []);
 
   const onSelectImage = (index, image) => {
@@ -31,15 +39,15 @@ function HomePage() {
         images={images}
         onSelectImage={onSelectImage}
       />
-      <button onClick={() => fetch('/api/updateSelectedImages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          selectedImages: images.filter(img => img.isSelected),
-        }),
-      })}>
+      <button onClick={async () => {
+        try {
+          await axios.post('/api/updateSelectedImages', {
+            selectedImages: images.filter(img => img.isSelected),
+          });
+        } catch (error) {
+          console.error('Failed to update selected images:', error);
+        }
+      }}>
         Update Selected Images
       </button>
     </div>
