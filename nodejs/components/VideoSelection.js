@@ -17,8 +17,9 @@ function createGalleryItems(videos, onSelect) {
   });                                                                                                                                                                                                                
 }                                                                                                                                                                                                                    
 
-function VideoSelection() {                                                                                                                                                                                          
-  const [selectedVideo, setSelectedVideo] = useState(null);                                                                                                                                                          
+function VideoSelection() {                                   
+  const [selectedVideo, setSelectedVideo] = useState(null);                                                                                                                                                            
+  const [selectedVideos, setSelectedVideos] = useState([]);                                                                                                                                                          
   const [showModal, setShowModal] = useState(false);                                                                                                                                                                 
   const [videos, setVideos] = useState([]);                                                                                                                                                                          
   const [query, setQuery] = useState('');                                                                                                                                                                            
@@ -32,9 +33,16 @@ function VideoSelection() {
       .then((data) => setVideos(data));                                                                                                                                                                              
   }, []);                                                                                                                                                                                                            
 
-  const handleVideoSelect = (videoUrl) => {                                                                                                                                                                          
-    setSelectedVideo(videoUrl);                                                                                                                                                                                      
-  };                                                                                                                                                                                                                 
+  
+  const handleVideoSelect = (videoId) => {                                                                                                                                                                             
+    setSelectedVideos((prevSelectedVideos) => {                                                                                                                                                                        
+      if (prevSelectedVideos.includes(videoId)) {                                                                                                                                                                      
+        return prevSelectedVideos.filter((id) => id !== videoId);                                                                                                                                                      
+      } else {                                                                                                                                                                                                         
+        return [...prevSelectedVideos, videoId];                                                                                                                                                                       
+      }                                                                                                                                                                                                                
+    });                                                                                                                                                                                                                
+  };                                                                                                                                                                                                                
 
   const galleryItems = createGalleryItems(videos, handleVideoSelect);                                                                                                                                                
 
