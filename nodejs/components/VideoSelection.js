@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';                                                                                                                                                     
 import {Gallery} from 'react-grid-gallery';                                                                                                                                                                          
 import YouTube from 'react-youtube';                                                                                                                                                                                 
+import Modal from 'react-modal';
 import VideoModal from './VideoModal';  
 import Modal from 'react-modal';    
 
@@ -98,7 +99,15 @@ function VideoSelection() {
          
   return (                                                                                                                                                                                                           
     <div className="p-4">                                                                                                                                                                                             
-      <VideoModal showModal={showModal} handleClose={handleClose} selectedVideo={selectedVideo} />                                                                                                                                                                                                                
+      <Modal
+        isOpen={showModal}
+        onRequestClose={handleClose}
+        contentLabel="Video Modal"
+        className="ReactModal__Content"
+        overlayClassName="ReactModal__Overlay"
+      >
+        <VideoModal handleClose={handleClose} selectedVideo={selectedVideo} />
+      </Modal>
       <div className="flex space-x-4 mb-4">                                                                                                                                                                           
         <input                                                                                                                                                                                                     
           type="text"                                                                                                                                                                                              
