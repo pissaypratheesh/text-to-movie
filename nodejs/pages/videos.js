@@ -25,10 +25,13 @@ function Videos() {
   const [query, setQuery] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/fetchshorts?query=elephant%20and%20turtle')
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlQuery = urlParams.get('query') || 'elephant and turtle';
+    setQuery(urlQuery);
+    fetch(`http://localhost:3000/api/fetchshorts?query=${encodeURIComponent(urlQuery)}`)
       .then((response) => response.json())
       .then((data) => setVideos(data));
-  }, [query]);
+  }, []);
 
   console.log("🚀 ~ file: videos.js:49 ~ Videos ~ selectedVideo:", selectedVideo)
 
@@ -75,6 +78,7 @@ function Videos() {
   }, [handleVideoSelect, setSelectedVideo]);
 
   const handleSearchClick = () => {
+    window.history.pushState({}, '', `?query=${encodeURIComponent(query)}`);
     fetch(`http://localhost:3000/api/fetchshorts?query=${encodeURIComponent(query)}`)
       .then((response) => response.json())
       .then((data) => setVideos(data));
