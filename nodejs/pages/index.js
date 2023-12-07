@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import ImageSelection from '../components/ImageSelection';
 import VideoSelection from '../components/VideoSelection';
+const sentences = [
+  "Sun sets, warm city glow.",
+  "Forest walk, birds chirp.",
+  "Quiet library, books imagination.",
+  "Freshly baked bread aroma."
+];//query.split('.').filter(sentence => sentence.trim().length > 0);
 
 function HomePage() {
   const [query, setQuery] = useState('');
@@ -15,7 +21,6 @@ function HomePage() {
   const [selectedImages, setSelectedImages] = useState({});
   const [selectedVideos, setSelectedVideos] = useState({});
 
-  const sentences = query.split('.').filter(sentence => sentence.trim().length > 0);
 
   if (!sentences.length) {
     return <div> add query</div>
