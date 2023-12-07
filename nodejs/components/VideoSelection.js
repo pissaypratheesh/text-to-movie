@@ -44,7 +44,7 @@ const customStyles = {
     },
   };
  */
-function VideoSelection() {                                   
+function VideoSelection({ query }) {                                   
   const [selectedVideo, setSelectedVideo] = useState(null);                                                                                                                                                            
   const [selectedVideos, setSelectedVideos] = useState([]);                                                                                                                                                          
   const [showModal, setShowModal] = useState(false);                                                                                                                                                                 

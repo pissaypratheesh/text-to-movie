@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';                                                                                                                                                                                           
 import { Gallery } from "react-grid-gallery";                                                                                                                                                                        
                                                                                                                                                                                                                      
-function ImageSelection() {                                                                                                                                                                                          
+function ImageSelection({ query }) {                                                                                                                                                                                          
   const [images, setImages] = useState([{                                                                                                                                                                            
     src: "https://player.vimeo.com/video/207276482?title=0&portrait=0&byline=0&autoplay=1&muted=true",                                                                                                               
     height:1080,                                                                                                                                                                                                     
