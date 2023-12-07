@@ -5,14 +5,14 @@ function HomePage() {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-    fetch('/api/fetch/bingimages')
+    fetch('/api/fetch/bingimages?query=coronavirus')
       .then(response => response.json())
       .then(data => setImages(data.images));
   }, []);
 
   const onSelectImage = (index, image) => {
     const imagesCopy = images.slice();
-    const img = imagesCopy[index];
+    const img = imagesCopy && imagesCopy[index];
     if (img.hasOwnProperty('isSelected')) {
       img.isSelected = !img.isSelected;
     } else {
@@ -22,6 +22,9 @@ function HomePage() {
     setImages(imagesCopy);
   }
 
+  if(!images || images.length == 0){
+    return <div>Loading..</div>
+  }
   return (
     <div>
       <Gallery
