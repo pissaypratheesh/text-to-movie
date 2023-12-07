@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {Gallery} from 'react-grid-gallery';
 import YouTube from 'react-youtube';
 
@@ -35,12 +35,7 @@ function createGalleryItems(videos, onSelect) {
       thumbnail: thumbnailUrl,
       thumbnailWidth: 320,
       thumbnailHeight: 180,
-      customOverlay: (
-        <div style={{ position: 'absolute', bottom: 0, right: 0 }}>
-          <button onClick={() => handleVideoSelect(videoId)}>Select</button>
-          <button onClick={() => setSelectedVideo(videoId)}>Play</button>
-        </div>
-      ),
+      videoId,
     };
   });
 }
@@ -58,13 +53,34 @@ function Videos() {
   const galleryItems = createGalleryItems(videos, handleVideoSelect);
   console.log("🚀 ~ file: videos.js:56 ~ Videos ~ galleryItems:", galleryItems)
 
+  const CustomThumbnail = useCallback(({ item }) => {
+    const handleSelectClick = (e) => {
+      e.stopPropagation();
+      handleVideoSelect(item.videoId);
+    };
+
+    const handlePlayClick = (e) => {
+      e.stopPropagation();
+      setSelectedVideo(item.videoId);
+    };
+
+    return (
+      <div>
+        <img src={item.thumbnail} alt={item.videoId} />
+        <div style={{ position: 'absolute', bottom: 0, right: 0 }}>
+          <button onClick={handleSelectClick}>Select</button>
+          <button onClick={handlePlayClick}>Play</button>
+        </div>
+      </div>
+    );
+  }, [handleVideoSelect, setSelectedVideo]);
+
   return (
     <div>
-        pratheesh
       <Gallery
         images={galleryItems}
         enableImageSelection={false}
-        onClickThumbnail={(index) => handleVideoSelect(videos[index].videoId)}
+        thumbnailImageComponent={CustomThumbnail}
       />
       {selectedVideo && (
         <div>
