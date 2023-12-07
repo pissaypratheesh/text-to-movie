@@ -3,14 +3,32 @@ import Gallery from 'react-grid-gallery';
 import YouTube from 'react-youtube';
 
 const videos = [
-  "https://www.youtube.com/shorts/Od5Xvu-PFYQ",
-  // Add more video URLs here
+  {
+    "title": "😌Tweet Reels😜❤️ #shorts #tweetreels #aesthetic #faketweet #funny #memes #viral #reels #youtube",
+    "thumbnail": {
+      "thumbnails": [
+        {
+          "url": "https://i.ytimg.com/vi/Od5Xvu-PFYQ/hq720_2.jpg?sqp=-oaymwE9COgCEMoBSFryq4qpAy8IARUAAAAAGAAlAADIQj0AgKJDeAHwAQH4Ac4FgAKACooCDAgAEAEYQSBLKGUwDw==&rs=AOn4CLDHBq5VinmLkomI9ZW9pssjyDgsmQ",
+          "width": 360,
+          "height": 202
+        },
+        {
+          "url": "https://i.ytimg.com/vi/Od5Xvu-PFYQ/hq720_2.jpg?sqp=-oaymwExCNAFEJQDSFryq4qpAyMIARUAAIhCGADwAQH4Ac4FgAKACooCDAgAEAEYQSBLKGUwDw==&rs=AOn4CLDo7SQoEVBNtJ3dRetnKxzn1_ItGw",
+          "width": 720,
+          "height": 404
+        }
+      ]
+    },
+    "videoId": "Od5Xvu-PFYQ",
+    "link": "https://www.youtube.com/shorts/Od5Xvu-PFYQ"
+  },
+  // Add more video objects here
 ];
 
 function createGalleryItems(videos, onSelect) {
   return videos.map((videoUrl, index) => {
-    const videoId = videoUrl.split('/').pop();
-    const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/0.jpg`;
+    const videoId = videoUrl.videoId;
+    const thumbnailUrl = videoUrl.thumbnail.thumbnails[0].url;
 
     return {
       src: videoUrl,
