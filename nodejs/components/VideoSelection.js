@@ -143,29 +143,31 @@ function VideoSelection({ q }) {
         
       </div>
       <div className="flex space-x-4 mb-4">                                                                                                                                                                           
-        <input                                                                                                                                                                                                     
-          type="text"                                                                                                                                                                                              
-          value={query}                                                                                                                                                                                            
-          onChange={(e) => setQuery(e.target.value)}                                                                                                                                                               
-          placeholder="Enter your search query"                                                                                                                                                                    
-          className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 text-lg leading-tight focus:outline-none focus:shadow-outline flex-grow"                                            
-        />                                                                                                                                                                                                         
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Enter your search query"
+          className="shadow appearance-none border rounded w-2/3 py-3 px-4 text-gray-700 text-lg leading-tight focus:outline-none focus:shadow-outline flex-grow"
+        />
         <button                                                                                                                                                                                                              
             onClick={handleSearchClick}                                                                                                                                                                                        
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 text-lg rounded focus:outline-none focus:shadow-outline"                                                                                   
             >                                                                                                                                                                                                                    
           Search                                                                                                                                                                                                             
         </button>                                                                                                                                                                                                            
-        <span className="ml-4 text-lg">                                                                                                                                                                                      
-            Selected: {selectedVideos.length}                                                                                                                                                                           
-        </span>   
-        <button                                                                                                                                                                                                              
-            onClick={handleMultiSelectClick}                                                                                                                                                                                   
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 text-lg rounded focus:outline-none focus:shadow-outline mt-4"                                                                            
-            >                                                                                                                                                                                                                    
-            UpdateSelected                                                                                                                                                                                  
-        </button>                                                                                                                                                                                                
-      </div>    
+      </div>
+      <div className="flex space-x-4 mb-4">
+        <span className="text-lg">
+          Selected: {selectedVideos.length}
+        </span>
+        <button
+          onClick={handleMultiSelectClick}
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 text-lg rounded focus:outline-none focus:shadow-outline"
+        >
+          UpdateSelected
+        </button>
+      </div>
                                                                                                                                                                                                           
       <Gallery                                                                                                                                                                                                     
         images={galleryItems}                                                                                                                                                                                      
