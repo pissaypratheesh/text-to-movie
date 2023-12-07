@@ -11,11 +11,6 @@ const {createTTSnSTT} = require("./utils")
 
 app.use(bodyParser.json());
 
-app.post('/download/shorts', async (req, res) => {
-  const ids = req.body.ids; // Assuming ids is an array of IDs in the request body
-  const data = await downloadMultipleShorts(ids);
-  return res.json(data);
-});
 
 app.get('/fetchbyid/:id', async (req, res) => {
   const id = req.params.id;
