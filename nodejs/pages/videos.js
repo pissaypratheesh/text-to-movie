@@ -57,8 +57,18 @@ function Videos() {
       <div>
         <img src={item.thumbnail} alt={item.videoId} />
         <div style={{ position: 'absolute', bottom: 0, right: 0 }}>
-          <button onClick={handleSelectClick}>Select</button>
-          <button onClick={handlePlayClick}>Play</button>
+          <button
+            onClick={handleSelectClick}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+          >
+            Select
+          </button>
+          <button
+            onClick={handlePlayClick}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+          >
+            Play
+          </button>
         </div>
       </div>
     );
@@ -134,8 +144,14 @@ function Videos() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Enter your search query"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
-        <button onClick={handleSearchClick}>Search</button>
+        <button
+          onClick={handleSearchClick}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Search
+        </button>
       </div>
       <Gallery
         images={galleryItems}
