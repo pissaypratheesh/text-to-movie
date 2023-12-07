@@ -45,12 +45,38 @@ function HomePage() {
             <ImageSelection
               q={sentence}
               selectedImage={selectedImages[index]}
-              onImageSelect={image => setSelectedImages({ ...selectedImages, [index]: image })}
+              onImageSelect={(image) => {
+                if (Array.isArray(image)) {
+                  setSelectedImages((prevSelectedImages) => {
+                    const newSelectedImages = { ...prevSelectedImages };
+                    image.forEach((img) => {
+                      newSelectedImages[index] = img;
+                      index++;
+                    });
+                    return newSelectedImages;
+                  });
+                } else {
+                  setSelectedImages({ ...selectedImages, [index]: image });
+                }
+              }}
             />
             <VideoSelection
               q={sentence}
               selectedVideo={selectedVideos[index]}
-              onVideoSelect={video => setSelectedVideos({ ...selectedVideos, [index]: video })}
+              onVideoSelect={(video) => {
+                if (Array.isArray(video)) {
+                  setSelectedVideos((prevSelectedVideos) => {
+                    const newSelectedVideos = { ...prevSelectedVideos };
+                    video.forEach((vid) => {
+                      newSelectedVideos[index] = vid;
+                      index++;
+                    });
+                    return newSelectedVideos;
+                  });
+                } else {
+                  setSelectedVideos({ ...selectedVideos, [index]: video });
+                }
+              }}
             />
           </div>
         </details>
