@@ -90,6 +90,11 @@ function VideoSelection() {
     setShowModal(false);                                                                                                                                                                                             
   };                                                                                                                                                                                                                 
 
+  const handleMultiSelectClick = () => {                                                                                                                                                                               
+    console.log("Selected video IDs:", selectedVideos);                                                                                                                                                                
+    // Make a call with the selected video IDs                                                                                                                                                                         
+  };                                                                                                                                                                                                                   
+         
   return (                                                                                                                                                                                                           
     <div className="p-4">                                                                                                                                                                                             
       <VideoModal showModal={showModal} handleClose={handleClose} selectedVideo={selectedVideo} />                                                                                                                                                                                                                
@@ -101,13 +106,23 @@ function VideoSelection() {
           placeholder="Enter your search query"                                                                                                                                                                    
           className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 text-lg leading-tight focus:outline-none focus:shadow-outline flex-grow"                                            
         />                                                                                                                                                                                                         
-        <button                                                                                                                                                                                                    
-          onClick={handleSearchClick}                                                                                                                                                                              
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 text-lg rounded focus:outline-none focus:shadow-outline"                                                                    
-        >                                                                                                                                                                                                          
-          Search                                                                                                                                                                                                   
-        </button>                                                                                                                                                                                                  
-      </div>                                                                                                                                                                                                        
+        <button                                                                                                                                                                                                              
+            onClick={handleSearchClick}                                                                                                                                                                                        
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 text-lg rounded focus:outline-none focus:shadow-outline"                                                                                   
+            >                                                                                                                                                                                                                    
+          Search                                                                                                                                                                                                             
+        </button>                                                                                                                                                                                                            
+        <span className="ml-4 text-lg">                                                                                                                                                                                      
+            Selected videos: {selectedVideos.length}                                                                                                                                                                           
+        </span>   
+        <button                                                                                                                                                                                                              
+            onClick={handleMultiSelectClick}                                                                                                                                                                                   
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 text-lg rounded focus:outline-none focus:shadow-outline mt-4"                                                                            
+            >                                                                                                                                                                                                                    
+            Make a call with selected videos                                                                                                                                                                                   
+        </button>                                                                                                                                                                                                
+      </div>    
+                                                                                                                                                                                                          
       <Gallery                                                                                                                                                                                                     
         images={galleryItems}                                                                                                                                                                                      
         enableImageSelection={false}                                                                                                                                                                               
