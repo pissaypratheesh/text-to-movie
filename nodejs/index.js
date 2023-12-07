@@ -1,6 +1,7 @@
 const express = require('express');
 const { fetchNewsSummaryAssets,fetchImageByPrompt } = require("./fetch_data")
 const {  downloadShorts , fetchShorts, downloadMultipleShorts, fetchShortsNDownloadRelevant} = require('./shorts');
+const {getBingImages} = require('./assets_scraper')
 const app = express();
 const fs = require('fs');
 const path = require('path');
@@ -86,6 +87,7 @@ app.get('/generate/summary', async (req, res) => {
   
 })
 
+
 app.get('/fetchall/:id',async (req, res) => {
   const id = req.params.id;
   const data = await fetchNewsData({
@@ -95,6 +97,19 @@ app.get('/fetchall/:id',async (req, res) => {
     getassets: true,
   });
   return res.json(data);
+})
+
+
+
+app.get('/fetch/bingimages', async (req, res) => {
+  const prompt = req.query.prompt || req.query.query || req.query.q;
+  console.log("🚀 ~ file: index.js:102 ~ app.get ~ prompt:", prompt)
+  if (!prompt) {
+    return res.status(400).json({ error: 'Missing prompt/query' });
+  }
+  const images = await getBingImages(prompt);
+  //res.set('Content-Type', 'image/jpeg');
+  return res.send(images);
 })
 
 app.get('/fetch/image', async (req, res) => {
