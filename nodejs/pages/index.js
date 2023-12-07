@@ -28,6 +28,15 @@ function HomePage() {
 
   return (
     <div className="m-4">
+      <h2 className="text-2xl font-semibold mb-4">Selected Images and Videos</h2>
+      <div className="grid grid-cols-3 gap-4 mb-8">
+        {Object.values(selectedImages).map((image, index) => (
+          <img key={index} src={image} alt="Selected" className="w-full h-32 object-cover" />
+        ))}
+        {Object.values(selectedVideos).map((video, index) => (
+          <video key={index} src={video} controls className="w-full h-32 object-cover" />
+        ))}
+      </div>
       {sentences.map((sentence, index) => (
         <details key={index} className="mb-4">
           <summary className="cursor-pointer text-xl font-semibold">{sentence}</summary>
