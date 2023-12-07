@@ -99,8 +99,9 @@ function VideoSelection() {
   const appElementRef = useRef(null);
 
   useEffect(() => {
-    Modal.setAppElement(appElementRef.current);
+    Modal.setAppElement(document.getElementById('__next'));
   }, []);
+  console.log("🚀 ~ file: VideoSelection.js:109 ~ VideoSelection ~ showModal:", showModal)
 
   return (
     <div className="p-4" ref={appElementRef}>
@@ -111,7 +112,7 @@ function VideoSelection() {
         className="ReactModal__Content"
         overlayClassName="ReactModal__Overlay"
       >
-        <VideoModal handleClose={handleClose} selectedVideo={selectedVideo} />
+        <VideoModal showModal={showModal} handleClose={handleClose} selectedVideo={selectedVideo} />
       </Modal>
       <div className="flex space-x-4 mb-4">                                                                                                                                                                           
         <input                                                                                                                                                                                                     
