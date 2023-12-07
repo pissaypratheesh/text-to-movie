@@ -72,12 +72,15 @@ function VideoSelection({ q }) {
 
   const galleryItems = createGalleryItems(videos, handleVideoSelect);                                                                                                                                                
 
-  const CustomThumbnail = useCallback(({ item }) => {                                                                                                                                                                
-    const handleSelectClick = (e) => {                                                                                                                                                                               
-      e.stopPropagation();                                                                                                                                                                                           
-      handleVideoSelect(item.videoId);                                                                                                                                                                               
-    };                                                                                                                                                                                                               
-
+  const CustomThumbnail = useCallback(({ item }) => {      
+    const [isCheckClicked, setIsCheckClicked] = useState(false);                                                                                                                                                       
+                                                                                                                                                                                                                      
+    const handleCheckClick = (e) => {                                                                                                                                                                                  
+      console.log("🚀 ~ file: VideoSelection.js:79 ~ handleCheckClick ~ e:", e)
+      e.stopPropagation();                                                                                                                                                                                             
+      setIsCheckClicked(!isCheckClicked);                                                                                                                                                                              
+      handleVideoSelect(item.videoId);                                                                                                                                                                                 
+    };    
     const handlePlayClick = (e) => {                                                                                                                                                                                 
       setShowModal(true);                                                                                                                                                                                            
       e.stopPropagation();                                                                                                                                                                                           
@@ -89,8 +92,8 @@ function VideoSelection({ q }) {
         <img src={item.thumbnail} alt={item.videoId} style={selectedVideos.includes(item.videoId) ? { border: '3px solid red' } : {}} />                                                                                                                                                              
         <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px' }}>                                                                                                                                 
           <button                                                                                                                                                                                                    
-            onClick={handleSelectClick}                                                                                                                                                                              
-            className="bg-gray-500 text-white px-2 py-1 rounded focus:outline-none focus:shadow-outline m-2 opacity-75 backdrop-blur-md text-sm"                                                                            
+            onClick={handleCheckClick}                                                                                                                                                                              
+            className={`bg-${isCheckClicked ? 'blue' : 'gray'}-500 text-white px-2 py-1 rounded focus:outline-none focus:shadow-outline m-2 opacity-75 backdrop-blur-md text-sm`}                                                                            
           >                                                                                                                                                                                                          
              <i className="fa fa-check mr-1"></i>                                                                                                                                                                                                    
           </button>                                                                                                                                                                                                  
