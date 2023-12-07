@@ -5,7 +5,9 @@
   "main": "lib/index.js",
   "types": "types/index.d.ts",
   "scripts": {
-    "start": "babel-node index.js",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "test": "jest",
     "lint": "eslint ./lib --ext .js",
     "travis": "npm run lint",
@@ -29,9 +31,9 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "next": "^12.0.7",                                                                                                                                                                                               
-    "react": "^17.0.2",                                                                                                                                                                                              
-    "react-dom": "^17.0.2",     
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
     "@koa/router": "^11.0.1",
     "@u4/opencv4nodejs": "^6.2.0",
     "@xmldom/xmldom": "^0.8.1",
