@@ -106,11 +106,11 @@ function ImageSelection({ q, onImageSelect }) {
       isSelected: !hasSelected,                                                                                                                                                                                      
     }));                                                                                                                                                                                                             
     setImages(nextImages);     
-    if (onImageSelect) {                                                                                                                                                                                               
-        const selectedImages = nextImages.filter((image) => image.isSelected).map((image) => {return {...image, q}});                                                                                                                 
-        console.log("🚀 ~ file: ImageSelection.js:111 ~ handleSelectAllClick ~ selectedImages:", selectedImages)
-        onImageSelect(selectedImages);                                                                                                                                                                                   
-    }                                                                                                                                                                                        
+    const selectedImages = nextImages.filter((image) => image.isSelected).map((image) => {return {...image, q}});
+    console.log("🚀 ~ file: ImageSelection.js:111 ~ handleSelectAllClick ~ selectedImages:", selectedImages)
+    if (onImageSelect) {
+      onImageSelect(selectedImages.length > 0 ? selectedImages : []);
+    }
   };                                                                                                                                                                                                                 
                                                                                                                                                                                                                      
   return (                                                                                                                                                                                                           
