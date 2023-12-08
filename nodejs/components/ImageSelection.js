@@ -96,7 +96,7 @@ function ImageSelection({ q, onImageSelect }) {
     );                                                                                                                                                                                                               
     setImages(nextImages);   
     if (onImageSelect) {                                                                                                                                                                                               
-        onImageSelect(item.src);                                                                                                                                                                                         
+        onImageSelect( {...item, q});                                                                                                                                                                                         
     }                                                                                                                                                                                          
   };                                                                                                                                                                                                                 
                                                                                                                                                                                                                      
@@ -105,7 +105,12 @@ function ImageSelection({ q, onImageSelect }) {
       ...image,                                                                                                                                                                                                      
       isSelected: !hasSelected,                                                                                                                                                                                      
     }));                                                                                                                                                                                                             
-    setImages(nextImages);                                                                                                                                                                                           
+    setImages(nextImages);     
+    if (onImageSelect) {                                                                                                                                                                                               
+        const selectedImages = nextImages.filter((image) => image.isSelected).map((image) => {return {...image, q}});                                                                                                                 
+        console.log("🚀 ~ file: ImageSelection.js:111 ~ handleSelectAllClick ~ selectedImages:", selectedImages)
+        onImageSelect(selectedImages);                                                                                                                                                                                   
+    }                                                                                                                                                                                        
   };                                                                                                                                                                                                                 
                                                                                                                                                                                                                      
   return (                                                                                                                                                                                                           
