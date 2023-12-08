@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ImageSelection from '../components/ImageSelection';
 import VideoSelection from '../components/VideoSelection';
+var _ = require('underscore')
 const sentences = [
   "Sun sets, warm city glow.",
   "Forest walk, birds chirp.",
@@ -45,8 +46,18 @@ function HomePage() {
             <ImageSelection
               q={sentence}
               selectedImage={selectedImages[index]}
-              onImageSelect={(image) => {
+              onImageSelect={(image, sentence) => {
                 if (Array.isArray(image)) {
+                  if(!image.length) {
+                    setSelectedImages((prevSelectedImages) => {
+                      const newSelectedImages = _.compact(prevSelectedImages.map((img) => {
+                        return img.q != sentence ? img : null
+                      }));
+                      return newSelectedImages;
+                    });
+                    return;
+                  }
+
                   setSelectedImages((prevSelectedImages) => {
                     const newSelectedImages = [ ...prevSelectedImages ];
                     image.forEach((img) => {
@@ -55,15 +66,35 @@ function HomePage() {
                     return newSelectedImages;
                   });
                 } else {
-                  setSelectedImages([ ...selectedImages,  image ]);
+                  console.log("🚀 ~ file: index.js:70 ~ HomePage ~ image:", image)
+                  if(image.isSelected){
+                    setSelectedImages([ ...selectedImages,  image ]);
+                  }else{
+                    setSelectedImages((prevSelectedImages) => {
+                      const newSelectedImages = _.compact(prevSelectedImages.map((img) => {
+                        return img.q == sentence && img.src == image.src  ? null : img
+                      }));
+                      return newSelectedImages;
+                    });
+                  }
                 }
               }}
             />
             <VideoSelection
               q={sentence}
               selectedVideo={selectedVideos[index]}
-              onVideoSelect={(video) => {
+              onVideoSelect={(video, sentence) => {
                 if (Array.isArray(video)) {
+                  if(!image.length) {
+                    setSelectedImages((prevSelectedImages) => {
+                      const newSelectedImages = _.compact(prevSelectedImages.map((img) => {
+                        return img.q != sentence ? img : null
+                      }));
+                      return newSelectedImages;
+                    });
+                    return;
+                  }
+
                   setSelectedVideos((prevSelectedVideos) => {
                     const newSelectedVideos = [ ...prevSelectedVideos ];
                     video.forEach((vid) => {
