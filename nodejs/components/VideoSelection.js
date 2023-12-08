@@ -121,7 +121,10 @@ function VideoSelection({ q, onVideoSelect }) {
 
   const handleMultiSelectClick = () => {                                                                                                                                                                               
     console.log("Selected video IDs:", selectedVideos);                                                                                                                                                                
-    // Make a call with the selected video IDs                                                                                                                                                                         
+    // Make a call with the selected video IDs   
+    if (onVideoSelect) {                                                                                                                                                                                               
+      onVideoSelect(selectedVideos);                                                                                                                                                                                   
+    }                                                                                                                                                                        
   };                                                                                                                                                                                                                   
          
 
