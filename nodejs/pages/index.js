@@ -50,8 +50,7 @@ function HomePage() {
                   setSelectedImages((prevSelectedImages) => {
                     const newSelectedImages = { ...prevSelectedImages };
                     image.forEach((img) => {
-                      newSelectedImages[index] = img;
-                      index++;
+                      newSelectedImages[Object.keys(newSelectedImages).length] = img;
                     });
                     return newSelectedImages;
                   });
@@ -68,8 +67,7 @@ function HomePage() {
                   setSelectedVideos((prevSelectedVideos) => {
                     const newSelectedVideos = { ...prevSelectedVideos };
                     video.forEach((vid) => {
-                      newSelectedVideos[index] = vid;
-                      index++;
+                      newSelectedVideos[Object.keys(newSelectedVideos).length] = vid;
                     });
                     return newSelectedVideos;
                   });
