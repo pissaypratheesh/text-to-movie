@@ -18,8 +18,8 @@ function HomePage() {
     setQuery(urlQuery);                                             
   },[])
   
-  const [selectedImages, setSelectedImages] = useState({});
-  const [selectedVideos, setSelectedVideos] = useState({});
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedVideos, setSelectedVideos] = useState([]);
   console.log("🚀 ~ file: index.js:22 ~ HomePage ~ selectedImages:", selectedImages,selectedVideos)
 
 
@@ -32,7 +32,7 @@ function HomePage() {
       <h2 className="text-2xl font-semibold mb-4">Selected Images and Videos</h2>
       <div className="grid grid-cols-3 gap-4 mb-8">
         {Object.values(selectedImages).map((image, index) => (
-          <img key={index} src={image} alt="Selected" className="w-full h-32 object-cover" />
+          <img key={index} src={image.src} alt="Selected" className="w-full h-32 object-cover" />
         ))}
         {Object.values(selectedVideos).map((video, index) => (
           <video key={index} src={video} controls className="w-full h-32 object-cover" />
@@ -48,14 +48,14 @@ function HomePage() {
               onImageSelect={(image) => {
                 if (Array.isArray(image)) {
                   setSelectedImages((prevSelectedImages) => {
-                    const newSelectedImages = { ...prevSelectedImages };
+                    const newSelectedImages = [ ...prevSelectedImages ];
                     image.forEach((img) => {
-                      newSelectedImages[Object.keys(newSelectedImages).length] = img;
+                      newSelectedImages[newSelectedImages.length] = img;
                     });
                     return newSelectedImages;
                   });
                 } else {
-                  setSelectedImages({ ...selectedImages, [index]: image });
+                  setSelectedImages([ ...selectedImages,  image ]);
                 }
               }}
             />
@@ -65,14 +65,14 @@ function HomePage() {
               onVideoSelect={(video) => {
                 if (Array.isArray(video)) {
                   setSelectedVideos((prevSelectedVideos) => {
-                    const newSelectedVideos = { ...prevSelectedVideos };
+                    const newSelectedVideos = [ ...prevSelectedVideos ];
                     video.forEach((vid) => {
-                      newSelectedVideos[Object.keys(newSelectedVideos).length] = vid;
+                      newSelectedVideos[(newSelectedVideos).length] = vid;
                     });
                     return newSelectedVideos;
                   });
                 } else {
-                  setSelectedVideos({ ...selectedVideos, [index]: video });
+                  setSelectedVideos([ ...selectedVideos,  video ]);
                 }
               }}
             />
