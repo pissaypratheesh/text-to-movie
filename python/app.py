@@ -23,7 +23,7 @@ app.mount("/api", api)
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
-app.mount("/images", StaticFiles(directory=f"./"), name="dalle_images")
+app.mount("/images", StaticFiles(directory=f"./dalle_images"), name="dalle_images")
 
 
 @api.get("/describe/video")
