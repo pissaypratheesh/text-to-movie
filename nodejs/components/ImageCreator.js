@@ -5,6 +5,7 @@ import Lightbox from 'react-18-image-lightbox';
 const ImageCreator = () => {
   const [text, setText] = useState('');
   const [images, setImages] = useState([]);
+  console.log("🚀 ~ file: ImageCreator.js:8 ~ ImageCreator ~ images:", images)
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -17,14 +18,19 @@ const ImageCreator = () => {
     }
   }, []);
 
-  const createImage = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8081/api/create_img?prompt=${text}`);
-      setImages(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
+  const createImage = async () => {                                                                                                                                                                                                               
+    setLoading(true);                                                                                                                                                                                                                           
+    try {                                                                                                                                                                                                                                       
+      const response = await axios.get(`http://localhost:8081/api/create_img?prompt=${text}`);                                                                                                                                                  
+      setImages(response.data);                                                                                                                                                                                                                 
+      console.log("🚀 ~ file: ImageCreator.js:27 ~ createImage ~ response:", response)
+    } catch (error) {                                                                                                                                                                                                                           
+      console.error(error);                                                                                                                                                                                                                     
+      console.log("🚀 ~ file: ImageCreator.js:30 ~ createImage ~ error:", error && error.toString())
+    }                                                                                                                                                                                                                                           
+    setLoading(false);                                                                                                                                                                                                                          
+  };   
 
   return (
     <div className="p-4">
@@ -40,11 +46,15 @@ const ImageCreator = () => {
       >
         Create Image
       </button>
-      <div className="grid grid-cols-3 gap-4 mt-4">
-        {images.map((image, index) => (
-          <Lightbox key={index} images={[image]} />
-        ))}
-      </div>
+      {loading ? (                                                                                                                                                                                                                                    
+         <p>Loading...</p>                                                                                                                                                                                                                       
+       ) : (                                                                                                                                                                                                                                     
+         <div className="grid grid-cols-3 gap-4 mt-4">                                                                                                                                                                                           
+           {images && images.map((image, index) => (                                                                                                                                                                                                       
+             <Lightbox key={index} images={[image]} />                                                                                                                                                                                           
+           ))}                                                                                                                                                                                                                                   
+         </div>                                                                                                                                                                                                                                  
+       )} 
     </div>
   );
 };
