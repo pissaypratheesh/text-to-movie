@@ -16,10 +16,12 @@ const ImageCreator = () => {
       const prompt = params.get('prompt') || params.get('query') || params.get('q');
       if (prompt) {
         setText(prompt);
-        createImage();
+        if (!loading) {
+          setTimeout(createImage, 1000);
+        }
       }
     }
-  }, []);
+  }, [loading]);
 
 
   const createImage = async () => {                                                                                                                                                                                                               
