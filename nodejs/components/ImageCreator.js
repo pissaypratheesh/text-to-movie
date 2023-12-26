@@ -5,6 +5,7 @@ import Lightbox from 'react-18-image-lightbox';
 const ImageCreator = () => {
   const [text, setText] = useState('');
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
