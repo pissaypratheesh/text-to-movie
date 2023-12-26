@@ -1,27 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Lightbox from 'react-18-image-lightbox';
-import { useLocation } from 'react-router-dom';
 
 const ImageCreator = () => {
   const [text, setText] = useState('');
   const [images, setImages] = useState([]);
-  const location = useLocation();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(location.search);
-      const prompt = params.get('prompt');
+      const prompt = params.get('prompt') || params.get('query') || params.get('q');
       if (prompt) {
         setText(prompt);
       }
     }
-  }, [location]);
+  }, []);
 
   const createImage = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/create', { text });
-      setImages([...images, response.data]);
+      const response = await axios.get(`http://localhost:8081/api/create_img?prompt=${text}`);
+      setImages(response.data);
     } catch (error) {
       console.error(error);
     }
