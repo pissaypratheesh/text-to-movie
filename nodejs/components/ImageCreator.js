@@ -16,6 +16,7 @@ const ImageCreator = () => {
       const prompt = params.get('prompt') || params.get('query') || params.get('q');
       if (prompt) {
         setText(prompt);
+        createImage();
       }
     }
   }, []);
