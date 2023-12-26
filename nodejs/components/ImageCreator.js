@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Lightbox from 'react-18-image-lightbox';
+import { Gallery } from 'react-grid-gallery';
 
 const ImageCreator = () => {
   const [text, setText] = useState('');
   const [images, setImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
   console.log("🚀 ~ file: ImageCreator.js:8 ~ ImageCreator ~ images:", images)
   const [loading, setLoading] = useState(false);
 
@@ -48,12 +50,23 @@ const ImageCreator = () => {
       </button>
       {loading ? (                                                                                                                                                                                                                                    
          <p>Loading...</p>                                                                                                                                                                                                                       
-       ) : (                                                                                                                                                                                                                                     
-         <div className="grid grid-cols-3 gap-4 mt-4">                                                                                                                                                                                           
-           {images && images.map((image, index) => (                                                                                                                                                                                                       
-             <Lightbox key={index} images={[image]} />                                                                                                                                                                                           
-           ))}                                                                                                                                                                                                                                   
-         </div>                                                                                                                                                                                                                                  
+       ) : (      
+        <>                                                                                                                                                                                                                               
+            <Gallery                                                                                                                                                                                                                                        
+                images={images.map((image, index) => ({                                                                                                                                                                                                       
+                src: image,                                                                                                                                                                                                                                 
+                thumbnail: image,                                                                                                                                                                                                                           
+                thumbnailWidth: 320,                                                                                                                                                                                                                        
+                thumbnailHeight: 212,                                                                                                                                                                                                                       
+                isSelected: selectedImage === index,                                                                                                                                                                                                        
+                caption: `Image ${index + 1}`                                                                                                                                                                                                               
+                }))}                                                                                                                                                                                                                                          
+                onSelectImage={index => setSelectedImage(index)}                                                                                                                                                                                              
+            />                                                                                                                                                                                                                                              
+            {selectedImage !== null && (                                                                                                                                                                                                                    
+                <Lightbox images={[images[selectedImage]]} />                                                                                                                                                                                                 
+            )} 
+        </>                                                                                                                                                                                                                                  
        )} 
     </div>
   );
