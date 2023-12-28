@@ -27,7 +27,7 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
   const playerRef = useRef(null);
   const [seekTime, setSeekTime] = useState(0);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [timingsText, setTimingsText] = useState(props.timingsText || "['1-3', '4-5']");
+  const [timingsText, setTimingsText] = useState(sentenceObj.timingsText || "['1-3', '4-5']");
   const onReady = (event) => {
     // access to player in all event handlers via event.target
     playerRef.current = event.target;
