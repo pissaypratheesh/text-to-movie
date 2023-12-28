@@ -27,14 +27,14 @@ import PIL
 from PIL import Image
 import matplotlib.pyplot as plt
 import time
-from ..tasks.numeric_hash import create_numeric_hash
+from tasks.numeric_hash import create_numeric_hash
 
 from autogen.agentchat.contrib.multimodal_conversable_agent import MultimodalConversableAgent
 
 
 # config_list = autogen.config_list_from_json(
 #     env_or_file="OAI_CONFIG_LIST",
-#     file_location="../",
+#     file_location=".",
 #     filter_dict={
 #         "model": ["gpt-3.5-turbo"],
 #     },
@@ -42,7 +42,7 @@ from autogen.agentchat.contrib.multimodal_conversable_agent import MultimodalCon
 
 config_list_4v = autogen.config_list_from_json(
     env_or_file="OAI_CONFIG_LIST",
-    file_location="../",
+    file_location=".",
     filter_dict={
         "model": ["gpt-4-vision-preview"],
     },
@@ -50,7 +50,7 @@ config_list_4v = autogen.config_list_from_json(
 
 config_list_gpt4 = autogen.config_list_from_json(
     env_or_file="OAI_CONFIG_LIST",
-    file_location="../",
+    file_location=".",
     filter_dict={
         "model": ["gpt-4", "gpt-4-0314", "gpt4", "gpt-4-32k", "gpt-4-32k-0314", "gpt-4-32k-v0314"],
     },
@@ -58,7 +58,7 @@ config_list_gpt4 = autogen.config_list_from_json(
 
 config_list_dalle = autogen.config_list_from_json(
     env_or_file="OAI_CONFIG_LIST",
-    file_location="../",
+    file_location=".",
     filter_dict={
         "model": ["dall-e-3"],
     },
@@ -216,7 +216,7 @@ class DALLEAgent(ConversableAgent):
 #  It iteratively improves the image by sending the prompt to DALLE and receiving feedback from Critics.
 class DalleCreator(AssistantAgent):
 
-    def __init__(self, n_iters=2, **kwargs):
+    def __init__(self, n_iters=3, **kwargs):
         """
         Initializes a DalleCreator instance.
         
@@ -299,9 +299,10 @@ class DalleCreator(AssistantAgent):
                 img_prompt = matches[0]
             else:
                 # Handle the case where no match is found
-                img_prompt = ""
+                print("No match found for PROMPT in feedback")
+                #img_prompt = ""
                 # Or raise an exception
-                raise ValueError("No match found for PROMPT in feedback")
+                #raise ValueError("No match found for PROMPT in feedback")
             
             self.send(
                 message=img_prompt,
@@ -318,7 +319,7 @@ class DalleCreator(AssistantAgent):
         return True, "result.jpg"
 
 
-def create_image_by_agents(prompt: str) -> PIL.Image:
+def create_image_by_agents(prompt: str, iterations: int = 1) -> PIL.Image:
     numeric_hash = create_numeric_hash(prompt)
     gpt4_llm_config["cache_seed"] = numeric_hash
     str_numeric_hash = "dalle_images/" + str(numeric_hash)
@@ -330,7 +331,8 @@ def create_image_by_agents(prompt: str) -> PIL.Image:
         name="DALLE Creator!",
         max_consecutive_auto_reply=0,
         system_message="Help me coordinate generating image",
-        llm_config=gpt4_llm_config
+        llm_config=gpt4_llm_config,
+
     )
 
     user_proxy = autogen.UserProxyAgent(
@@ -345,7 +347,7 @@ def create_image_by_agents(prompt: str) -> PIL.Image:
     #print("\n\n\nimg-->",img)
     print("\n\n\noutput-->",output)
     return {
-        "created_image": numeric_hash
+        "created_image": f"dalle_images/{numeric_hash}"
     }
 
 

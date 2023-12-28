@@ -2,8 +2,11 @@ from fastapi import FastAPI, Request
 from airelated.videovision import describe_video
 from airelated.create_img_dalle_n_vision import create_image_by_agents
 from tasks.numeric_hash import create_numeric_hash
+from tasks.assets_helper import extract_video_data
+from tasks.summarization import run_summarization_flow
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from youtubesearchpython import VideosSearch
 import os
 import re
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,7 +26,7 @@ app.mount("/api", api)
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
-app.mount("/images", StaticFiles(directory=f"./dalle_images"), name="dalle_images")
+app.mount("/dalle_images", StaticFiles(directory=f"./dalle_images"), name="dalle_images")
 
 
 @api.get("/describe/video")
@@ -31,6 +34,16 @@ async def describe_vid(request: Request):
     query = request.query_params.get("q") or request.query_params.get("query") or request.query_params.get("url")
     viddesc = describe_video(query)
     return viddesc
+
+@api.post("/summarize")
+async def summarize(request: Request):
+    data = await request.json()
+    prompt = data.get("q") or data.get("query") or data.get("data")
+    print("\n\n\n\n🚀 ~ file: app.py:41 ~ prompt:", prompt)
+    if prompt:
+        return run_summarization_flow(prompt)
+    else:
+        return {"error": "Missing prompt parameter"}
 
 #http://localhost:8081/api/create_img?prompt=elephant%20and%20rabbit%20having%20running%20race%20together%20in%20same%20direction
 @api.get("/create_img")
@@ -64,6 +77,19 @@ async def get_image(request: Request):
     else:
         return {"error": "Missing hash parameter"}
 
+@api.get("/ytvideos")
+async def videos(request: Request):
+    query = request.query_params.get("query")
+    if query:
+         videosSearch = VideosSearch(query, limit = 5)
+         res = videosSearch.result()
+         if res:
+             return extract_video_data(res['result'])
+         else:
+             return {"error": "No videos found"}
+    else:
+        return {"error": "Missing query parameter"}
+   
 
 
 if __name__ == "__main__":

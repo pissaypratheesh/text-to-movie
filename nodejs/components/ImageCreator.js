@@ -16,21 +16,21 @@ const ImageCreator = () => {
       const prompt = params.get('prompt') || params.get('query') || params.get('q');
       if (prompt) {
         setText(prompt);
-        createImage();
+        createImage(prompt);
       }
     }
   }, []);
 
 
-  const createImage = async () => {                                                                                                                                                                                                               
+  const createImage = async (prompt) => {                                                                                                                                                                                                               
     setLoading(true);                                                                                                                                                                                                                           
     try {                                                                                                                                                                                                                                       
-      const response = await axios.get(`http://localhost:8081/api/create_img?prompt=${text}`);                                                                                                                                                  
-      setImages(response.data);                                                                                                                                                                                                                 
-      console.log("🚀 ~ file: ImageCreator.js:27 ~ createImage ~ response:", response)
+      const response = await axios.get(`http://localhost:8081/api/create_img?prompt=${text || prompt}`);                                                                                                                                                  
+      //setImages(response.data);                                                                                                                                                                                                                 
+      console.log("🚀 ~ file: ImageCreator.js:27 ~ createImage ~ response:", response.data && response.data.created_image)
     } catch (error) {                                                                                                                                                                                                                           
       console.error(error);                                                                                                                                                                                                                     
-      console.log("🚀 ~ file: ImageCreator.js:30 ~ createImage ~ error:", error && error.toString())
+      console.log("🚀 ~ file: ImageCreator.js:30 ~ createImage ~ error:", error && error.toString(),error)
     }                                                                                                                                                                                                                                           
     setLoading(false);                                                                                                                                                                                                                          
   };   

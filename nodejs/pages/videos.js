@@ -1,7 +1,7 @@
-import VideoSelection from '../components/VideoSelection';
+import ImageCreator from '../components/ImageCreator';
 
 function Videos() {
-  return <VideoSelection />;
+  return <ImageCreator />;
 }
 
 export default Videos;

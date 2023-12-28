@@ -3,3 +3,7 @@ nodejs/node_modules
 OAI_CONFIG_LIST_AZURE
 OAI_CONFIG_LIST
 nodejs/.next
+python/.cache
+python/dalle_images
+python/__pycache__
+python/tasks/__pycache__

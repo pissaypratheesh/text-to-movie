@@ -5,7 +5,6 @@ import Lightbox from 'react-18-image-lightbox';
 
                                                                                                                                                                                                                      
 function ImageSelection({ q, onImageSelect }) {                                                                                                                                                                                          
-  console.log("🚀 ~ file: ImageSelection.js:6 ~ ImageSelection ~ q:", q)
   const [images, setImages] = useState([]);                                                                                                                                                                                                               
   const [query, setQuery] = useState(q || '');     
   const [index, setIndex] = useState(-1);                                                                                                                                                                  
@@ -94,10 +93,13 @@ function ImageSelection({ q, onImageSelect }) {
     const nextImages = images.map((image, i) =>                                                                                                                                                                      
       i === index ? { ...image, isSelected: !image.isSelected } : image                                                                                                                                              
     );                                                                                                                                                                                                               
-    setImages(nextImages);   
-    if (onImageSelect) {                                                                                                                                                                                               
-        onImageSelect( {...item, q});                                                                                                                                                                                         
-    }                                                                                                                                                                                          
+    setImages(nextImages); 
+    const selectedImages = nextImages.filter((image) => image.isSelected).map((image) => {return {...image, q}});
+    console.log("🚀 ~ file: ImageSelection.js:111 ~ handleSelectAllClick ~ selectedImages:", selectedImages)
+    if (onImageSelect) {
+      onImageSelect({ ...item, isSelected: !item.isSelected  , q}, q);
+    }  
+                                                                                                                                                                                        
   };                                                                                                                                                                                                                 
                                                                                                                                                                                                                      
   const handleSelectAllClick = () => {                                                                                                                                                                               
@@ -105,11 +107,12 @@ function ImageSelection({ q, onImageSelect }) {
       ...image,                                                                                                                                                                                                      
       isSelected: !hasSelected,                                                                                                                                                                                      
     }));                                                                                                                                                                                                             
+    console.log("🚀 ~ file: ImageSelection.js:107 ~ nextImages ~ hasSelected:", hasSelected)
     setImages(nextImages);     
     const selectedImages = nextImages.filter((image) => image.isSelected).map((image) => {return {...image, q}});
     console.log("🚀 ~ file: ImageSelection.js:111 ~ handleSelectAllClick ~ selectedImages:", selectedImages)
     if (onImageSelect) {
-      onImageSelect(selectedImages.length > 0 ? selectedImages : []);
+      onImageSelect(selectedImages.length > 0 ? selectedImages : [], q);
     }
   };                                                                                                                                                                                                                 
                                                                                                                                                                                                                      

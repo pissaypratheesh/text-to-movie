@@ -56,22 +56,64 @@ function VideoSelection({ q, onVideoSelect }) {
     // setQuery(urlQuery);                                                                                                                                                                                              
     fetch(`http://localhost:3000/api/fetchshorts?query=${encodeURIComponent(query)}`)                                                                                                                             
       .then((response) => response.json())                                                                                                                                                                           
-      .then((data) => setVideos(data));                                                                                                                                                                              
+      .then((data) => {
+        setVideos(data.map((vid,i) => {                                                                                                                                                                        
+          vid.src = vid.url;  
+          vid.i = i;                                                                                                                                                                                      
+          return vid                                                                                                                                                                                                
+        })) 
+      });                                                                                                                                                                              
   }, []);                                                                                                                                                                                                            
-
+  const handleVideoSelect = (video) => {
+    let videoIndex = -1;
+    const nextVideos = selectedVideos.map((vid, index) => {
+      if (video.videoId === vid.videoId) {
+        videoIndex = index;
+        return { ...vid, isSelected: !vid.isSelected };
+      } else {
+        return vid;
+      }
+    });
   
-  const handleVideoSelect = (videoId) => {                                                                                                                                                                             
-    setSelectedVideos((prevSelectedVideos) => {                                                                                                                                                                        
-      if (prevSelectedVideos.includes(videoId)) {                                                                                                                                                                      
-        return prevSelectedVideos.filter((id) => id !== videoId);                                                                                                                                                      
-      } else {                                                                                                                                                                                                         
-        return [...prevSelectedVideos, videoId];                                                                                                                                                                       
-      }                                                                                                                                                                                                                
-    });     
+    if (videoIndex !== -1) {
+      nextVideos.splice(videoIndex, 1);
+      //console.log("🚀 ~ file: VideoSelection.js:77 ~ nextVideos ~ nextVideos:", nextVideos)
+    } else {
+      nextVideos.push({ ...video, isSelected: true });
+    }
+  
+    setSelectedVideos(nextVideos);
+    onVideoSelect(nextVideos, q);
+  };
+/*   const handleVideoSelect = (video) => {       
+    let alreadyExisted = false;
+    const nextVideos = selectedVideos.length > 0 ? selectedVideos.map((vid, i) => {                                                                                                                                                                       
+        if(video.videoId == vid.videoId) {
+          alreadyExisted = true;
+          return { ...video, isSelected: !video.isSelected } 
+        } else {
+          return vid
+        }      
+      }                                                                                                                                          
+    ) : [{...video, isSelected: true}];   
+    if(!alreadyExisted) {
+      nextVideos.push({ ...video, isSelected: true });
+    }
+    
+    setSelectedVideos(nextVideos);                                                                                                                                                                                             
+    const selVideos = nextVideos                                                                                                                                                                                  
+      .filter((video) => video.isSelected)                                                                                                                                                                             
+      .map((video) => {                                                                                                                                                                                                
+        return { ...video, q };                                                                                                                                                                                        
+      });                                                                                                                                                                                                              
+    console.log(                                                                                                                                                                                                       
+      "🚀 ~ file: VideoSelection.js ~ handleVideoSelect ~ selectedVideos:",                                                                                                                                            
+      selVideos   ,selectedVideos                                                                                                                                                                                                
+    );                                                                                                                                                                                                                 
     if (onVideoSelect) {                                                                                                                                                                                               
-      onVideoSelect(videoId);                                                                                                                                                                                          
-    }                                                                                                                                                                                                            
-  };                                                                                                                                                                                                                
+      onVideoSelect({ ...video, isSelected: !video.isSelected, q }, q);                                                                                                                                                
+    }                                                                                                                                                                                                    
+  };     */                                                                                                                                                                                                            
 
   const galleryItems = createGalleryItems(videos, handleVideoSelect);                                                                                                                                                
 
@@ -79,7 +121,7 @@ function VideoSelection({ q, onVideoSelect }) {
                                                                                                                                                                                                                       
     const handleCheckClick = (e) => {                                                                                                                                                                                  
       e.stopPropagation();                                                                                                                                                                                               
-      handleVideoSelect(item.videoId);                                                                                                                                                                                 
+      handleVideoSelect(item);                                                                                                                                                                                 
     };    
     const handlePlayClick = (e) => {                                                                                                                                                                                 
       setShowModal(true);                                                                                                                                                                                            
@@ -120,11 +162,12 @@ function VideoSelection({ q, onVideoSelect }) {
   };                                                                                                                                                                                                                 
 
   const handleMultiSelectClick = () => {                                                                                                                                                                               
-    console.log("Selected video IDs:", selectedVideos);
-    // Make a call with the selected video IDs
-    if (onVideoSelect) {
-      onVideoSelect(selectedVideos.length > 0 ? selectedVideos : []);
-    }
+    console.log("Selected video IDs:", selectedVideos);                                                                                                                                                                
+    // Make a call with the selected video IDs   
+    if (onVideoSelect) {                                                                                                                                                                                               
+      onVideoSelect(selectedVideos.length > 0 ? selectedVideos : []);                                                                                                                                                                                    
+    }        
+                                                                                                                                                                   
   };                                                                                                                                                                                                                   
          
 
@@ -169,7 +212,7 @@ function VideoSelection({ q, onVideoSelect }) {
             if(selectedVideos.length > 0){
               setSelectedVideos([]);
             }else{
-              setSelectedVideos(videos.map((video) => video.videoId));
+              setSelectedVideos(videos);
             }
           }}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 text-lg rounded focus:outline-none focus:shadow-outline"
