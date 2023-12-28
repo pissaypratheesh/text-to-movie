@@ -48,65 +48,51 @@ const AssetsAggregation = observer(function AssetsAggregation() {
 
   return (
     <div className="m-4">
-      <h2 className="text-2xl font-semibold mb-4">
-        Selected Images and Videos
-      </h2>
-      <div
-        className="grid grid-cols-3 gap-4 mb-8"
-        key={`${selectedImages.length}_${Object.values(selectedVideos)
-          .map((videos) => videos.length)
-          .join(",")}`}
-      >
-        {Object.values(selectedImages).map((image, index) => (
-          <img
-            key={index}
-            src={image.src}
-            alt="Selected"
-            className="w-full h-32 object-cover"
-          />
-        ))}
-        {Object.values(selectedVideos).map((videos, index) => {
-          return Object.values(videos).map((video, i) => {
-            return (
-              <img
-                key={index}
-                src={video.src}
-                controls
-                className="w-full h-32 object-cover"
-              />
-            );
-          });
-        })}
-      </div>
+
       {sentences.map((sentenceObj, index) => {
         let { line: sentence } = sentenceObj;
+        let selectedImgs = toJS(sentenceObj.selectedImgs || []);
+        let selectedVids =  toJS(sentenceObj.selectedVids || []);
+        let isBothEmpty = selectedImgs.length === 0 && selectedVids.length === 0;
         return (
-          <div key={index} className="mb-4">
-            <div
+          <details key={index} className="mb-4">
+            <summary
               className="cursor-pointer text-xl font-semibold"
               onClick={() => setSelectedSentence(sentenceObj)}
             >
               {sentence}
-            </div>
-            {selectedSentence === sentenceObj && (
-              <div className="mt-4">
-                <ImageSelection
-                  q={selectedSentence.line}
-                  sentenceObj={selectedSentence}
-                  onImageSelect={(image, sentence, sentenceObj) => {
-                    // ... (rest of the code remains the same)
-                  }}
-                />
-                <VideoSelection
-                  q={selectedSentence.line}
-                  sentenceObj={selectedSentence}
-                  onVideoSelect={(video, sentence, sentenceObj) => {
-                    // ... (rest of the code remains the same)
-                  }}
-                />
-              </div>
+            </summary>
+            {!isBothEmpty && (
+                <>
+                        {(<h2 className="text-2xl font-semibold mb-4">
+                            Selected Images and Videos
+                        </h2>)}
+                        <div
+                            className="grid grid-cols-3 gap-4 mb-8"
+                            key={`${selectedImgs.length}_${selectedVids.length}`}
+                        >
+                            {Object.values(selectedImgs).map((image, index) => (
+                                <img
+                                    key={index}
+                                    src={image.src}
+                                    alt="Selected"
+                                    className="w-full h-32 object-cover"
+                                />
+                            ))}
+                            {Object.values(selectedVids).map((video, index) => {
+                                    return (
+                                    <img
+                                        key={index}
+                                        src={video.src}
+                                        controls
+                                        className="w-full h-32 object-cover"
+                                    />
+                                    );
+                            })}
+                        </div>
+                </>
             )}
-          </div>
+          </details>
         );
       })}
       {selectedSentence && (

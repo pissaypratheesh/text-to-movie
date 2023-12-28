@@ -119,7 +119,11 @@ function VideoSelection({ q, onVideoSelect, sentenceObj }) {
 
   const galleryItems = createGalleryItems(videos, handleVideoSelect);                                                                                                                                                
 
-  const CustomThumbnail = useCallback(({ item }) => {                                                                                                                                                          
+  const CustomThumbnail = useCallback(({ item }) => {    
+    
+    const checkExistence = (item) => {
+      return _.find(selectedVideos, (obj) => obj.videoId === item.videoId);
+    }
                                                                                                                                                                                                                       
     const handleCheckClick = (e) => {                                                                                                                                                                                  
       e.stopPropagation();                                                                                                                                                                                               
@@ -133,7 +137,7 @@ function VideoSelection({ q, onVideoSelect, sentenceObj }) {
 
     return (                                                                                                                                                                                                         
       <div>                                                                                                                                                                                                          
-        <img src={item.thumbnail} alt={item.videoId} style={selectedVideos.includes(item.videoId) ? { border: '3px solid red' } : {}} />                                                                                                                                                              
+        <img src={item.thumbnail} alt={item.videoId} style={checkExistence(item) ? { border: '3px solid red' } : {}} />                                                                                                                                                              
         <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px' }}>                                                                                                                                 
           <button                                                                                                                                                                                                    
             onClick={handleCheckClick}                                                                                                                                                                              
