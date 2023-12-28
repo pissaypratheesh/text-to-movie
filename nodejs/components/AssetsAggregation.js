@@ -21,26 +21,12 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       urlParams.get("query") ||
       urlParams.get("prompt") ||
       urlParams.get("p");
-    console.log(
-      "🚀 ~ file: index.js:112 ~ useEffect ~ urlQuery:",
-      urlQuery,
-      window.location.search,
-      urlParams
-    );
     setQuery(urlQuery);
   }, []);
 
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedSentence, setSelectedSentence] = useState(null);
   const [selectedVideos, setSelectedVideos] = useState({});
-  console.log(
-    "🚀 ~ file: index.js:22 ~ HomePage ~ selectedImages:",
-    selectedImages,
-    selectedVideos,
-    `${selectedImages.length}_${Object.values(selectedVideos)
-      .map((videos) => videos.length)
-      .join(",")}`
-  );
 
   if (!sentences.length) {
     return <div> add query</div>;
@@ -128,26 +114,11 @@ const AssetsAggregation = observer(function AssetsAggregation() {
             q={selectedSentence.line}
             sentenceObj={selectedSentence}
             onVideoSelect={(video, sentence, sentenceObj) => {
-                console.log("🚀 ~ file: AssetsAggregation.js:127 ~ AssetsAggregation ~ video, sentence, sentenceObj:", video, sentence, sentenceObj)
                 let newSentences = [...store.sentences];
                 //let newVidArr = newSentences[sentenceObj.index]['selectedVids'] || [];
                 newSentences[sentenceObj.index]['selectedVids'] = video;
                 store.updateSentences(newSentences)
-                  //selectAll or deselct all   
-               /*  if (Array.isArray(video)) {
-                    setSelectedVideos((prevSelectedVideosOrig) => {
-                    let prevSelectedVideos = { ...prevSelectedVideosOrig };
-                    console.log(
-                        "🚀 ~ file: index.js:89 ~ setSelectedVideos ~ prevSelectedVideos:",
-                        prevSelectedVideos
-                    );
-                    prevSelectedVideos[sentence] = video;
-                    return prevSelectedVideos;
-                    });
-                } else {
-                    setSelectedVideos([...selectedVideos, video]);
-                } */
-                }}
+            }}
           />
         </div>
       )}
