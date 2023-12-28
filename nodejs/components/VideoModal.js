@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import YouTube from 'react-youtube';
 import { useRef } from 'react';
 //import { FixedSizeList as List } from 'react-window'; 
@@ -32,7 +32,10 @@ function VideoModal({ showModal, handleClose, selectedVideo }) {
     const item = transcript[index];                                                                                                                                                                                                               
     return (                                                                                                                                                                                                                                      
       <button                                                                                                                                                                                                                                     
-        onClick={() => player.current.seekTo(item.start)}                                                                                                                                                                                         
+        onClick={() => {
+          setSeekTime(item.start);
+          player.current.seekTo(item.start);
+        }}
         className="w-full text-left p-2 hover:bg-gray-200"                                                                                                                                                                                        
         style={style}                                                                                                                                                                                                                             
       >                                                                                                                                                                                                                                           
@@ -41,7 +44,8 @@ function VideoModal({ showModal, handleClose, selectedVideo }) {
     );                                                                                                                                                                                                                                            
   };                                                                                                                                                                                                                                              
                                                                                                                                                                                                                                                   
-  const player = useRef(null);       
+  const player = useRef(null);
+  const [seekTime, setSeekTime] = useState(0);
   return (
       <div className="fixed mt-8 z-50 inset-0 overflow-y-auto">
         <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -78,7 +82,7 @@ function VideoModal({ showModal, handleClose, selectedVideo }) {
                               height: '390',
                               width: '640',
                               autoplay: 1,
-                              start: 3
+                              start: seekTime
                             }, } }
                           className="mx-auto"/>
                                                                                                                                                                                                                                                                            
