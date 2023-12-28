@@ -6,6 +6,12 @@ enableStaticRendering(typeof window === 'undefined')
 export class Store {
   lastUpdate = 0
   light = false
+  sentences = [
+    "Sun sets, warm city glow.",
+    "Forest walk, birds chirp.",
+    "Quiet library, books imagination.",
+    "Freshly baked bread aroma.",
+  ]
 
   constructor() {
     makeObservable(this, {
@@ -18,12 +24,7 @@ export class Store {
     })
   }
 
-  sentences = [
-    "Sun sets, warm city glow.",
-    "Forest walk, birds chirp.",
-    "Quiet library, books imagination.",
-    "Freshly baked bread aroma.",
-  ]
+
 
   start = () => {
     this.timer = setInterval(() => {
