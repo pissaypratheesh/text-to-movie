@@ -31,7 +31,16 @@ function VideoModal({ showModal, handleClose, selectedVideo }) {
                   <div className="mt-2">
                     <div className="mt-2">
                       {selectedVideo && (
-                        <YouTube videoId={selectedVideo.split('/').pop()} className="mx-auto"/>
+                        <YouTube 
+                          videoId={selectedVideo.split('/').pop()}
+                          opts = { { playerVars: {
+                            // https://developers.google.com/youtube/player_parameters
+                            height: '490',
+                            width: '840',
+                            autoplay: 1,
+                            start: 3
+                          }, } }
+                         className="mx-auto"/>
                       )}
                     </div>
                   </div>
