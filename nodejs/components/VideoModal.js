@@ -44,7 +44,7 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
   }, [searchKeyword, transcript]);
 
   const validateTimingsText = () => {
-    const regex = /^\[\s*('\d+-\d+'\s*,\s*)*'\d+-\d+'\s*\]$/;
+    const regex = /^\[\s*('\d+-\d+'\s*,\s*)*'\d+-\d+'\s*\]$/g;
     if (!regex.test(timingsText)) {
       setErrorMessage("Invalid format. Please enter timings like ['1-3', '4-5']");
     } else {
@@ -124,10 +124,10 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
                           className="mx-auto"
                         />
 
-                        <div className="flex flex-col items-center mt-2">
+                        <div className="flex items-center mt-2">
                           <input
                             type="text"
-                            className="w-full p-2 border border-gray-300 rounded"
+                            className="flex-grow p-2 border border-gray-300 rounded"
                             placeholder="Enter selected timings like ['1-3','4-5'].."
                             value={timingsText}
                             onChange={(e) => setTimingsText(e.target.value)}
