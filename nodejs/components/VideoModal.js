@@ -1,9 +1,48 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import YouTube from 'react-youtube';
-
-function VideoModal({ showModal, handleClose, selectedVideo, transcript }) {
+import { useRef } from 'react';
+//import { FixedSizeList as List } from 'react-window'; 
+import { FixedSizeList as List } from 'react-window';
+function VideoModal({ showModal, handleClose, selectedVideo }) {
+  let transcript = [
+    {
+        "text": "chat GPT maybe you've heard of it if you",
+        "start": 0.799,
+        "duration": 5.881
+    },
+    {
+        "text": "haven't then get ready the tech",
+        "start": 4.24,
+        "duration": 4.12
+    },
+    {
+        "text": "billionaire Elon Musk has said",
+        "start": 6.68,
+        "duration": 4.12
+    },
+    {
+        "text": "artificial intelligence will one day",
+        "start": 8.36,
+        "duration": 5.239
+    }]
+  if(!showModal){
+    return <></>
+  }
+  const Row = ({ index, style }) => {                                                                                                                                                                                                             
+    const item = transcript[index];                                                                                                                                                                                                               
+    return (                                                                                                                                                                                                                                      
+      <button                                                                                                                                                                                                                                     
+        onClick={() => player.current.seekTo(item.start)}                                                                                                                                                                                         
+        className="w-full text-left p-2 hover:bg-gray-200"                                                                                                                                                                                        
+        style={style}                                                                                                                                                                                                                             
+      >                                                                                                                                                                                                                                           
+        {item.text}                                                                                                                                                                                                                               
+      </button>                                                                                                                                                                                                                                   
+    );                                                                                                                                                                                                                                            
+  };                                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                  
+  const player = useRef(null);       
   return (
-    showModal ? (
       <div className="fixed mt-8 z-50 inset-0 overflow-y-auto">
         <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <div
@@ -29,49 +68,31 @@ function VideoModal({ showModal, handleClose, selectedVideo, transcript }) {
                     Video Player
                   </h3>
                   <div className="mt-2">
-const Row = ({ index, style }) => {
-  const item = transcript[index];
-  return (
-    <button
-      onClick={() => player.current.seekTo(item.start)}
-      className="w-full text-left p-2 hover:bg-gray-200"
-      style={style}
-    >
-      {item.text}
-    </button>
-  );
-};
-
-const player = useRef(null);
-
-return (
-  selectedVideo && (
-    <YouTube
-      ref={player}
-      videoId={selectedVideo.split('/').pop()}
-      opts={{
-        playerVars: {
-          // https://developers.google.com/youtube/player_parameters
-          height: '490',
-          width: '840',
-          autoplay: 1,
-          start: 3,
-        },
-      }}
-      className="mx-auto"
-    />
-  )
-);
-
-<List
-  height={150}
-  itemCount={transcript.length}
-  itemSize={35}
-  width="100%"
-  className="mt-4 overflow-y-auto"
->
-  {Row}
-</List>
+                    <div className="mt-2">
+                      {selectedVideo && (
+                        <>
+                          <YouTube 
+                            videoId={selectedVideo.split('/').pop()}
+                            opts = { { playerVars: {
+                              // https://developers.google.com/youtube/player_parameters
+                              height: '390',
+                              width: '640',
+                              autoplay: 1,
+                              start: 3
+                            }, } }
+                          className="mx-auto"/>
+                                                                                                                                                                                                                                                                           
+                          <List                                                                                                                                                                                                                                           
+                            height={150}                                                                                                                                                                                                                                  
+                            itemCount={transcript.length}                                                                                                                                                                                                                 
+                            itemSize={35}                                                                                                                                                                                                                                 
+                            width="100%"                                                                                                                                                                                                                                  
+                            className="mt-4 overflow-y-auto"                                                                                                                                                                                                              
+                          >                                                                                                                                                                                                                                               
+                            {Row}                                                                                                                                                                                                                                         
+                          </List> 
+                         </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -90,8 +111,7 @@ return (
           </div>
         </div>
       </div>
-    ) : null
-  );
+    );
 }
 
 export default VideoModal;
