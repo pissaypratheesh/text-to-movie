@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import YouTube from 'react-youtube';
 import { useRef } from 'react';
 //import { FixedSizeList as List } from 'react-window'; 
@@ -10,11 +10,19 @@ function VideoModal({ showModal, handleClose, selectedVideo }) {
   }                                                                                                                                                                                                                                       
   const playerRef = useRef(null);
   const [seekTime, setSeekTime] = useState(0);
+  const [searchKeyword, setSearchKeyword] = useState('');
   const onReady = (event) => {
     // access to player in all event handlers via event.target
     playerRef.current = event.target;
     event.target.playVideo();
   };
+  const filteredTranscript = useMemo(() => {
+    if (!searchKeyword) {
+      return transcript;
+    }
+    return transcript.filter(item => item.text.toLowerCase().includes(searchKeyword.toLowerCase()));
+  }, [searchKeyword, transcript]);
+
   const changeTime = (seconds) => {
     playerRef.current.seekTo(seconds);
     playerRef.current.playVideo();
@@ -77,15 +85,22 @@ function VideoModal({ showModal, handleClose, selectedVideo }) {
                             }, } }
                           className="mx-auto"/>
                                                                                                                                                                                                                                                                            
-                          <List                                                                                                                                                                                                                                           
-                            height={150}                                                                                                                                                                                                                                  
-                            itemCount={transcript.length}                                                                                                                                                                                                                 
-                            itemSize={35}                                                                                                                                                                                                                                 
-                            width="100%"                                                                                                                                                                                                                                  
-                            className="mt-4 overflow-y-auto"                                                                                                                                                                                                              
-                          >                                                                                                                                                                                                                                               
-                            {Row}                                                                                                                                                                                                                                         
-                          </List> 
+                          <input
+                            type="text"
+                            className="w-full p-2 border border-gray-300 rounded mt-4"
+                            placeholder="Search transcript..."
+                            value={searchKeyword}
+                            onChange={(e) => setSearchKeyword(e.target.value)}
+                          />
+                          <List
+                            height={150}
+                            itemCount={filteredTranscript.length}
+                            itemSize={35}
+                            width="100%"
+                            className="mt-4 overflow-y-auto"
+                          >
+                            {Row}
+                          </List>
                          </>
                       )}
                     </div>
