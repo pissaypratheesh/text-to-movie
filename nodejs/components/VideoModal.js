@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import { FixedSizeList as List } from 'react-window';
 import YouTube from 'react-youtube';
 
 function VideoModal({ showModal, handleClose, selectedVideo, transcript }) {
@@ -30,49 +29,6 @@ function VideoModal({ showModal, handleClose, selectedVideo, transcript }) {
                     Video Player
                   </h3>
                   <div className="mt-2">
-const Row = ({ index, style }) => {
-  const item = transcript[index];
-  return (
-    <button
-      onClick={() => player.current.seekTo(item.start)}
-      className="w-full text-left p-2 hover:bg-gray-200"
-      style={style}
-    >
-      {item.text}
-    </button>
-  );
-};
-
-const player = useRef(null);
-
-return (
-  selectedVideo && (
-    <YouTube
-      ref={player}
-      videoId={selectedVideo.split('/').pop()}
-      opts={{
-        playerVars: {
-          // https://developers.google.com/youtube/player_parameters
-          height: '490',
-          width: '840',
-          autoplay: 1,
-          start: 3,
-        },
-      }}
-      className="mx-auto"
-    />
-  )
-);
-
-<List
-  height={150}
-  itemCount={transcript.length}
-  itemSize={35}
-  width="100%"
-  className="mt-4 overflow-y-auto"
->
-  {Row}
-</List>
 const Row = ({ index, style }) => {
   const item = transcript[index];
   return (
