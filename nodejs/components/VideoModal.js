@@ -44,24 +44,14 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
   }, [searchKeyword, transcript]);
 
   const validateTimingsText = () => {
-    try {
-      const parsedTimings = JSON.parse(timingsText);
-      console.log("🚀 ~ file: VideoModal.js:49 ~ validateTimingsText ~ timingsText:", parsedTimings,parsedTimings.every(
+    if (
+      Array.isArray(timingsText) &&
+      timingsText.every(
         (timing) => typeof timing === "string" && /^\d+-\d+$/.test(timing)
-      ))
-      if (
-        Array.isArray(parsedTimings) &&
-        parsedTimings.every(
-          (timing) => typeof timing === "string" && /^\d+-\d+$/.test(timing)
-        )
-      ) {
-        setErrorMessage("");
-      } else {
-        console.log("\n\n errror again")
-        setErrorMessage("Invalid format. Please enter timings like ['1-3', '4-5']");
-      }
-    } catch (error) {
-      console.log("🚀 ~ file: VideoModal.js:60 ~ validateTimingsText ~ error:", error)
+      )
+    ) {
+      setErrorMessage("");
+    } else {
       setErrorMessage("Invalid format. Please enter timings like ['1-3', '4-5']");
     }
   };
