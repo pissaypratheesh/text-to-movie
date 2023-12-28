@@ -110,7 +110,7 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
                           className="mx-auto"
                         />
 
-                        <div className="flex items-center">
+                        <div className="flex items-center mt-2">
                           <input
                             type="text"
                             className="w-full p-2 border border-gray-300 rounded"
