@@ -81,14 +81,32 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       {sentences.map((sentenceObj, index) => {
         let { line: sentence } = sentenceObj;
         return (
-          <details key={index} className="mb-4">
-            <summary
+          <div key={index} className="mb-4">
+            <div
               className="cursor-pointer text-xl font-semibold"
               onClick={() => setSelectedSentence(sentenceObj)}
             >
               {sentence}
-            </summary>
-          </details>
+            </div>
+            {selectedSentence === sentenceObj && (
+              <div className="mt-4">
+                <ImageSelection
+                  q={selectedSentence.line}
+                  sentenceObj={selectedSentence}
+                  onImageSelect={(image, sentence, sentenceObj) => {
+                    // ... (rest of the code remains the same)
+                  }}
+                />
+                <VideoSelection
+                  q={selectedSentence.line}
+                  sentenceObj={selectedSentence}
+                  onVideoSelect={(video, sentence, sentenceObj) => {
+                    // ... (rest of the code remains the same)
+                  }}
+                />
+              </div>
+            )}
+          </div>
         );
       })}
       {selectedSentence && (
