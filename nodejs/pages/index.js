@@ -20,8 +20,8 @@ function HomePage() {
   },[])
   
   const [selectedImages, setSelectedImages] = useState([]);
-  const [selectedVideos, setSelectedVideos] = useState([]);
-  console.log("🚀 ~ file: index.js:22 ~ HomePage ~ selectedImages:", selectedImages,selectedVideos)
+  const [selectedVideos, setSelectedVideos] = useState({});
+  console.log("🚀 ~ file: index.js:22 ~ HomePage ~ selectedImages:", selectedImages,selectedVideos,`${selectedImages.length}_${Object.values(selectedVideos).map((videos) => videos.length).join(",")}`)
 
 
   if (!sentences.length) {
@@ -31,13 +31,17 @@ function HomePage() {
   return (
     <div className="m-4">
       <h2 className="text-2xl font-semibold mb-4">Selected Images and Videos</h2>
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-3 gap-4 mb-8" key={`${selectedImages.length}_${Object.values(selectedVideos).map((videos) => videos.length).join(",")}`}>
         {Object.values(selectedImages).map((image, index) => (
           <img key={index} src={image.src} alt="Selected" className="w-full h-32 object-cover" />
         ))}
-        {Object.values(selectedVideos).map((video, index) => (
-          <video key={index} src={video} controls className="w-full h-32 object-cover" />
-        ))}
+        {Object.values(selectedVideos).map((videos, index) => {
+          return Object.values(videos).map((video,i ) => {
+            return (
+              <img key={index} src={video.src} controls className="w-full h-32 object-cover" />
+            )
+          })
+        })}
       </div>
       {sentences.map((sentence, index) => (
         <details key={index} className="mb-4">
@@ -84,27 +88,16 @@ function HomePage() {
               q={sentence}
               selectedVideo={selectedVideos[index]}
               onVideoSelect={(video, sentence) => {
-                if (Array.isArray(video)) {
-                  if(!image.length) {
-                    setSelectedImages((prevSelectedImages) => {
-                      const newSelectedImages = _.compact(prevSelectedImages.map((img) => {
-                        return img.q != sentence ? img : null
-                      }));
-                      return newSelectedImages;
-                    });
-                    return;
-                  }
-
-                  setSelectedVideos((prevSelectedVideos) => {
-                    const newSelectedVideos = [ ...prevSelectedVideos ];
-                    video.forEach((vid) => {
-                      newSelectedVideos[(newSelectedVideos).length] = vid;
-                    });
-                    return newSelectedVideos;
+                if (Array.isArray(video)) {                                                                                                                                                                          
+                  setSelectedVideos((prevSelectedVideosOrig) => { 
+                    let prevSelectedVideos = {...prevSelectedVideosOrig}
+                    console.log("🚀 ~ file: index.js:89 ~ setSelectedVideos ~ prevSelectedVideos:", prevSelectedVideos)
+                    prevSelectedVideos[sentence] = video;
+                    return prevSelectedVideos;
                   });
-                } else {
-                  setSelectedVideos([ ...selectedVideos,  video ]);
-                }
+                } else {                                                                                                                                                                                             
+                  setSelectedVideos([...selectedVideos, video]);                                                                                                                                                     
+                }     
               }}
             />
           </div>
