@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import useStore from '../store';
 import ImageSelection from '../components/ImageSelection';
 import VideoSelection from '../components/VideoSelection';
 var _ = require('underscore')
@@ -28,9 +29,20 @@ function HomePage() {
     return <div> add query</div>
   }
 
+  const { count, increment, decrement } = useStore();
+
   return (
     <div className="m-4">
       <h2 className="text-2xl font-semibold mb-4">Selected Images and Videos</h2>
+      <div className="mb-4">
+        <h3>Count: {count}</h3>
+        <button onClick={increment} className="mr-2 bg-blue-500 text-white px-4 py-2 rounded">
+          Increment
+        </button>
+        <button onClick={decrement} className="bg-red-500 text-white px-4 py-2 rounded">
+          Decrement
+        </button>
+      </div>
       <div className="grid grid-cols-3 gap-4 mb-8" key={`${selectedImages.length}_${Object.values(selectedVideos).map((videos) => videos.length).join(",")}`}>
         {Object.values(selectedImages).map((image, index) => (
           <img key={index} src={image.src} alt="Selected" className="w-full h-32 object-cover" />
