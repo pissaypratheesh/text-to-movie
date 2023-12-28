@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import axios from 'axios';
 import { useStore } from 'mobx-react-lite';
 import AssetsAggregation from '../components/AssetsAggregation';
 import { useStore } from '../components/StoreProvider'
@@ -10,8 +11,8 @@ function HomePage() {
   useEffect(() => {
     async function fetchSentences() {
       try {
-        const response = await fetch('/api/sentences');
-        const data = await response.json();
+        const response = await axios.get('/api/sentences');
+        const data = response.data;
         store.updateSentences(data.sentences);
       } catch (error) {
         console.error('Error fetching sentences:', error);
