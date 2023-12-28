@@ -4,48 +4,39 @@ import { useRef } from 'react';
 //import { FixedSizeList as List } from 'react-window'; 
 import { FixedSizeList as List } from 'react-window';
 function VideoModal({ showModal, handleClose, selectedVideo }) {
-  let transcript = [
-    {
-        "text": "chat GPT maybe you've heard of it if you",
-        "start": 0.799,
-        "duration": 5.881
-    },
-    {
-        "text": "haven't then get ready the tech",
-        "start": 4.24,
-        "duration": 4.12
-    },
-    {
-        "text": "billionaire Elon Musk has said",
-        "start": 6.68,
-        "duration": 4.12
-    },
-    {
-        "text": "artificial intelligence will one day",
-        "start": 8.36,
-        "duration": 5.239
-    }]
+  let transcript = [{"text":"chat GPT maybe you've heard of it if you","start":0.799,"duration":5.881},{"text":"haven't then get ready the tech","start":4.24,"duration":4.12},{"text":"billionaire Elon Musk has said","start":6.68,"duration":4.12},]  
   if(!showModal){
     return <></>
-  }
+  }                                                                                                                                                                                                                                       
+  const playerRef = useRef(null);
+  const [seekTime, setSeekTime] = useState(0);
+  const onReady = (event) => {
+    // access to player in all event handlers via event.target
+    playerRef.current = event.target;
+    event.target.playVideo();
+  };
+  const changeTime = (seconds) => {
+    playerRef.current.seekTo(seconds);
+    playerRef.current.playVideo();
+  };
+
   const Row = ({ index, style }) => {                                                                                                                                                                                                             
     const item = transcript[index];                                                                                                                                                                                                               
     return (                                                                                                                                                                                                                                      
       <button                                                                                                                                                                                                                                     
         onClick={() => {
-          setSeekTime(item.start);
-          player.current.seekTo(item.start);
+          // setSeekTime(item.start);
+          // player.current.seekTo(item.start);
+          changeTime(item.start)
         }}
         className="w-full text-left p-2 hover:bg-gray-200"                                                                                                                                                                                        
         style={style}                                                                                                                                                                                                                             
       >                                                                                                                                                                                                                                           
-        {item.text}                                                                                                                                                                                                                               
+        {`${item.start}: ${item.text}`}                                                                                                                                                                                                                               
       </button>                                                                                                                                                                                                                                   
     );                                                                                                                                                                                                                                            
   };                                                                                                                                                                                                                                              
-                                                                                                                                                                                                                                                  
-  const player = useRef(null);
-  const [seekTime, setSeekTime] = useState(0);
+           
   return (
       <div className="fixed mt-8 z-50 inset-0 overflow-y-auto">
         <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -77,12 +68,12 @@ function VideoModal({ showModal, handleClose, selectedVideo }) {
                         <>
                           <YouTube 
                             videoId={selectedVideo.split('/').pop()}
+                            onReady={onReady} 
                             opts = { { playerVars: {
                               // https://developers.google.com/youtube/player_parameters
                               height: '390',
                               width: '640',
-                              autoplay: 1,
-                              start: seekTime
+                              autoplay: 1
                             }, } }
                           className="mx-auto"/>
                                                                                                                                                                                                                                                                            
