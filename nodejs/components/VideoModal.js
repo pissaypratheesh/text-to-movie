@@ -46,6 +46,9 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
   const validateTimingsText = () => {
     try {
       const parsedTimings = JSON.parse(timingsText);
+      console.log("🚀 ~ file: VideoModal.js:49 ~ validateTimingsText ~ timingsText:", parsedTimings,parsedTimings.every(
+        (timing) => typeof timing === "string" && /^\d+-\d+$/.test(timing)
+      ))
       if (
         Array.isArray(parsedTimings) &&
         parsedTimings.every(
@@ -54,9 +57,11 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
       ) {
         setErrorMessage("");
       } else {
+        console.log("\n\n errror again")
         setErrorMessage("Invalid format. Please enter timings like ['1-3', '4-5']");
       }
     } catch (error) {
+      console.log("🚀 ~ file: VideoModal.js:60 ~ validateTimingsText ~ error:", error)
       setErrorMessage("Invalid format. Please enter timings like ['1-3', '4-5']");
     }
   };
@@ -96,9 +101,7 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
           onClick={handleClose}
         >
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-        {errorMessage && (
-          <p className="text-red-600 mt-2">{errorMessage}</p>
-        )}
+          
         </div>
         <div
           className="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:w-3/4 sm:h-3/4 m-auto"
@@ -149,6 +152,9 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
                             Submit
                           </button>
                         </div>
+                        {errorMessage && (
+                          <p className="text-red-600 mt-2">{errorMessage}</p>
+                        )}
                         <input
                           type="text"
                           className="w-full p-2 border border-gray-300 rounded mt-4"
