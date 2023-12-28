@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { Provider } from 'mobx-react';
+import { observable } from 'mobx';
 import ImageSelection from '../components/ImageSelection';
 import VideoSelection from '../components/VideoSelection';
 var _ = require('underscore')
-const sentences = [
-  "Sun sets, warm city glow.",
-  "Forest walk, birds chirp.",
-  "Quiet library, books imagination.",
-  "Freshly baked bread aroma."
-];//query.split('.').filter(sentence => sentence.trim().length > 0);
+const store = observable({
+  sentences: [
+    "Sun sets, warm city glow.",
+    "Forest walk, birds chirp.",
+    "Quiet library, books imagination.",
+    "Freshly baked bread aroma."
+  ]//query.split('.').filter(sentence => sentence.trim().length > 0);
+});
 
 function HomePage() {
   const [query, setQuery] = useState('');
@@ -24,7 +28,7 @@ function HomePage() {
   console.log("🚀 ~ file: index.js:22 ~ HomePage ~ selectedImages:", selectedImages,selectedVideos,`${selectedImages.length}_${Object.values(selectedVideos).map((videos) => videos.length).join(",")}`)
 
 
-  if (!sentences.length) {
+  if (!store.sentences.length) {
     return <div> add query</div>
   }
 
@@ -43,7 +47,7 @@ function HomePage() {
           })
         })}
       </div>
-      {sentences.map((sentence, index) => (
+      {store.sentences.map((sentence, index) => (
         <details key={index} className="mb-4">
           <summary className="cursor-pointer text-xl font-semibold">{sentence}</summary>
           <div className="mt-4">
@@ -107,5 +111,9 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default () => (
+  <Provider store={store}>
+    <HomePage />
+  </Provider>
+);
 //
