@@ -4,7 +4,7 @@ import { Gallery } from "react-grid-gallery";
 import Lightbox from 'react-18-image-lightbox';
 
                                                                                                                                                                                                                      
-function ImageSelection({ q, onImageSelect }) {                                                                                                                                                                                          
+function ImageSelection({ q, sentenceObj, onImageSelect }) {                                                                                                                                                                                          
   const [images, setImages] = useState([]);                                                                                                                                                                                                               
   const [query, setQuery] = useState(q || '');     
   const [index, setIndex] = useState(-1);                                                                                                                                                                  
@@ -97,9 +97,8 @@ function ImageSelection({ q, onImageSelect }) {
     const selectedImages = nextImages.filter((image) => image.isSelected).map((image) => {return {...image, q}});
     console.log("🚀 ~ file: ImageSelection.js:111 ~ handleSelectAllClick ~ selectedImages:", selectedImages)
     if (onImageSelect) {
-      onImageSelect({ ...item, isSelected: !item.isSelected  , q}, q);
+      onImageSelect({ ...item, isSelected: !item.isSelected  , q}, q,sentenceObj);
     }  
-                                                                                                                                                                                        
   };                                                                                                                                                                                                                 
                                                                                                                                                                                                                      
   const handleSelectAllClick = () => {                                                                                                                                                                               
@@ -112,7 +111,7 @@ function ImageSelection({ q, onImageSelect }) {
     const selectedImages = nextImages.filter((image) => image.isSelected).map((image) => {return {...image, q}});
     console.log("🚀 ~ file: ImageSelection.js:111 ~ handleSelectAllClick ~ selectedImages:", selectedImages)
     if (onImageSelect) {
-      onImageSelect(selectedImages.length > 0 ? selectedImages : [], q);
+      onImageSelect(selectedImages.length > 0 ? selectedImages : [], q, sentenceObj);
     }
   };                                                                                                                                                                                                                 
                                                                                                                                                                                                                      

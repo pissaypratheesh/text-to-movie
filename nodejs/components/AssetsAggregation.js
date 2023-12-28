@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ImageSelection from "./ImageSelection";
 import VideoSelection from "./VideoSelection";
 import { useStore } from "./StoreProvider";
+import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 
 var _ = require("underscore");
@@ -82,82 +83,65 @@ const AssetsAggregation = observer(function AssetsAggregation() {
           <details key={index} className="mb-4">
             <summary
               className="cursor-pointer text-xl font-semibold"
-              onClick={() => setSelectedSentence(sentence)}
+              onClick={() => setSelectedSentence(sentenceObj)}
             >
               {sentence}
             </summary>
           </details>
         );
       })}
-      )}
       {selectedSentence && (
-        <div className="mt-4">
+        <div className="mt-4" key={selectedSentence.index}>
           <ImageSelection
-            q={selectedSentence}
-            selectedImage={selectedImages.find(
-              (img) => img.q === selectedSentence
-            )}
-            onImageSelect={(image, sentence) => {
+            q={selectedSentence.line}
+            sentenceObj={selectedSentence}
+            onImageSelect={(image, sentence, sentenceObj) => {
+              let newSentences = [...store.sentences];
+              let newImageArr = newSentences[sentenceObj.index]['selectedImgs'] || [];
+      
+              //selectAll or deselct all    
               if (Array.isArray(image)) {
                 if (!image.length) {
-                  setSelectedImages((prevSelectedImages) => {
-                    const newSelectedImages = _.compact(
-                      prevSelectedImages.map((img) => {
-                        return img.q != sentence ? img : null;
-                      })
-                    );
-                    return newSelectedImages;
-                  });
-                  return;
+                  newImageArr = [];
+                }else{
+                    newImageArr = image;
                 }
-
-                setSelectedImages((prevSelectedImages) => {
-                  const newSelectedImages = [...prevSelectedImages];
-                  image.forEach((img) => {
-                    newSelectedImages[newSelectedImages.length] = img;
-                  });
-                  return newSelectedImages;
-                });
               } else {
-                console.log(
-                  "🚀 ~ file: index.js:70 ~ HomePage ~ image:",
-                  image
-                );
+                // select/deselect single
                 if (image.isSelected) {
-                  setSelectedImages([...selectedImages, image]);
+                    newImageArr[newImageArr.length] = image;
                 } else {
-                  setSelectedImages((prevSelectedImages) => {
-                    const newSelectedImages = _.compact(
-                      prevSelectedImages.map((img) => {
-                        return img.q == sentence && img.src == image.src
-                          ? null
-                          : img;
-                      })
-                    );
-                    return newSelectedImages;
-                  });
+                    newImageArr = newImageArr.filter(img => img.src != image.src)
                 }
               }
+              //Update store
+              newSentences[sentenceObj.index]['selectedImgs'] = newImageArr;
+              store.updateSentences(newSentences)
             }}
           />
           <VideoSelection
-            q={selectedSentence}
-            selectedVideo={selectedVideos[selectedSentence]}
-            onVideoSelect={(video, sentence) => {
-              if (Array.isArray(video)) {
-                setSelectedVideos((prevSelectedVideosOrig) => {
-                  let prevSelectedVideos = { ...prevSelectedVideosOrig };
-                  console.log(
-                    "🚀 ~ file: index.js:89 ~ setSelectedVideos ~ prevSelectedVideos:",
-                    prevSelectedVideos
-                  );
-                  prevSelectedVideos[sentence] = video;
-                  return prevSelectedVideos;
-                });
-              } else {
-                setSelectedVideos([...selectedVideos, video]);
-              }
-            }}
+            q={selectedSentence.line}
+            sentenceObj={selectedSentence}
+            onVideoSelect={(video, sentence, sentenceObj) => {
+                let newSentences = [...store.sentences];
+                //let newVidArr = newSentences[sentenceObj.index]['selectedVids'] || [];
+                newSentences[sentenceObj.index]['selectedVids'] = video;
+                store.updateSentences(newSentences)
+                  //selectAll or deselct all   
+               /*  if (Array.isArray(video)) {
+                    setSelectedVideos((prevSelectedVideosOrig) => {
+                    let prevSelectedVideos = { ...prevSelectedVideosOrig };
+                    console.log(
+                        "🚀 ~ file: index.js:89 ~ setSelectedVideos ~ prevSelectedVideos:",
+                        prevSelectedVideos
+                    );
+                    prevSelectedVideos[sentence] = video;
+                    return prevSelectedVideos;
+                    });
+                } else {
+                    setSelectedVideos([...selectedVideos, video]);
+                } */
+                }}
           />
         </div>
       )}

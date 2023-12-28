@@ -3,6 +3,8 @@ import {Gallery} from 'react-grid-gallery';
 import YouTube from 'react-youtube';   
 import VideoModal from './VideoModal';  
 import Modal from 'react-modal';    
+var _ = require("underscore");
+_.mixin(require('../mixins'))
 
 function createGalleryItems(videos, onSelect) {                                                                                                                                                                      
   return videos.map((videoUrl, index) => {                                                                                                                                                                           
@@ -43,9 +45,9 @@ const customStyles = {
     },
   };
  */
-function VideoSelection({ q, onVideoSelect }) {                                   
+function VideoSelection({ q, onVideoSelect, sentenceObj }) {                                   
   const [selectedVideo, setSelectedVideo] = useState(null);                                                                                                                                                            
-  const [selectedVideos, setSelectedVideos] = useState([]);                                                                                                                                                          
+  const [selectedVideos, setSelectedVideos] = useState(_.at(sentenceObj,'selectedVids') || []);                                                                                                                                                          
   const [showModal, setShowModal] = useState(false);                                                                                                                                                                 
   const [videos, setVideos] = useState([]);                                                                                                                                                                          
   const [query, setQuery] = useState(q);                                                                                                                                                                            
@@ -83,7 +85,7 @@ function VideoSelection({ q, onVideoSelect }) {
     }
   
     setSelectedVideos(nextVideos);
-    onVideoSelect(nextVideos, q);
+    onVideoSelect(nextVideos, q,sentenceObj);
   };
 /*   const handleVideoSelect = (video) => {       
     let alreadyExisted = false;
@@ -165,7 +167,7 @@ function VideoSelection({ q, onVideoSelect }) {
     console.log("Selected video IDs:", selectedVideos);                                                                                                                                                                
     // Make a call with the selected video IDs   
     if (onVideoSelect) {                                                                                                                                                                                               
-      onVideoSelect(selectedVideos.length > 0 ? selectedVideos : []);                                                                                                                                                                                    
+      onVideoSelect(selectedVideos.length > 0 ? selectedVideos : [], q, sentenceObj);                                                                                                                                                                                    
     }        
                                                                                                                                                                    
   };                                                                                                                                                                                                                   
