@@ -29,6 +29,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   }, []);
 
   const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedSentence, setSelectedSentence] = useState(null);
   const [selectedVideos, setSelectedVideos] = useState({});
   console.log(
     "🚀 ~ file: index.js:22 ~ HomePage ~ selectedImages:",
@@ -79,7 +80,10 @@ const AssetsAggregation = observer(function AssetsAggregation() {
         let { line: sentence } = sentenceObj;
         return (
           <details key={index} className="mb-4">
-            <summary className="cursor-pointer text-xl font-semibold">
+            <summary
+              className="cursor-pointer text-xl font-semibold"
+              onClick={() => setSelectedSentence(sentence)}
+            >
               {sentence}
             </summary>
             <div className="mt-4">
