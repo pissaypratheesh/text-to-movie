@@ -44,11 +44,20 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
   }, [searchKeyword, transcript]);
 
   const validateTimingsText = () => {
-    const regex = /^\[\s*('\d+-\d+'\s*,\s*)*'\d+-\d+'\s*\]$/g;
-    if (!regex.test(timingsText)) {
+    try {
+      const parsedTimings = JSON.parse(timingsText);
+      if (
+        Array.isArray(parsedTimings) &&
+        parsedTimings.every(
+          (timing) => typeof timing === "string" && /^\d+-\d+$/.test(timing)
+        )
+      ) {
+        setErrorMessage("");
+      } else {
+        setErrorMessage("Invalid format. Please enter timings like ['1-3', '4-5']");
+      }
+    } catch (error) {
       setErrorMessage("Invalid format. Please enter timings like ['1-3', '4-5']");
-    } else {
-      setErrorMessage("");
     }
   };
 
