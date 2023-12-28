@@ -11,6 +11,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const [query, setQuery] = useState("");
   const store = useStore();
   const { sentences } = store;
+  console.log("🚀 ~ file: AssetsAggregation.js:13 ~ AssetsAggregation ~ sentences:", toJS(sentences))
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -123,6 +124,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
             q={selectedSentence.line}
             sentenceObj={selectedSentence}
             onVideoSelect={(video, sentence, sentenceObj) => {
+                console.log("🚀 ~ file: AssetsAggregation.js:127 ~ AssetsAggregation ~ video, sentence, sentenceObj:", video, sentence, sentenceObj)
                 let newSentences = [...store.sentences];
                 //let newVidArr = newSentences[sentenceObj.index]['selectedVids'] || [];
                 newSentences[sentenceObj.index]['selectedVids'] = video;
