@@ -114,7 +114,7 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
                           <input
                             type="text"
                             className="w-full p-2 border border-gray-300 rounded"
-                            placeholder="Enter selected timings"
+                            placeholder="Enter selected timings.."
                           />
                           <button
                             type="button"
