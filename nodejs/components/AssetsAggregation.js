@@ -86,76 +86,81 @@ const AssetsAggregation = observer(function AssetsAggregation() {
             >
               {sentence}
             </summary>
-            <div className="mt-4">
-              <ImageSelection
-                q={sentence}
-                selectedImage={selectedImages[index]}
-                onImageSelect={(image, sentence) => {
-                  if (Array.isArray(image)) {
-                    if (!image.length) {
-                      setSelectedImages((prevSelectedImages) => {
-                        const newSelectedImages = _.compact(
-                          prevSelectedImages.map((img) => {
-                            return img.q != sentence ? img : null;
-                          })
-                        );
-                        return newSelectedImages;
-                      });
-                      return;
-                    }
-
-                    setSelectedImages((prevSelectedImages) => {
-                      const newSelectedImages = [...prevSelectedImages];
-                      image.forEach((img) => {
-                        newSelectedImages[newSelectedImages.length] = img;
-                      });
-                      return newSelectedImages;
-                    });
-                  } else {
-                    console.log(
-                      "🚀 ~ file: index.js:70 ~ HomePage ~ image:",
-                      image
-                    );
-                    if (image.isSelected) {
-                      setSelectedImages([...selectedImages, image]);
-                    } else {
-                      setSelectedImages((prevSelectedImages) => {
-                        const newSelectedImages = _.compact(
-                          prevSelectedImages.map((img) => {
-                            return img.q == sentence && img.src == image.src
-                              ? null
-                              : img;
-                          })
-                        );
-                        return newSelectedImages;
-                      });
-                    }
-                  }
-                }}
-              />
-              <VideoSelection
-                q={sentence}
-                selectedVideo={selectedVideos[index]}
-                onVideoSelect={(video, sentence) => {
-                  if (Array.isArray(video)) {
-                    setSelectedVideos((prevSelectedVideosOrig) => {
-                      let prevSelectedVideos = { ...prevSelectedVideosOrig };
-                      console.log(
-                        "🚀 ~ file: index.js:89 ~ setSelectedVideos ~ prevSelectedVideos:",
-                        prevSelectedVideos
-                      );
-                      prevSelectedVideos[sentence] = video;
-                      return prevSelectedVideos;
-                    });
-                  } else {
-                    setSelectedVideos([...selectedVideos, video]);
-                  }
-                }}
-              />
-            </div>
           </details>
         );
       })}
+      )}
+      {selectedSentence && (
+        <div className="mt-4">
+          <ImageSelection
+            q={selectedSentence}
+            selectedImage={selectedImages.find(
+              (img) => img.q === selectedSentence
+            )}
+            onImageSelect={(image, sentence) => {
+              if (Array.isArray(image)) {
+                if (!image.length) {
+                  setSelectedImages((prevSelectedImages) => {
+                    const newSelectedImages = _.compact(
+                      prevSelectedImages.map((img) => {
+                        return img.q != sentence ? img : null;
+                      })
+                    );
+                    return newSelectedImages;
+                  });
+                  return;
+                }
+
+                setSelectedImages((prevSelectedImages) => {
+                  const newSelectedImages = [...prevSelectedImages];
+                  image.forEach((img) => {
+                    newSelectedImages[newSelectedImages.length] = img;
+                  });
+                  return newSelectedImages;
+                });
+              } else {
+                console.log(
+                  "🚀 ~ file: index.js:70 ~ HomePage ~ image:",
+                  image
+                );
+                if (image.isSelected) {
+                  setSelectedImages([...selectedImages, image]);
+                } else {
+                  setSelectedImages((prevSelectedImages) => {
+                    const newSelectedImages = _.compact(
+                      prevSelectedImages.map((img) => {
+                        return img.q == sentence && img.src == image.src
+                          ? null
+                          : img;
+                      })
+                    );
+                    return newSelectedImages;
+                  });
+                }
+              }
+            }}
+          />
+          <VideoSelection
+            q={selectedSentence}
+            selectedVideo={selectedVideos[selectedSentence]}
+            onVideoSelect={(video, sentence) => {
+              if (Array.isArray(video)) {
+                setSelectedVideos((prevSelectedVideosOrig) => {
+                  let prevSelectedVideos = { ...prevSelectedVideosOrig };
+                  console.log(
+                    "🚀 ~ file: index.js:89 ~ setSelectedVideos ~ prevSelectedVideos:",
+                    prevSelectedVideos
+                  );
+                  prevSelectedVideos[sentence] = video;
+                  return prevSelectedVideos;
+                });
+              } else {
+                setSelectedVideos([...selectedVideos, video]);
+              }
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 });
