@@ -27,6 +27,7 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
   const playerRef = useRef(null);
   const [seekTime, setSeekTime] = useState(0);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [timingsText, setTimingsText] = useState(props.timingsText || "['1-3', '4-5']");
   const onReady = (event) => {
     // access to player in all event handlers via event.target
     playerRef.current = event.target;
@@ -115,7 +116,8 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
                             type="text"
                             className="w-full p-2 border border-gray-300 rounded"
                             placeholder="Enter selected timings like ['1-3','4-5'].."
-                            value="['1-3', '4-5']"
+                            value={timingsText}
+                            onChange={(e) => setTimingsText(e.target.value)}
                           />
                           <button
                             type="button"
