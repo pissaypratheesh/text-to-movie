@@ -21,6 +21,7 @@ export class Store {
       hydrate: action,
       timeString: computed,
       sentences: observable,
+      updateSentences: action,
     })
   }
 
@@ -51,5 +52,9 @@ export class Store {
 
     this.lastUpdate = data.lastUpdate !== null ? data.lastUpdate : Date.now()
     this.light = !!data.light
+  }
+
+  updateSentences = (newSentences) => {
+    this.sentences = newSentences;
   }
 }
