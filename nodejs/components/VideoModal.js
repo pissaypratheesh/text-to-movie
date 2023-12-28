@@ -28,6 +28,7 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
   const [seekTime, setSeekTime] = useState(0);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [timingsText, setTimingsText] = useState(sentenceObj.timingsText || "['1-3', '4-5']");
+  const [errorMessage, setErrorMessage] = useState("");
   const onReady = (event) => {
     // access to player in all event handlers via event.target
     playerRef.current = event.target;
@@ -41,6 +42,15 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
       item.text.toLowerCase().includes(searchKeyword.toLowerCase())
     );
   }, [searchKeyword, transcript]);
+
+  const validateTimingsText = () => {
+    const regex = /^\[\s*('\d+-\d+'\s*,\s*)*'\d+-\d+'\s*\]$/;
+    if (!regex.test(timingsText)) {
+      setErrorMessage("Invalid format. Please enter timings like ['1-3', '4-5']");
+    } else {
+      setErrorMessage("");
+    }
+  };
 
   const changeTime = (seconds) => {
     playerRef.current.seekTo(seconds);
@@ -77,6 +87,9 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
           onClick={handleClose}
         >
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+        {errorMessage && (
+          <p className="text-red-600 mt-2">{errorMessage}</p>
+        )}
         </div>
         <div
           className="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:w-3/4 sm:h-3/4 m-auto"
@@ -111,7 +124,7 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
                           className="mx-auto"
                         />
 
-                        <div className="flex items-center mt-2">
+                        <div className="flex flex-col items-center mt-2">
                           <input
                             type="text"
                             className="w-full p-2 border border-gray-300 rounded"
@@ -122,6 +135,7 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
                           <button
                             type="button"
                             className="ml-2 px-4 py-2 bg-blue-600 text-white font-medium rounded hover:bg-blue-700"
+                            onClick={validateTimingsText}
                           >
                             Submit
                           </button>
