@@ -55,6 +55,8 @@ export class Store {
   }
 
   updateSentences = (newSentences) => {
-    this.sentences = newSentences;
+    runInAction(() => {
+      this.sentences = newSentences;
+    });
   }
 }
