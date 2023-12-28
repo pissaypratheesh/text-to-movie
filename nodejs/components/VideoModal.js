@@ -110,6 +110,19 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
                           className="mx-auto"
                         />
 
+                        <div className="flex items-center">
+                          <input
+                            type="text"
+                            className="w-full p-2 border border-gray-300 rounded"
+                            placeholder="Enter selected timings"
+                          />
+                          <button
+                            type="button"
+                            className="ml-2 px-4 py-2 bg-blue-600 text-white font-medium rounded hover:bg-blue-700"
+                          >
+                            Submit
+                          </button>
+                        </div>
                         <input
                           type="text"
                           className="w-full p-2 border border-gray-300 rounded mt-4"
