@@ -14,8 +14,16 @@ export class Store {
       start: action,
       hydrate: action,
       timeString: computed,
+      sentences: observable,
     })
   }
+
+  sentences = [
+    "Sun sets, warm city glow.",
+    "Forest walk, birds chirp.",
+    "Quiet library, books imagination.",
+    "Freshly baked bread aroma.",
+  ]
 
   start = () => {
     this.timer = setInterval(() => {

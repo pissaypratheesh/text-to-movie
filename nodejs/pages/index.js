@@ -3,12 +3,8 @@ import ImageSelection from '../components/ImageSelection';
 import VideoSelection from '../components/VideoSelection';
 import Page from '../components/Page';
 var _ = require('underscore')
-const sentences = [
-  "Sun sets, warm city glow.",
-  "Forest walk, birds chirp.",
-  "Quiet library, books imagination.",
-  "Freshly baked bread aroma."
-];//query.split('.').filter(sentence => sentence.trim().length > 0);
+const store = useStore()
+const { sentences } = store
 
 function HomePage() {
   const [query, setQuery] = useState('');
