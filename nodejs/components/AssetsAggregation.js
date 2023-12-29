@@ -75,6 +75,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                                     />
                                     );
                             })}
+                            <div id='fileuploader'></div>
                         </div>
                 </>
             )}
