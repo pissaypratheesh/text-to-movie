@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback } from "react";
 import ImageSelection from "./ImageSelection";
 import VideoSelection from "./VideoSelection";
 import { useStore } from "./StoreProvider";
@@ -129,6 +129,9 @@ const AssetsAggregation = observer(function AssetsAggregation() {
             sentenceObj={selectedSentence}
             onVideoSelect={(video, sentence, sentenceObj) => {
                 let newSentences = [...store.sentences];
+                if(video && Array.isArray(video)){
+                    video = video.map((v,i) => {return {...v, index: i}})
+                }
                 //let newVidArr = newSentences[sentenceObj.index]['selectedVids'] || [];
                 newSentences[sentenceObj.index]['selectedVids'] = video;
                 store.updateSentences(newSentences)
