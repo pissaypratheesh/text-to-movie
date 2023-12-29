@@ -11,7 +11,7 @@ var _ = require("underscore");
 const AssetsAggregation = observer(function AssetsAggregation() {
   const uploadFile = async (file) => {
     // Replace this URL with your backend API endpoint
-    const apiUrl = "/upload";
+    const apiUrl = "/api/upload";
     const formData = new FormData();
     formData.append("file", file);
 
