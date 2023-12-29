@@ -4,10 +4,16 @@ import VideoSelection from "./VideoSelection";
 import { useStore } from "./StoreProvider";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
+import { useDropzone } from "react-dropzone";
 
 var _ = require("underscore");
 
 const AssetsAggregation = observer(function AssetsAggregation() {
+  const onDrop = useCallback((acceptedFiles) => {
+    // Handle the file upload here
+    console.log(acceptedFiles);
+  }, []);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const [query, setQuery] = useState("");
   const store = useStore();
   const { sentences } = store;
@@ -75,7 +81,14 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                                     />
                                     );
                             })}
-                            <div id='fileuploader'></div>
+                            <div {...getRootProps()} className="border-dashed border-2 border-gray-400 p-4 cursor-pointer">
+                              <input {...getInputProps()} />
+                              {
+                                isDragActive ?
+                                  <p>Drop the files here ...</p> :
+                                  <p>Click or drag a file to upload</p>
+                              }
+                            </div>
                         </div>
                 </>
             )}
