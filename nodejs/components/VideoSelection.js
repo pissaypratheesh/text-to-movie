@@ -6,13 +6,17 @@ import Modal from 'react-modal';
 import { useStore } from "./StoreProvider";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";  
+import axios from 'axios';
 var _ = require("underscore");
 _.mixin(require('../mixins'))
+const shortsURL = `http://localhost:3000/api/fetchshorts`;
+const ytURL =  `http://localhost:8081/api/ytvideos`;
+
 
 function createGalleryItems(videos, onSelect) {                                                                                                                                                                      
   return videos.map((videoUrl, index) => {                                                                                                                                                                           
     const videoId = videoUrl.videoId;                                                                                                                                                                                
-    const thumbnailUrl = videoUrl.thumbnail.thumbnails[0].url;                                                                                                                                                       
+    const thumbnailUrl = _.at(videoUrl, 'thumbnail.thumbnails.0.url') || _.at (videoUrl, 'thumbnails.0.url') || _.at (videoUrl, 'thumbnail.0.url') || '';                                                                                                                                                       
     return {     
       ...videoUrl,                                                                                                                                                                                                    
       src: thumbnailUrl,                                                                                                                                                                                             
@@ -62,15 +66,19 @@ const VideoSelection = observer(function VideoSelection({ q, onVideoSelect, sent
     // const urlParams = new URLSearchParams(window.location.search);                                                                                                                                                   
     // const urlQuery = urlParams.get(q) || 'elephant and turtle';                                                                                                                                                
     // setQuery(urlQuery);                                                                                                                                                                                              
-    fetch(`http://localhost:3000/api/fetchshorts?query=${encodeURIComponent(query)}`)                                                                                                                             
-      .then((response) => response.json())                                                                                                                                                                           
-      .then((data) => {
-        setVideos(data.map((vid,i) => {                                                                                                                                                                        
-          vid.src = vid.url;  
-          vid.i = i;                                                                                                                                                                                      
-          return vid                                                                                                                                                                                                
-        })) 
-      });                                                                                                                                                                              
+    axios.get(`${ytURL}?query=${encodeURIComponent(query)}`)
+      .then(response => {
+        const data = response.data;
+        console.log("\n\n\n\ndata====>", data);
+        setVideos(data.map((vid, i) => {
+          vid.src = vid.url;
+          vid.i = i;
+          return vid;
+        }));
+      })
+      .catch(error => {
+        console.error(error);
+      });                                                                                                                                                                           
   }, []);                                                                                                                                                                                                            
   const handleVideoSelect = (video) => {
     let videoIndex = -1;
@@ -164,9 +172,14 @@ const VideoSelection = observer(function VideoSelection({ q, onVideoSelect, sent
 
   const handleSearchClick = () => {                                                                                                                                                                                  
     //window.history.pushState({}, '', `?query=${encodeURIComponent(query)}`);                                                                                                                                         
-    fetch(`http://localhost:3000/api/fetchshorts?query=${encodeURIComponent(query)}`)                                                                                                                                
-      .then((response) => response.json())                                                                                                                                                                           
-      .then((data) => setVideos(data));                                                                                                                                                                              
+    axios.get(`${ytURL}?query=${encodeURIComponent(query)}`)
+      .then(response => {
+        const data = response.data;
+        setVideos(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });                                                                                                                                                                           
   };                                                                                                                                                                                                                 
 
   const handleClose = () => {                                                                                                                                                                                        
