@@ -60,14 +60,17 @@ const VideoSelection = observer(function VideoSelection({ q, onVideoSelect, sent
   const [showModal, setShowModal] = useState(false);                                                                                                                                                                 
   const [videos, setVideos] = useState([]);                                                                                                                                                                          
   console.log("🚀 ~ file: VideoSelection.js:53 ~ VideoSelection ~ videos:", videos)
-  const [query, setQuery] = useState(q);                                                                                                                                                                            
+  const [query, setQuery] = useState(q);       
+  const [loading, setLoading] = useState(false);                                                                                                                                                                        
 
   useEffect(() => {                                                                                                                                                                                                  
     // const urlParams = new URLSearchParams(window.location.search);                                                                                                                                                   
     // const urlQuery = urlParams.get(q) || 'elephant and turtle';                                                                                                                                                
-    // setQuery(urlQuery);                                                                                                                                                                                              
+    // setQuery(urlQuery);     
+    setLoading(true);                                                                                                                                                                                           
     axios.get(`${ytURL}?query=${encodeURIComponent(query)}`)
       .then(response => {
+        setLoading(false); 
         const data = response.data;
         console.log("\n\n\n\ndata====>", data);
         setVideos(data.map((vid, i) => {
@@ -230,6 +233,12 @@ const VideoSelection = observer(function VideoSelection({ q, onVideoSelect, sent
           Search                                                                                                                                                                                                             
         </button>                                                                                                                                                                                                            
       </div>
+      {loading && (<>
+        <div className="flex justify-center items-center">                                                                                                                                                           
+           <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>                                                                                                          
+         </div>
+      </>)}
+
       <div className="flex space-x-4 mb-4">
         <button
           onClick={(e)=>{
