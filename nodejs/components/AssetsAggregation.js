@@ -81,7 +81,9 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       uploadFile(file, sentenceIndex);
     });
   }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: (acceptedFiles, fileRejections, event) => onDrop(acceptedFiles, fileRejections, event),
+  });
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
