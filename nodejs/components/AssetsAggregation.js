@@ -15,7 +15,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const [query, setQuery] = useState("");
   const store = useStore();
   const { sentences } = store;
-  const uploadFile = async (file) => {
+  const uploadFile = async (file, sentenceIndex) => {
     // Replace this URL with your backend API endpoint
     const apiUrl = "/api/upload";
     const formData = new FormData();
@@ -62,10 +62,11 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     }
   };
 
-  const onDrop = useCallback((acceptedFiles, others) => {
+  const onDrop = useCallback((acceptedFiles, others, event) => {
+    const sentenceIndex = event.target.getAttribute('data-sentence-index');
     console.log("🚀 ~ file: AssetsAggregation.js:66 ~ onDrop ~ others:", others)
     acceptedFiles.forEach((file) => {
-      uploadFile(file);
+      uploadFile(file, sentenceIndex);
     });
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -142,7 +143,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
               className="border-dashed border-2 border-gray-400 p-4 cursor-pointer"
               id='filedrop'
             >
-              <input {...getInputProps({sentenceObj:toJS(sentenceObj)})} />
+              <input {...getInputProps({sentenceObj:toJS(sentenceObj)})} data-sentence-index={index} />
               {isDragActive ? (
                 <p>Drop the files here ...</p>
               ) : (
