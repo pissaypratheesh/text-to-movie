@@ -155,21 +155,25 @@ const VideoSelection = observer(function VideoSelection({ q, onVideoSelect, sent
     return (                                                                                                                                                                                                         
       <div>                                                                                                                                                                                                          
         <img src={item.thumbnail} alt={item.videoId} style={checkExistence(item) ? { border: '3px solid red' } : {}} />  
-        <div className="mt-2 text-center text-sm">{item.title}</div>                                                                                                                                                              
-        <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px' }}>                                                                                                                                 
-          <button                                                                                                                                                                                                    
-            onClick={handleCheckClick}                                                                                                                                                                              
-            className={`bg-${selectedVideos.includes(item.videoId) ? 'blue' : 'gray'}-500 text-white px-2 py-1 rounded focus:outline-none focus:shadow-outline m-2 opacity-75 backdrop-blur-md text-sm`}                                                                            
-          >                                                                                                                                                                                                          
-             <i className="fa fa-check mr-1"></i>                                                                                                                                                                                                    
-          </button>                                                                                                                                                                                                  
-          <button                                                                                                                                                                                                    
-            onClick={handlePlayClick}                                                                                                                                                                                
-            className="bg-gray-500 text-white px-2 py-1 rounded focus:outline-none focus:shadow-outline m-2 opacity-75 backdrop-blur-md text-sm"                                                                              
-          >                                                                                                                                                                                                          
-            <i className="fa fa-play mr-1"></i>                                                                                                                                                                                                     
-          </button>                                                                                                                                                                                                  
-        </div>                                                                                                                                                                                                       
+        <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px', display: 'flex', alignItems: 'center' }}>
+          <div className="flex-grow-1 mt-2 text-sm z-10 bg-gray-300 bg-opacity-50 text-white text-left">{item.title}</div>
+          <div>
+            <button
+              onClick={handleCheckClick}
+              className={`bg-${selectedVideos.includes(item.videoId) ? 'blue' : 'gray'}-500 text-white px-2 py-1 rounded focus:outline-none focus:shadow-outline m-2 opacity-75 backdrop-blur-md text-sm`}
+              style={{ display: 'inline-block' }}
+            >
+              <i className="fa fa-check mr-1"></i>
+            </button>
+            <button
+              onClick={handlePlayClick}
+              className="bg-gray-500 text-white px-2 py-1 rounded focus:outline-none focus:shadow-outline m-2 opacity-75 backdrop-blur-md text-sm"
+              style={{ display: 'inline-block' }}
+            >
+              <i className="fa fa-play mr-1"></i>
+            </button>
+          </div>
+        </div>                                                                                                                                                                                    
       </div>                                                                                                                                                                                                         
     );                                                                                                                                                                                                               
   }, [handleVideoSelect, setSelectedVideo]);                                                                                                                                                                         
