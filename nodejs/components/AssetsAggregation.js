@@ -5,7 +5,8 @@ import { useStore } from "./StoreProvider";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useDropzone } from "react-dropzone";
-
+import axios from "axios";
+var activeFile = 9999;
 var _ = require("underscore");
 
 const AssetsAggregation = observer(function AssetsAggregation() {
@@ -16,28 +17,20 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const store = useStore();
   const { sentences } = store;
   const uploadFile = async (file, sentenceIndex) => {
-    console.log(
-      "🚀 ~ file: AssetsAggregation.js:65 ~ uploadFile ~ sentenceIndex:",
-      sentenceIndex
-    );
   
     // Replace this URL with your backend API endpoint
-    sentenceIndex;
     const apiUrl = "/api/upload";
     const formData = new FormData();
     formData.append("file", file);
 
     try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await axios.post(apiUrl, formData);
       let newSentences = [...store.sentences];
       //let newImageArr =        newSentences[selectedSentence.index]["selectedImgs"] || [];
       console.log(
         "File uploaded successfully",
-        selectedSentence,
-        response.data,
+        activeFile,
+        response,
         newSentences
       );
 
@@ -70,20 +63,19 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     }
   };
 
-  const onDrop = useCallback((acceptedFiles, others, event) => {
-    const sentenceIndex = event.target.getAttribute("data-sentence-index");
+  const onDrop = (function(acceptedFiles, others, event){ //useCallback
+    const sentenceIndex = event && event.target && event.target.getAttribute("data-sentence-index");
     console.log(
       "🚀 ~ file: AssetsAggregation.js:66 ~ onDrop ~ others:",
       others,
+      event,
       sentenceIndex
     );
     acceptedFiles.forEach((file) => {
-      uploadFile(file, sentenceIndex);
+      uploadFile(file);
     });
-  }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: (acceptedFiles, fileRejections, event) => onDrop(acceptedFiles, fileRejections, event),
-  });
+  }); //, []
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -160,16 +152,19 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                 <div
                   {...getRootProps()}
                   className="border-dashed border-2 border-gray-400 p-4 cursor-pointer"
-                  id="filedrop"
+                  id={`filedrop_div_${index}`}
                 >
                   <input
-                    {...getInputProps({ sentenceObj: toJS(sentenceObj) })}
+                    {...getInputProps()}
                     data-sentence-index={index}
+                    id={`filedrop_input_${index}`}
                   />
                   {isDragActive ? (
-                    <p>Drop the files here ...</p>
+                    <p 
+                    onClick={()=>{console.log("pratheesh click",index);activeFile=index;}}>Drop the files here ...</p>
                   ) : (
-                    <p>Click or drag a file to upload</p>
+                    <p 
+                    onClick={()=>{console.log("pratheesh click",index);activeFile=index;}}>Click or drag a file to upload</p>
                   )}
                 </div>
               </>
