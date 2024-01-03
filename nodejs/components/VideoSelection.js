@@ -68,7 +68,7 @@ const VideoSelection = observer(function VideoSelection({ q, onVideoSelect, sent
     // const urlQuery = urlParams.get(q) || 'elephant and turtle';                                                                                                                                                
     // setQuery(urlQuery);     
     setLoading(true);                                                                                                                                                                                           
-    axios.get(`${ytURL}?query=${encodeURIComponent(query)}`)
+    axios.get(`${shortsURL}?query=${encodeURIComponent(query)}`)
       .then(response => {
         setLoading(false); 
         const data = response.data;
@@ -154,7 +154,8 @@ const VideoSelection = observer(function VideoSelection({ q, onVideoSelect, sent
 
     return (                                                                                                                                                                                                         
       <div>                                                                                                                                                                                                          
-        <img src={item.thumbnail} alt={item.videoId} style={checkExistence(item) ? { border: '3px solid red' } : {}} />                                                                                                                                                              
+        <img src={item.thumbnail} alt={item.videoId} style={checkExistence(item) ? { border: '3px solid red' } : {}} />  
+        <div className="mt-2 text-center text-sm">{item.title}</div>                                                                                                                                                              
         <div style={{ position: 'absolute', bottom: 0, right: 0, padding: '10px' }}>                                                                                                                                 
           <button                                                                                                                                                                                                    
             onClick={handleCheckClick}                                                                                                                                                                              
@@ -175,7 +176,7 @@ const VideoSelection = observer(function VideoSelection({ q, onVideoSelect, sent
 
   const handleSearchClick = () => {                                                                                                                                                                                  
     //window.history.pushState({}, '', `?query=${encodeURIComponent(query)}`);                                                                                                                                         
-    axios.get(`${ytURL}?query=${encodeURIComponent(query)}`)
+    axios.get(`${shortsURL}?query=${encodeURIComponent(query)}`)
       .then(response => {
         const data = response.data;
         setVideos(data);
