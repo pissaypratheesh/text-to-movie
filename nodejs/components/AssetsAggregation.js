@@ -5,6 +5,7 @@ import { useStore } from "./StoreProvider";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useDropzone } from "react-dropzone";
+import Dropzone from "react-dropzone";
 import axios from "axios";
 var activeFile = 9999;
 var _ = require("underscore");
@@ -16,7 +17,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const [query, setQuery] = useState("");
   const store = useStore();
   const { sentences } = store;
-  const uploadFile = async (file, sentenceIndex) => {
+  const uploadFile = async (file, others) => {
   
     // Replace this URL with your backend API endpoint
     const apiUrl = "/api/upload";
@@ -29,32 +30,32 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       //let newImageArr =        newSentences[selectedSentence.index]["selectedImgs"] || [];
       console.log(
         "File uploaded successfully",
-        activeFile,
+        others,
         response,
         newSentences
       );
 
-      if (response.ok) {
-        /*  //selectAll or deselct all
-        if (Array.isArray(image)) {
-          if (!image.length) {
-            newImageArr = [];
-          } else {
-            newImageArr = image;
+      if (response.data && response.data.files) {
+        let meta = toJS(others);
+        let activeIndex = meta && meta.index;
+        let files = response.data.files || [];
+        let newImageArr = newSentences[activeIndex]["selectedImgs"] || [];
+        let newVideoArr = newSentences[activeIndex]["selectedVids"] || [];
+        files.forEach((filedetails)=>{
+          let { type, url } = filedetails;
+          if (type == "image") {
+            newImageArr[newImageArr.length] = { src: url, link: url, url, index: newImageArr.length };
           }
-        } else {
-          // select/deselect single
-          if (image.isSelected) {
-            newImageArr[newImageArr.length] = image;
-          } else {
-            newImageArr = newImageArr.filter(
-              (img) => img.src != image.src
-            );
+          if(type == "video"){
+            newVideoArr[newVideoArr.length] = { src: url, link: url, url, index: newVideoArr.length };
           }
-        }
-        //Update store
-        newSentences[selectedSentence.index]["selectedImgs"] = newImageArr;
-        store.updateSentences(newSentences); */
+        })
+        newSentences[activeIndex]["selectedImgs"] = newImageArr;
+        newSentences[activeIndex]["selectedVids"] = newVideoArr;
+        console.log("🚀 ~ file: AssetsAggregation.js:42 ~ uploadFile ~ activeIndex:", activeIndex,newSentences)
+
+        store.updateSentences(newSentences);
+
       } else {
         console.error("Error uploading file");
       }
@@ -63,22 +64,11 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     }
   };
 
-  const onDrop = (acceptedFiles, others, event) => {
-    console.log(
-      "🚀 ~ file: AssetsAggregation.js:66 ~ onDrop ~ others:",
-      others,
-      event,
-      sentenceIndex
-    );
+  const onDrop = (function(acceptedFiles, others, event){ //useCallback
     acceptedFiles.forEach((file) => {
-      uploadFile(file);
+      uploadFile(file,others);
     });
-  //, []
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-  });
-    return { getRootProps, getInputProps, isDragActive };
-  };
+  }); //, []
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -141,7 +131,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                       ))}
                       {Object.values(selectedVids).map((video, index) => {
                         return (
-                          <img
+                          <video
                             key={index}
                             src={video.src}
                             controls
@@ -152,23 +142,21 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                     </div>
                   </>
                 )}
-                {
-                  return (
-                    <div
-                      {...getRootProps()}
-                      className="border-dashed border-2 border-gray-400 p-4 cursor-pointer"
-                      id={`filedrop_div_${index}`}
-                    >
-                      <input {...getInputProps()} id={`filedrop_input_${index}`} />
-                    const { getRootProps, getInputProps, isDragActive } = getDropzoneProps(index);
-                  {isDragActive ? (
-                    <p 
-                    onClick={()=>{console.log("pratheesh click",index);activeFile=index;}}>Drop the files here ...</p>
-                  ) : (
-                    <p 
-                    onClick={()=>{console.log("pratheesh click",index);activeFile=index;}}>Click or drag a file to upload</p>
-                  )}
-                </div>
+                <Dropzone  
+                  onDrop={(acceptedFiles) => {
+                    onDrop(acceptedFiles, sentenceObj);
+                  }} 
+                  accept="image/*,video/*" 
+                  multiple={true}>
+                    {({getRootProps, getInputProps}) => (
+                      <div {...getRootProps({className: 'className="border-dashed border-2 border-gray-400 p-4 cursor-pointer'})}>
+                          <input {...getInputProps()} />
+                          <span >
+                                Drop hero image here, or click to select file
+                          </span>
+                      </div>
+                    )}
+                </Dropzone>
               </>
             }
           </details>

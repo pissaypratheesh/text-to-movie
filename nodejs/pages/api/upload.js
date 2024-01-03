@@ -13,8 +13,6 @@ const handler = async (req, res) => {
   const protocol = req.headers['x-forwarded-proto'] || 'http';
   const host = req.headers.host;
   const fullHost = `${protocol}://${host}`;
-
-  console.log("\n\n\nhost-->", req.headers.host, req.headers.hostname,req)
   let status = 200;
   let resultBody = { status: 'ok', message: 'Files were uploaded successfully', files: [] };
 
@@ -41,10 +39,12 @@ const handler = async (req, res) => {
   //console.log("\n\n\n\n🚀 ~ file: upload.js:36 ~ files ~ files:", files,process.cwd())
   const imgPath = `/public/assets/images/`;
   const vidPath = `/public/assets/videos/`;
+  const audPath = `/public/assets/audios/`;
   if (files && files.length) {
     /* Move uploaded files to directory */
     for (const file of files) {
       const mimetype = file[1].mimetype;
+      console.log("\n\n\n\n🚀 ~ file: upload.js:48 ~ handler ~ mimetype:", mimetype)
       let servePath;
       let targetPath;
       let type;
@@ -53,14 +53,18 @@ const handler = async (req, res) => {
         servePath = imgPath.replace('/public', '');
         type = 'image';
       }
-      if(mimetype.startsWith('video')) {
+      if(mimetype.startsWith('video') || mimetype.startsWith('application/octet-stream')) {
         targetPath = path.join(process.cwd(), vidPath);
         servePath = vidPath.replace('/public', '');
         type =  'video';
       }
+      if(mimetype.startsWith('audio')) {
+        targetPath = path.join(process.cwd(), audPath);
+        servePath = audPath.replace('/public', '');
+        type =  'audio';
+      }
       
       const tempPath = file[1].filepath;
-      console.log("\n\n\n\n\n\n\n🚀 ~ file: upload.js:51 ~ handler ~ tempPath:",tempPath,file[1])
       await fs.rename(tempPath, targetPath + file[1].originalFilename);//.newFilename);
       resultBody.files.push({type, url:`${fullHost}${servePath}${file[1].originalFilename}`});
     }
