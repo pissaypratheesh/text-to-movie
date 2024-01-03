@@ -63,7 +63,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     }
   };
 
-  const onDrop = (function(acceptedFiles, others, event){ //useCallback
+  const onDrop = (sentenceIndex) => (acceptedFiles, others, event) => {
     const sentenceIndex = event && event.target && event.target.getAttribute("data-sentence-index");
     console.log(
       "🚀 ~ file: AssetsAggregation.js:66 ~ onDrop ~ others:",
@@ -72,10 +72,15 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       sentenceIndex
     );
     acceptedFiles.forEach((file) => {
-      uploadFile(file);
+      uploadFile(file, sentenceIndex);
     });
   }); //, []
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const getDropzoneProps = (sentenceIndex) => {
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+      onDrop: onDrop(sentenceIndex),
+    });
+    return { getRootProps, getInputProps, isDragActive };
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -150,15 +155,18 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                   </>
                 )}
                 <div
-                  {...getRootProps()}
-                  className="border-dashed border-2 border-gray-400 p-4 cursor-pointer"
-                  id={`filedrop_div_${index}`}
-                >
-                  <input
-                    {...getInputProps()}
-                    data-sentence-index={index}
-                    id={`filedrop_input_${index}`}
-                  />
+                  const { getRootProps, getInputProps, isDragActive } = getDropzoneProps(index);
+                  return (
+                    <div
+                      {...getRootProps()}
+                      className="border-dashed border-2 border-gray-400 p-4 cursor-pointer"
+                      id={`filedrop_div_${index}`}
+                    >
+                      <input
+                        {...getInputProps()}
+                        data-sentence-index={index}
+                        id={`filedrop_input_${index}`}
+                      />
                   {isDragActive ? (
                     <p 
                     onClick={()=>{console.log("pratheesh click",index);activeFile=index;}}>Drop the files here ...</p>
