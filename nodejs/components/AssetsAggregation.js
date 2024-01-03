@@ -74,7 +74,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     acceptedFiles.forEach((file) => {
       uploadFile(file, sentenceIndex);
     });
-  }); //, []
+  //, []
   const getDropzoneProps = (sentenceIndex) => {
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
       onDrop: onDrop(sentenceIndex),
@@ -154,7 +154,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                     </div>
                   </>
                 )}
-                <div
+                {
                   const { getRootProps, getInputProps, isDragActive } = getDropzoneProps(index);
                   return (
                     <div
@@ -167,6 +167,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                         data-sentence-index={index}
                         id={`filedrop_input_${index}`}
                       />
+                }
                   {isDragActive ? (
                     <p 
                     onClick={()=>{console.log("pratheesh click",index);activeFile=index;}}>Drop the files here ...</p>
