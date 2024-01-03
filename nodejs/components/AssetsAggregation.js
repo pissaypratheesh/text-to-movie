@@ -63,8 +63,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     }
   };
 
-  const onDrop = (sentenceIndex) => (acceptedFiles, others, event) => {
-    const sentenceIndex = event && event.target && event.target.getAttribute("data-sentence-index");
+  const onDrop = (acceptedFiles, others, event) => {
     console.log(
       "🚀 ~ file: AssetsAggregation.js:66 ~ onDrop ~ others:",
       others,
@@ -72,13 +71,12 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       sentenceIndex
     );
     acceptedFiles.forEach((file) => {
-      uploadFile(file, sentenceIndex);
+      uploadFile(file);
     });
   //, []
-  const getDropzoneProps = (sentenceIndex) => {
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-      onDrop: onDrop(sentenceIndex),
-    });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+  });
     return { getRootProps, getInputProps, isDragActive };
   };
 
@@ -161,11 +159,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                       className="border-dashed border-2 border-gray-400 p-4 cursor-pointer"
                       id={`filedrop_div_${index}`}
                     >
-                      <input
-                        {...getInputProps()}
-                        data-sentence-index={index}
-                        id={`filedrop_input_${index}`}
-                      />
+                      <input {...getInputProps()} id={`filedrop_input_${index}`} />
                     const { getRootProps, getInputProps, isDragActive } = getDropzoneProps(index);
                   {isDragActive ? (
                     <p 
