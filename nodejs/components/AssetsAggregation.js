@@ -155,7 +155,6 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                   </>
                 )}
                 {
-                  const { getRootProps, getInputProps, isDragActive } = getDropzoneProps(index);
                   return (
                     <div
                       {...getRootProps()}
@@ -167,7 +166,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                         data-sentence-index={index}
                         id={`filedrop_input_${index}`}
                       />
-                }
+                    const { getRootProps, getInputProps, isDragActive } = getDropzoneProps(index);
                   {isDragActive ? (
                     <p 
                     onClick={()=>{console.log("pratheesh click",index);activeFile=index;}}>Drop the files here ...</p>
