@@ -16,7 +16,13 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const store = useStore();
   const { sentences } = store;
   const uploadFile = async (file, sentenceIndex) => {
+    console.log(
+      "🚀 ~ file: AssetsAggregation.js:65 ~ uploadFile ~ sentenceIndex:",
+      sentenceIndex
+    );
+  
     // Replace this URL with your backend API endpoint
+    sentenceIndex;
     const apiUrl = "/api/upload";
     const formData = new FormData();
     formData.append("file", file);
@@ -28,11 +34,15 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       });
       let newSentences = [...store.sentences];
       //let newImageArr =        newSentences[selectedSentence.index]["selectedImgs"] || [];
-        console.log("File uploaded successfully",selectedSentence,response.data, newSentences);
+      console.log(
+        "File uploaded successfully",
+        selectedSentence,
+        response.data,
+        newSentences
+      );
 
       if (response.ok) {
-        
-       /*  //selectAll or deselct all
+        /*  //selectAll or deselct all
         if (Array.isArray(image)) {
           if (!image.length) {
             newImageArr = [];
@@ -52,8 +62,6 @@ const AssetsAggregation = observer(function AssetsAggregation() {
         //Update store
         newSentences[selectedSentence.index]["selectedImgs"] = newImageArr;
         store.updateSentences(newSentences); */
-      
-
       } else {
         console.error("Error uploading file");
       }
@@ -63,8 +71,12 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   };
 
   const onDrop = useCallback((acceptedFiles, others, event) => {
-    const sentenceIndex = event.target.getAttribute('data-sentence-index');
-    console.log("🚀 ~ file: AssetsAggregation.js:66 ~ onDrop ~ others:", others)
+    const sentenceIndex = event.target.getAttribute("data-sentence-index");
+    console.log(
+      "🚀 ~ file: AssetsAggregation.js:66 ~ onDrop ~ others:",
+      others,
+      sentenceIndex
+    );
     acceptedFiles.forEach((file) => {
       uploadFile(file, sentenceIndex);
     });
@@ -99,59 +111,67 @@ const AssetsAggregation = observer(function AssetsAggregation() {
             <summary
               className="cursor-pointer text-xl font-semibold"
               onClick={() => {
-                console.log("\n\n\nclick for symmary of sentence",index, toJS(sentenceObj));
-                setSelectedSentence(toJS(sentenceObj))}
-              }
+                console.log(
+                  "\n\n\nclick for symmary of sentence",
+                  index,
+                  toJS(sentenceObj)
+                );
+                setSelectedSentence(toJS(sentenceObj));
+              }}
             >
               {sentence}
             </summary>
-            {<>{!isBothEmpty && (
+            {
               <>
-                {
-                  <h2 className="text-2xl font-semibold mb-4">
-                    Selected Images and Videos
-                  </h2>
-                }
+                {!isBothEmpty && (
+                  <>
+                    {
+                      <h2 className="text-2xl font-semibold mb-4">
+                        Selected Images and Videos
+                      </h2>
+                    }
+                    <div
+                      className="grid grid-cols-4 gap-4 mb-8"
+                      key={`${selectedImgs.length}_${selectedVids.length}`}
+                    >
+                      {Object.values(selectedImgs).map((image, index) => (
+                        <img
+                          key={index}
+                          src={image.src}
+                          alt="Selected"
+                          className="w-full h-32 object-cover"
+                        />
+                      ))}
+                      {Object.values(selectedVids).map((video, index) => {
+                        return (
+                          <img
+                            key={index}
+                            src={video.src}
+                            controls
+                            className="w-full h-32 object-cover"
+                          />
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
                 <div
-                  className="grid grid-cols-4 gap-4 mb-8"
-                  key={`${selectedImgs.length}_${selectedVids.length}`}
+                  {...getRootProps()}
+                  className="border-dashed border-2 border-gray-400 p-4 cursor-pointer"
+                  id="filedrop"
                 >
-                  {Object.values(selectedImgs).map((image, index) => (
-                    <img
-                      key={index}
-                      src={image.src}
-                      alt="Selected"
-                      className="w-full h-32 object-cover"
-                    />
-                  ))}
-                  {Object.values(selectedVids).map((video, index) => {
-                    return (
-                      <img
-                        key={index}
-                        src={video.src}
-                        controls
-                        className="w-full h-32 object-cover"
-                      />
-                    );
-                  })}
-
+                  <input
+                    {...getInputProps({ sentenceObj: toJS(sentenceObj) })}
+                    data-sentence-index={index}
+                  />
+                  {isDragActive ? (
+                    <p>Drop the files here ...</p>
+                  ) : (
+                    <p>Click or drag a file to upload</p>
+                  )}
                 </div>
-              </>)
+              </>
             }
-            <div
-              {...getRootProps()}
-              className="border-dashed border-2 border-gray-400 p-4 cursor-pointer"
-              id='filedrop'
-            >
-              <input {...getInputProps({sentenceObj:toJS(sentenceObj)})} data-sentence-index={index} />
-              {isDragActive ? (
-                <p>Drop the files here ...</p>
-              ) : (
-                <p>Click or drag a file to upload</p>
-              )}
-            </div>
-          </>
-          }
           </details>
         );
       })}
