@@ -3,6 +3,10 @@ nodejs/node_modules
 OAI_CONFIG_LIST_AZURE
 OAI_CONFIG_LIST
 nodejs/.next
+nodejs/assets/
+nodejs/public/images/
+nodejs/package-lock.json
+nodejs/public/
 python/.cache
 python/dalle_images
 python/__pycache__

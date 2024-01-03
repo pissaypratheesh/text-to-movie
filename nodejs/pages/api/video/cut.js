@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import ffmpeg from 'fluent-ffmpeg';
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req, res) => {
   const { videoUrl, startTime, duration } = req.query;
 
   if (!videoUrl || !startTime || !duration) {

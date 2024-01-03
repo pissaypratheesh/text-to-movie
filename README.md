@@ -24,18 +24,24 @@ and nodejs/xml_generator/refactored/jsonGenerator.js
 //main work
 1. fetch playlist
 2. select video
-3. subtitle summary
-4. script creation
-5. tts and stt creation
-6. stt segmentation
-7. each segment asset creation
-8. video identification in video
-9. json generation and xml creation
+3. subtitle summary //API done,
+4. script creation //Api done,
+5. tts and stt creation 
+6. stt segmentation 
+7. each segment asset creation //Done
+8. video clip identification in video //Done
+9. json generation and xml creation 
 10. burn
+11. Video screenshot creator for a given time
+    
     
 
  Present integration:
  1. summary creation   
+
+
+
+
 
 
 Youtube related:

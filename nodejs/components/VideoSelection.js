@@ -2,7 +2,10 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {Gallery} from 'react-grid-gallery';                                                                                                                                                                          
 import YouTube from 'react-youtube';   
 import VideoModal from './VideoModal';  
-import Modal from 'react-modal';    
+import Modal from 'react-modal';  
+import { useStore } from "./StoreProvider";
+import { toJS } from "mobx";
+import { observer } from "mobx-react-lite";  
 var _ = require("underscore");
 _.mixin(require('../mixins'))
 
@@ -10,12 +13,14 @@ function createGalleryItems(videos, onSelect) {
   return videos.map((videoUrl, index) => {                                                                                                                                                                           
     const videoId = videoUrl.videoId;                                                                                                                                                                                
     const thumbnailUrl = videoUrl.thumbnail.thumbnails[0].url;                                                                                                                                                       
-    return {                                                                                                                                                                                                         
+    return {     
+      ...videoUrl,                                                                                                                                                                                                    
       src: thumbnailUrl,                                                                                                                                                                                             
       thumbnail: thumbnailUrl,                                                                                                                                                                                       
       thumbnailWidth: 320,                                                                                                                                                                                           
       thumbnailHeight: 180,                                                                                                                                                                                          
-      videoId,                                                                                                                                                                                                       
+      videoId,
+      vidIndex: videoUrl.i                                                                                                                                                                                                       
     };                                                                                                                                                                                                               
   });                                                                                                                                                                                                                
 }                                                                                                                                                                                                                    
@@ -45,11 +50,12 @@ const customStyles = {
     },
   };
  */
-function VideoSelection({ q, onVideoSelect, sentenceObj }) {                                   
+const VideoSelection = observer(function VideoSelection({ q, onVideoSelect, sentenceObj }) {                                   
   const [selectedVideo, setSelectedVideo] = useState(null);                                                                                                                                                            
   const [selectedVideos, setSelectedVideos] = useState(_.at(sentenceObj,'selectedVids') || []);                                                                                                                                                          
   const [showModal, setShowModal] = useState(false);                                                                                                                                                                 
   const [videos, setVideos] = useState([]);                                                                                                                                                                          
+  console.log("🚀 ~ file: VideoSelection.js:53 ~ VideoSelection ~ videos:", videos)
   const [query, setQuery] = useState(q);                                                                                                                                                                            
 
   useEffect(() => {                                                                                                                                                                                                  
@@ -132,7 +138,7 @@ function VideoSelection({ q, onVideoSelect, sentenceObj }) {
     const handlePlayClick = (e) => {                                                                                                                                                                                 
       setShowModal(true);                                                                                                                                                                                            
       e.stopPropagation();                                                                                                                                                                                           
-      setSelectedVideo(item.videoId);                                                                                                                                                                                
+      setSelectedVideo(item);                                                                                                                                                                                
     };                                                                                                                                                                                                               
 
     return (                                                                                                                                                                                                         
@@ -192,7 +198,7 @@ function VideoSelection({ q, onVideoSelect, sentenceObj }) {
         overlayClassName="ReactModal__Overlay"
       >
         <div>
-            <VideoModal showModal={showModal} handleClose={handleClose} selectedVideo={selectedVideo} />    
+            <VideoModal showModal={showModal} handleClose={handleClose} selectedVideo={selectedVideo} sentenceObj={sentenceObj}/>    
         </div>
         
       </div>
@@ -240,6 +246,6 @@ function VideoSelection({ q, onVideoSelect, sentenceObj }) {
       />                                                                                                                                                                                                           
     </div>                                                                                                                                                                                                           
   );                                                                                                                                                                                                                 
-}                                                                                                                                                                                                                    
+})                                                                                                                                                                                                                    
 
 export default VideoSelection;

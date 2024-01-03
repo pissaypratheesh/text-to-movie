@@ -68,7 +68,6 @@ async function fetchShorts(query) {
   });
 
   if (ytInitialData) {
-    console.log("🚀 ~ file: shorts.js:30 ~ fetchShorts ~ ytInitialData:", ytInitialData.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents[0]['itemSectionRenderer']['contents'])
     //const shorts = _.at(ytInitialData,'contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents.0.itemSectionRenderer.contents');
     const shorts = ytInitialData.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents[0]['itemSectionRenderer']['contents'];
     const hasVideoRenderer = shorts.some(obj => 'videoRenderer' in obj);

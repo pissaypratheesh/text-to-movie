@@ -9,6 +9,12 @@ import { useDropzone } from "react-dropzone";
 var _ = require("underscore");
 
 const AssetsAggregation = observer(function AssetsAggregation() {
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedSentence, setSelectedSentence] = useState(null);
+  const [selectedVideos, setSelectedVideos] = useState({});
+  const [query, setQuery] = useState("");
+  const store = useStore();
+  const { sentences } = store;
   const uploadFile = async (file) => {
     // Replace this URL with your backend API endpoint
     const apiUrl = "/api/upload";
@@ -20,9 +26,34 @@ const AssetsAggregation = observer(function AssetsAggregation() {
         method: "POST",
         body: formData,
       });
+      let newSentences = [...store.sentences];
+      //let newImageArr =        newSentences[selectedSentence.index]["selectedImgs"] || [];
+        console.log("File uploaded successfully",selectedSentence,response.data, newSentences);
 
       if (response.ok) {
-        console.log("File uploaded successfully");
+        
+       /*  //selectAll or deselct all
+        if (Array.isArray(image)) {
+          if (!image.length) {
+            newImageArr = [];
+          } else {
+            newImageArr = image;
+          }
+        } else {
+          // select/deselect single
+          if (image.isSelected) {
+            newImageArr[newImageArr.length] = image;
+          } else {
+            newImageArr = newImageArr.filter(
+              (img) => img.src != image.src
+            );
+          }
+        }
+        //Update store
+        newSentences[selectedSentence.index]["selectedImgs"] = newImageArr;
+        store.updateSentences(newSentences); */
+      
+
       } else {
         console.error("Error uploading file");
       }
@@ -31,19 +62,13 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     }
   };
 
-  const onDrop = useCallback((acceptedFiles) => {
+  const onDrop = useCallback((acceptedFiles, others) => {
+    console.log("🚀 ~ file: AssetsAggregation.js:66 ~ onDrop ~ others:", others)
     acceptedFiles.forEach((file) => {
       uploadFile(file);
     });
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-  const [query, setQuery] = useState("");
-  const store = useStore();
-  const { sentences } = store;
-  console.log(
-    "🚀 ~ file: AssetsAggregation.js:13 ~ AssetsAggregation ~ sentences:",
-    toJS(sentences)
-  );
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -55,10 +80,6 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       urlParams.get("p");
     setQuery(urlQuery);
   }, []);
-
-  const [selectedImages, setSelectedImages] = useState([]);
-  const [selectedSentence, setSelectedSentence] = useState(null);
-  const [selectedVideos, setSelectedVideos] = useState({});
 
   if (!sentences.length) {
     return <div> add query</div>;
@@ -76,11 +97,14 @@ const AssetsAggregation = observer(function AssetsAggregation() {
           <details key={index} className="mb-4">
             <summary
               className="cursor-pointer text-xl font-semibold"
-              onClick={() => setSelectedSentence(sentenceObj)}
+              onClick={() => {
+                console.log("\n\n\nclick for symmary of sentence",index, toJS(sentenceObj));
+                setSelectedSentence(toJS(sentenceObj))}
+              }
             >
               {sentence}
             </summary>
-            {!isBothEmpty && (
+            {<>{!isBothEmpty && (
               <>
                 {
                   <h2 className="text-2xl font-semibold mb-4">
@@ -88,7 +112,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                   </h2>
                 }
                 <div
-                  className="grid grid-cols-3 gap-4 mb-8"
+                  className="grid grid-cols-4 gap-4 mb-8"
                   key={`${selectedImgs.length}_${selectedVids.length}`}
                 >
                   {Object.values(selectedImgs).map((image, index) => (
@@ -109,20 +133,24 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                       />
                     );
                   })}
-                  <div
-                    {...getRootProps()}
-                    className="border-dashed border-2 border-gray-400 p-4 cursor-pointer"
-                  >
-                    <input {...getInputProps()} />
-                    {isDragActive ? (
-                      <p>Drop the files here ...</p>
-                    ) : (
-                      <p>Click or drag a file to upload</p>
-                    )}
-                  </div>
+
                 </div>
-              </>
-            )}
+              </>)
+            }
+            <div
+              {...getRootProps()}
+              className="border-dashed border-2 border-gray-400 p-4 cursor-pointer"
+              id='filedrop'
+            >
+              <input {...getInputProps({sentenceObj:toJS(sentenceObj)})} />
+              {isDragActive ? (
+                <p>Drop the files here ...</p>
+              ) : (
+                <p>Click or drag a file to upload</p>
+              )}
+            </div>
+          </>
+          }
           </details>
         );
       })}
