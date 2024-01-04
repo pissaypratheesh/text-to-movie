@@ -46,17 +46,19 @@ function Videos() {
           Search                                                                                                                                                                                                     
         </button>                                                                                                                                                                                                    
       </div>                                                                                                                                                                                                         
+      { jsonData && (
         <Editor                                                                                                                                                                                                    
-        height="40vh"                                                                                                                                                                                                 
-        language="json"                                                                                                                                                                                              
-        theme="vs-dark"                                                                                                                                                                                              
-        value={jsonData}                                                                                                                                                                                             
-        options={{                                                                                                                                                                                                   
-          readOnly: true,                                                                                                                                                                                            
-          minimap: { enabled: false },                                                                                                                                                                               
-          scrollBeyondLastLine: false,                                                                                                                                                                               
-        }}                                                                                                                                                                                                           
-      />                                                                                                                                                                                                             
+          height="40vh"                                                                                                                                                                                                 
+          language="json"                                                                                                                                                                                              
+          theme="vs-dark"                                                                                                                                                                                              
+          value={jsonData}    
+          options={{                                                                                                                                                                                                   
+            readOnly: true,                                                                                                                                                                                            
+            minimap: { enabled: false },                                                                                                                                                                               
+            scrollBeyondLastLine: false,                                                                                                                                                                               
+          }}                                                                                                                                                                                                           
+        /> )
+      }                                                                                                                                                                                                            
     </div>                                                                                                                                                                                                           
   );                                                                                                                                                                                                                 
 }   
