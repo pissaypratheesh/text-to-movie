@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';                                                                                                                                                                         
+import { useState, useEffect, useRef } from 'react';                                                                                                                                                                         
 import axios from 'axios';                                                                                                                                                                                           
 import Editor from "@monaco-editor/react";                                                                                                                                                                        
 let data = JSON.stringify({
@@ -6,7 +6,8 @@ let data = JSON.stringify({
 });                                                                                                                                                                                                
 function Videos() {                                                                                                                                                                                                  
   const [searchTerm, setSearchTerm] = useState('');                                                                                                                                                                  
-  const [jsonData, setJsonData] = useState('');                                                                                                                                                                      
+  const [jsonData, setJsonData] = useState('');  
+  const editorRef = useRef(null);                                                                                                                                                                       
                                                                                                                                                                                                                      
   const handleEditorUpdate = (value) => {
     setJsonData(value);
@@ -56,13 +57,16 @@ function Videos() {
           language="json"                                                                                                                                                                                              
           theme="vs-dark"                                                                                                                                                                                              
           value={jsonData}    
-          options={{
-            readOnly: false,
-            minimap: { enabled: false },
-            scrollBeyondLastLine: false,
-            wordWrap: 'on',
-            lineNumbersMinChars: 3,
-          }}
+          onMount={(editor) => {                                                                                                                                                                                     
+            editorRef.current = editor;                                                                                                                                                                              
+          }}                                                                                                                                                                                                         
+          options={{                                                                                                                                                                                                 
+            readOnly: false,                                                                                                                                                                                         
+            minimap: { enabled: false },                                                                                                                                                                             
+            scrollBeyondLastLine: false,                                                                                                                                                                             
+            wordWrap: 'on',                                                                                                                                                                                          
+            lineNumbersMinChars: 3,                                                                                                                                                                                  
+          }}         
         /> )
       }                                                                                                                                                                                                            
     </div>                                                                                                                                                                                                           
