@@ -108,17 +108,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     fetchAudioURL();
   }, []);
 
-  const AudioPlayer = () => {
-    const audioRef = useRef(null);
-
-    useEffect(() => {
-      if (audioUrl && audioRef.current) {
-        audioRef.current.src = audioUrl;
-      }
-    }, [audioUrl]);
-
-    return <audio ref={audioRef} controls />;
-  };
+import AudioPlayer from "./AudioPlayer";
 
   if (!(sentences && sentences.length)) {
     return <div> add query</div>;
