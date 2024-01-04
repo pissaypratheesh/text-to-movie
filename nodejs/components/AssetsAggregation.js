@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import ImageSelection from "./ImageSelection";
 import VideoSelection from "./VideoSelection";
 import { useStore } from "./StoreProvider";
@@ -15,6 +15,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const [selectedSentence, setSelectedSentence] = useState(null);
   const [selectedVideos, setSelectedVideos] = useState({});
   const [query, setQuery] = useState("");
+  const [audioUrl, setAudioUrl] = useState(null);
   const store = useStore();
   let { sentences, videodata } = store;
   sentences = toJS((sentences) || []);
@@ -81,7 +82,43 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       urlParams.get("prompt") ||
       urlParams.get("p");
     setQuery(urlQuery);
+  const fetchAudioURL = async () => {
+    const apiUrl = "localhost:3000/api/generate/speech";
+    const data = {
+      id: "1234",
+      summary: "this is summary text",
+    };
+
+    try {
+      const response = await axios.post(apiUrl, data, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.data && response.data.url) {
+        setAudioUrl(response.data.url);
+      } else {
+        console.error("Error fetching audio URL");
+      }
+    } catch (error) {
+      console.error("Error fetching audio URL:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAudioURL();
   }, []);
+
+  const AudioPlayer = () => {
+    const audioRef = useRef(null);
+
+    useEffect(() => {
+      if (audioUrl && audioRef.current) {
+        audioRef.current.src = audioUrl;
+      }
+    }, [audioUrl]);
+
+    return <audio ref={audioRef} controls />;
+  };
 
   if (!(sentences && sentences.length)) {
     return <div> add query</div>;
@@ -227,6 +264,8 @@ const AssetsAggregation = observer(function AssetsAggregation() {
           />
         </div>
       )}
+    <div className="mt-4">
+      <AudioPlayer />
     </div>
   );
 });
