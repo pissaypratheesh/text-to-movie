@@ -13,10 +13,13 @@ function Start() {
   const [transcript, setTranscript] = useState([]);
   const [summary, setSummary] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleButtonClick = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`http://localhost:8081/api/ytvideos?url=${encodeURIComponent(youtubeUrl)}`);
+      setIsLoading(false);
       let data = response && response.data;
       if(data){
         let videoData = data[0]
@@ -87,6 +90,11 @@ function Start() {
             }}
           />
         </>
+      )}
+      {isLoading && (
+        <div className="flex justify-center items-center">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
       )}
     </div>
   );
