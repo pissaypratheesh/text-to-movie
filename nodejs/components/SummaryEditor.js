@@ -85,7 +85,7 @@ export default SummaryEditor;
 
 /* import ImageCreator from '../components/ImageCreator';
 
-function SummaryEditor() {
+function SummaryEditor({ summary }) {
   return <ImageCreator />;
 }
 
