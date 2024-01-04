@@ -130,6 +130,20 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                         />
                       ))}
                       {Object.values(selectedVids).map((video, index) => {
+                        if(video.link && video.link.indexOf('tube.com')!==-1){
+                          return (
+                            <div>
+                              <div>{`${video.title.slice(0, 25)}..` || ''}</div>
+                              <img
+                                  key={index}
+                                  src={video.src}
+                                  alt="Selected"
+                                  className="w-full h-32 object-cover"
+                                />
+                            </div>
+                          )
+                        }
+                        console.log("🚀 ~ file: AssetsAggregation.js:133 ~ {Object.values ~ video:", video)
                         return (
                           <video
                             key={index}

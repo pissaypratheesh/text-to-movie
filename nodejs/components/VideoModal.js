@@ -6,9 +6,12 @@ import { FixedSizeList as List } from "react-window";
 import { useStore } from "./StoreProvider";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
+var _ = require("underscore");
+_.mixin(require('../mixins'))
 
 const VideoModal = observer(function VideoModal({ showModal, handleClose, selectedVideo, transcript, sentenceObj }) {
-  transcript = transcript || [
+  console.log("🚀 ~ file: VideoModal.js:11 ~ VideoModal ~ sentenceObj:", selectedVideo,sentenceObj)
+  transcript = transcript || _.at(selectedVideo,'transcript') || [
     {
       text: "chat GPT maybe you've heard of it if you",
       start: 0.799,

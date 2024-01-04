@@ -107,6 +107,8 @@ def extract_video_data(input_data):
         extracted_data = {
             "type": current_item.get("type"),
             "id": current_item.get("id"),
+            "videoId": current_item.get("id"),
+            "thumbnails": current_item.get("thumbnails"),
             "link": current_item.get("link"),
             "duration": current_item.get("duration"),
             "title": current_item.get("title"),
