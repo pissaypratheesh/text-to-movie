@@ -6,20 +6,19 @@ import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import { useDropzone } from "react-dropzone";
 import Dropzone from "react-dropzone";
+import AudioPlayer from "./AudioPlayer";
+
+
 import axios from "axios";
 var activeFile = 9999;
 var _ = require("underscore");
 
 const AssetsAggregation = observer(function AssetsAggregation() {
-  const [selectedImages, setSelectedImages] = useState([]);
   const [selectedSentence, setSelectedSentence] = useState(null);
-  const [selectedVideos, setSelectedVideos] = useState({});
-  const [query, setQuery] = useState("");
-  const [audioUrl, setAudioUrl] = useState(null);
   const store = useStore();
   let { sentences, videodata } = store;
   sentences = toJS((sentences) || []);
-  console.log("🚀 ~ file: AssetsAggregation.js:20 ~ sentences:", videodata,sentences, store)
+  console.log("🚀 ~ file: AssetsAggregation.js:20 ~ sentences:", toJS(videodata),sentences)
   const uploadFile = async (file, others) => {
   
     // Replace this URL with your backend API endpoint
@@ -73,42 +72,6 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     });
   }); //, []
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-
-    const urlQuery =
-      urlParams.get("q") ||
-      urlParams.get("query") ||
-      urlParams.get("prompt") ||
-      urlParams.get("p");
-    setQuery(urlQuery);
-  const fetchAudioURL = async () => {
-    const apiUrl = "localhost:3000/api/generate/speech";
-    const data = {
-      id: "1234",
-      summary: "this is summary text",
-    };
-
-    try {
-      const response = await axios.post(apiUrl, data, {
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (response.data && response.data.url) {
-        setAudioUrl(response.data.url);
-      } else {
-        console.error("Error fetching audio URL");
-      }
-    } catch (error) {
-      console.error("Error fetching audio URL:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchAudioURL();
-  }, []);
-
-import AudioPlayer from "./AudioPlayer";
 
   if (!(sentences && sentences.length)) {
     return <div> add query</div>;
@@ -116,6 +79,7 @@ import AudioPlayer from "./AudioPlayer";
 
   return (
     <div className="m-4">
+      <AudioPlayer onAudioReceived={(url)=>{}}/>
       {sentences.map((sentenceObj, index) => {
         let { line: sentence } = sentenceObj;
         let selectedImgs = toJS(sentenceObj.selectedImgs || []);
@@ -254,11 +218,10 @@ import AudioPlayer from "./AudioPlayer";
           />
         </div>
       )}
-    <div className="mt-4">
-      <AudioPlayer />
+    
     </div>
   );
 });
 
+
 export default AssetsAggregation;
-//
