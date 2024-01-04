@@ -53,7 +53,7 @@ function Videos() {
           theme="vs-dark"                                                                                                                                                                                              
           value={jsonData}    
           options={{
-            readOnly: true,
+            readOnly: false,
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
             wordWrap: 'on',
