@@ -16,7 +16,9 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const [selectedVideos, setSelectedVideos] = useState({});
   const [query, setQuery] = useState("");
   const store = useStore();
-  const { sentences } = store;
+  let { sentences, videodata } = store;
+  sentences = toJS((sentences) || []);
+  console.log("🚀 ~ file: AssetsAggregation.js:20 ~ sentences:", videodata,sentences, store)
   const uploadFile = async (file, others) => {
   
     // Replace this URL with your backend API endpoint
@@ -81,7 +83,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     setQuery(urlQuery);
   }, []);
 
-  if (!sentences.length) {
+  if (!(sentences && sentences.length)) {
     return <div> add query</div>;
   }
 
