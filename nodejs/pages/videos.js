@@ -8,6 +8,10 @@ function Videos() {
   const [searchTerm, setSearchTerm] = useState('');                                                                                                                                                                  
   const [jsonData, setJsonData] = useState('');                                                                                                                                                                      
                                                                                                                                                                                                                      
+  const handleEditorUpdate = (value) => {
+    setJsonData(value);
+  };
+
   const fetchJsonData = async () => {
     let config = {
       method: 'post',
