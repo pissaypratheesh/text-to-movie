@@ -155,22 +155,14 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
                            validateTimingsText={validateTimingsText}                                                                                                                                                  
                            errorMessage={errorMessage}                                                                                                                                                                
                          />        
-                        <input
-                          type="text"
-                          className="w-full p-2 border border-gray-300 rounded mt-4"
-                          placeholder="Search transcript..."
-                          value={searchKeyword}
-                          onChange={(e) => setSearchKeyword(e.target.value)}
+                        <TranscriptSearch
+                          searchKeyword={searchKeyword}
+                          setSearchKeyword={setSearchKeyword}
                         />
-                        <List
-                          height={150}
-                          itemCount={filteredTranscript.length}
-                          itemSize={35}
-                          width="100%"
-                          className="mt-4 overflow-y-auto"
-                        >
-                          {Row}
-                        </List>
+                        <TranscriptList
+                          filteredTranscript={filteredTranscript}
+                          changeTime={changeTime}
+                        />
                       </>
                     )}
                   </div>
