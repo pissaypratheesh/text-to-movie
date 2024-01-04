@@ -1,5 +1,8 @@
 import React, { useState, useMemo } from "react";
-import YouTube from "react-youtube";
+import YouTubePlayer from "./YouTubePlayer";
+import TimingsInput from "./TimingsInput";
+import TranscriptSearch from "./TranscriptSearch";
+import TranscriptList from "./TranscriptList";
 import { useRef } from "react";
 //import { FixedSizeList as List } from 'react-window';
 import { FixedSizeList as List } from "react-window";
@@ -144,19 +147,7 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
                   <div className="mt-2">
                     {selectedVideo && (
                       <>
-                        <YouTube
-                          videoId={selectedVideo.videoId.split("/").pop()}
-                          onReady={onReady}
-                          opts={{
-                            playerVars: {
-                              // https://developers.google.com/youtube/player_parameters
-                              height: "390",
-                              width: "640",
-                              autoplay: 1,
-                            },
-                          }}
-                          className="mx-auto"
-                        />
+                        <YouTubePlayer videoId={selectedVideo.videoId} onReady={onReady} />
 
                         <div className="flex items-center mt-2">
                           <input
