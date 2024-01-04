@@ -9,8 +9,8 @@ function Videos() {
   const [jsonData, setJsonData] = useState('');  
   const editorRef = useRef(null);                                                                                                                                                                       
                                                                                                                                                                                                                      
-  const handleEditorUpdate = (value) => {
-    setJsonData(value);
+  const handleEditorUpdate = () => {
+    setJsonData(editorRef.current.getValue());
   };
 
   const fetchJsonData = async () => {
@@ -52,22 +52,30 @@ function Videos() {
         </button>                                                                                                                                                                                                    
       </div>                                                                                                                                                                                                         
       { jsonData && (
-        <Editor                                                                                                                                                                                                    
-          height="40vh"                                                                                                                                                                                                 
-          language="json"                                                                                                                                                                                              
-          theme="vs-dark"                                                                                                                                                                                              
-          value={jsonData}    
-          onMount={(editor) => {                                                                                                                                                                                     
-            editorRef.current = editor;                                                                                                                                                                              
-          }}                                                                                                                                                                                                         
-          options={{                                                                                                                                                                                                 
-            readOnly: false,                                                                                                                                                                                         
-            minimap: { enabled: false },                                                                                                                                                                             
-            scrollBeyondLastLine: false,                                                                                                                                                                             
-            wordWrap: 'on',                                                                                                                                                                                          
-            lineNumbersMinChars: 3,                                                                                                                                                                                  
-          }}         
-        /> )
+        <>
+          <button
+            className="bg-green-500 text-white px-4 py-2 rounded mb-4"
+            onClick={handleEditorUpdate}
+          >
+            Update
+          </button>
+          <Editor                                                                                                                                                                                                    
+            height="40vh"                                                                                                                                                                                                 
+            language="json"                                                                                                                                                                                              
+            theme="vs-dark"                                                                                                                                                                                              
+            value={jsonData}    
+            onMount={(editor) => {                                                                                                                                                                                     
+              editorRef.current = editor;                                                                                                                                                                              
+            }}                                                                                                                                                                                                         
+            options={{                                                                                                                                                                                                 
+              readOnly: false,                                                                                                                                                                                         
+              minimap: { enabled: false },                                                                                                                                                                             
+              scrollBeyondLastLine: false,                                                                                                                                                                             
+              wordWrap: 'on',                                                                                                                                                                                          
+              lineNumbersMinChars: 3,                                                                                                                                                                                  
+            }}         
+          /> 
+        </>)
       }                                                                                                                                                                                                            
     </div>                                                                                                                                                                                                           
   );                                                                                                                                                                                                                 
