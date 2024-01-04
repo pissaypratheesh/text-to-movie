@@ -60,6 +60,9 @@ function Start() {
             filteredTranscript={transcript.filter((item) =>
               item.text.toLowerCase().includes(searchKeyword.toLowerCase())
             )}
+            changeTime={(time) => {
+              console.log("Change time to:", time);
+            }}
           />
           <Editor
             height="40vh"

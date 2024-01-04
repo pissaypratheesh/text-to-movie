@@ -1,7 +1,7 @@
 import React from "react";
 import { FixedSizeList as List } from "react-window";
 
-const TranscriptList = ({ filteredTranscript, changeTime }) => {
+const TranscriptList = ({ filteredTranscript, changeTime = () => {} }) => {
   const Row = ({ index, style }) => {
     const item = filteredTranscript[index];
     return (
