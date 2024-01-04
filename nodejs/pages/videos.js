@@ -47,7 +47,7 @@ function Videos() {
         </button>                                                                                                                                                                                                    
       </div>                                                                                                                                                                                                         
         <Editor                                                                                                                                                                                                    
-        height="400"                                                                                                                                                                                                 
+        height="40vh"                                                                                                                                                                                                 
         language="json"                                                                                                                                                                                              
         theme="vs-dark"                                                                                                                                                                                              
         value={jsonData}                                                                                                                                                                                             
