@@ -28,7 +28,7 @@ function Start() {
           className="bg-blue-500 text-white px-4 py-2 rounded ml-4"
           onClick={handleButtonClick}
         >
-          Fetch Data
+          Fetch
         </button>
       </div>
       <div className="response-data">
