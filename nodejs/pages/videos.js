@@ -52,11 +52,13 @@ function Videos() {
           language="json"                                                                                                                                                                                              
           theme="vs-dark"                                                                                                                                                                                              
           value={jsonData}    
-          options={{                                                                                                                                                                                                   
-            readOnly: true,                                                                                                                                                                                            
-            minimap: { enabled: false },                                                                                                                                                                               
-            scrollBeyondLastLine: false,                                                                                                                                                                               
-          }}                                                                                                                                                                                                           
+          options={{
+            readOnly: true,
+            minimap: { enabled: false },
+            scrollBeyondLastLine: false,
+            wordWrap: 'on',
+            lineNumbersMinChars: 3,
+          }}
         /> )
       }                                                                                                                                                                                                            
     </div>                                                                                                                                                                                                           
