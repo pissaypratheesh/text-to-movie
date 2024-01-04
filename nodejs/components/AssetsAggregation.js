@@ -15,6 +15,7 @@ var _ = require("underscore");
 
 const AssetsAggregation = observer(function AssetsAggregation() {
   const [selectedSentence, setSelectedSentence] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const store = useStore();
   let { sentences, videodata } = store;
   sentences = toJS((sentences) || []);
