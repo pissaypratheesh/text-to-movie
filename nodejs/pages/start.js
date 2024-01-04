@@ -51,7 +51,12 @@ function Start() {
       </div>
       {responseData && (
         <>
-          <YouTubePlayer videoId={videoId} />
+          <YouTubePlayer
+            videoId={videoId}
+            onReady={(event) => {
+              console.log("YouTube player is ready:", event.target);
+            }}
+          />
           <TranscriptSearch
             searchKeyword={searchKeyword}
             setSearchKeyword={setSearchKeyword}
