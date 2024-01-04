@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import YouTubePlayer from "../components/YouTubePlayer";
 import TranscriptSearch from "../components/TranscriptSearch";
@@ -7,6 +7,7 @@ import Editor from "@monaco-editor/react";
 
 function Start() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
+  const playerRef = useRef(null);
   const [responseData, setResponseData] = useState("");
   const [videoId, setVideoId] = useState("");
   const [transcript, setTranscript] = useState([]);
@@ -31,6 +32,16 @@ function Start() {
       console.error('Error fetching data:', error);
     }
   };
+  const onReady = (event) => {
+    // access to player in all event handlers via event.target
+    playerRef.current = event.target;
+    event.target.playVideo();
+  };
+  const changeTime = (seconds) => {
+    playerRef.current.seekTo(seconds);
+    playerRef.current.playVideo();
+  };
+
 
   return (
     <div className="container mx-auto">
@@ -53,9 +64,7 @@ function Start() {
         <>
           <YouTubePlayer
             videoId={videoId}
-            onReady={(event) => {
-              console.log("YouTube player is ready:", event.target);
-            }}
+            onReady={onReady}
           />
           <TranscriptSearch
             searchKeyword={searchKeyword}
@@ -65,9 +74,7 @@ function Start() {
             filteredTranscript={transcript.filter((item) =>
               item.text.toLowerCase().includes(searchKeyword.toLowerCase())
             )}
-            changeTime={(time) => {
-              console.log("Change time to:", time);
-            }}
+            changeTime={changeTime}
           />
           <Editor
             height="40vh"
