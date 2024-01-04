@@ -3,7 +3,7 @@ import axios from "axios";
 import YouTubePlayer from "../components/YouTubePlayer";
 import TranscriptSearch from "../components/TranscriptSearch";
 import TranscriptList from "../components/TranscriptList";
-import MonacoEditor from "react-monaco-editor";
+import Editor from "@monaco-editor/react";  
 
 function Start() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
@@ -16,10 +16,17 @@ function Start() {
   const handleButtonClick = async () => {
     try {
       const response = await axios.get(`http://localhost:8081/api/ytvideos?url=${encodeURIComponent(youtubeUrl)}`);
-      setResponseData(response.data);
-      setVideoId(response.data.videoId);
-      setTranscript(response.data.transcript);
-      setSummary(response.data.summary);
+      let data = response && response.data;
+      if(data){
+        let videoData = data[0]
+        let {videoId, thumbnails, duration, title, descriptionSnippet, stream, transcript = []} = videoData || {}
+        let summary = transcript.map((item) => item.text).join(" ");
+        setResponseData(response.data);
+        setVideoId(videoId);
+        setTranscript(transcript);
+        setSummary(summary);
+      }
+      
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -54,8 +61,8 @@ function Start() {
               item.text.toLowerCase().includes(searchKeyword.toLowerCase())
             )}
           />
-          <MonacoEditor
-            height="200"
+          <Editor
+            height="40vh"
             language="markdown"
             theme="vs-dark"
             value={summary}
