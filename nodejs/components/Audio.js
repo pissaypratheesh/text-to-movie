@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AudioPlayer = ({src, link, url}) => {
+const AudioPlayer = ({src, link, url, play=false}) => {
   return (
     <audio controls>
       <source src={src || link || url} type="audio/mpeg" />
