@@ -50,7 +50,7 @@ const AudioModal = observer(function AudioModal({}) {
       {isLoading ? (
         <Loader text={"audio fetcing.."}/>
       ) : (
-        <div className="grid grid-cols-none auto-cols-auto gap-4 flex flex-wrap">
+        <div className="flex flex-wrap gap-4">
           {backgroundMusicList.map((music) => (
             <div
               key={music.id || music.name}
