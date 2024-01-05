@@ -1,17 +1,23 @@
 import { useState, useEffect, useRef } from 'react';                                                                                                                                                                         
 import axios from 'axios';                                                                                                                                                                                           
-import Editor from "@monaco-editor/react";                                                                                                                                                                        
+import Editor from "@monaco-editor/react";       
+import Loading from './Loading';                                                                                                                                                                 
                                                                                                                                                                                                
-function SummaryEditor({ summary }) {                                                                                                                                                                                                  
+function SummaryEditor({ summary, onUpdate }) {                                                                                                                                                                                                  
   const [searchTerm, setSearchTerm] = useState(summary || '');                                                                                                                                                                  
   const [jsonData, setJsonData] = useState('');  
-  const editorRef = useRef(null);                                                                                                                                                                       
+  const [loading, setLoading] = useState(false);  
+  const editorRef = useRef(null);   
+  useEffect(() => {                                                                                                                                                                                                  
+    fetchJsonData();                                                                                                                                                                                                 
+  }, []);                                                                                                                                                                     
                                                                                                                                                                                                                      
   const handleEditorUpdate = () => {
     setJsonData(editorRef.current.getValue());
+    onUpdate(editorRef.current.getValue());
   };
-  let data = JSON.stringify({ "q": summary });
   const fetchJsonData = async () => {
+    let data = JSON.stringify({ "q": summary });
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -21,10 +27,12 @@ function SummaryEditor({ summary }) {
       },
       data : data
     };                                                                                                                                                                                
-    try {                                                                                                                                                                                                            
+    try {  
+      setLoading(true);                                                                                                                                                                                                          
       const response = await axios.request(config);                                                                                                                               
       console.log("🚀 ~ file: videos.js:23 ~ fetchJsonData ~ response:", response.data,response.data.messages[0]['content'])
       let json = response.data.messages[0]['content']
+      setLoading(false);
       setJsonData(JSON.stringify(JSON.parse(json), null, 2));                                                                                                                                                           
     } catch (error) {                                                                                                                                                                                                
       console.error('Error fetching JSON data:', error);                                                                                                                                                             
@@ -39,23 +47,27 @@ function SummaryEditor({ summary }) {
         <textarea                                                                                                                                                                                                    
            className="border border-gray-300 rounded px-4 py-2 w-full"                                                                                                                                                
            placeholder="Search..."                                                                                                                                                                                    
-           value={searchTerm}                                                                                                                                                                                         
+           value={searchTerm}                                  
+           rows={6}                                                                                                                                                       
            onChange={(e) => setSearchTerm(e.target.value)}                                                                                                                                                            
          ></textarea>                                                                                                                                                                                                           
         <button                                                                                                                                                                                                      
           className="bg-blue-500 text-white px-4 py-2 rounded ml-4"                                                                                                                                                  
           onClick={fetchJsonData}                                                                                                                                                                                    
         >                                                                                                                                                                                                            
-          Search                                                                                                                                                                                                     
+          Summarize                                                                                                                                                                                                     
         </button>                                                                                                                                                                                                    
-      </div>                                                                                                                                                                                                         
+      </div>       
+      {loading && (
+          <Loading text="Fetching the summary"/>
+      )}                                                                                                                                                                                                  
       { jsonData && (
         <>
           <button
             className="bg-green-500 text-white px-4 py-2 rounded mb-4"
             onClick={handleEditorUpdate}
           >
-            Update
+            Go Next..
           </button>
           <Editor                                                                                                                                                                                                    
             height="40vh"                                                                                                                                                                                                 

@@ -3,17 +3,24 @@ import axios from "axios";
 import YouTubePlayer from "../components/YouTubePlayer";
 import TranscriptSearch from "../components/TranscriptSearch";
 import TranscriptList from "../components/TranscriptList";
-import Editor from "@monaco-editor/react";  
-
-function Start() {
-  const [youtubeUrl, setYoutubeUrl] = useState('');
+import SummaryEditor from "../components/SummaryEditor";
+import { useStore } from "../components/StoreProvider";
+import AssetsAggregation from "../components/AssetsAggregation";
+import Loading from "../components/Loading";
+import { observer } from "mobx-react-lite";
+import { toJS } from "mobx";
+const Start = observer(function Start() {
+  const store = useStore();  
+  const [youtubeUrl, setYoutubeUrl] = useState('https://www.youtube.com/watch?v=Fbbu_GQcrwc');
   const playerRef = useRef(null);
   const [responseData, setResponseData] = useState("");
   const [videoId, setVideoId] = useState("");
+  const [videodata, setVideodata] = useState();
   const [transcript, setTranscript] = useState([]);
   const [summary, setSummary] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [finalSummary, setFinalSummary] = useState();
 
   const handleButtonClick = async () => {
     setIsLoading(true);
@@ -25,6 +32,7 @@ function Start() {
         let videoData = data[0]
         let {videoId, thumbnails, duration, title, descriptionSnippet, stream, transcript = []} = videoData || {}
         let summary = transcript.map((item) => item.text).join(" ");
+        setVideodata(videoData);
         setResponseData(response.data);
         setVideoId(videoId);
         setTranscript(transcript);
@@ -54,16 +62,18 @@ function Start() {
           className="border border-gray-300 rounded px-4 py-2 w-full"
           placeholder="Enter YouTube URL..."
           value={youtubeUrl}
+          disabled={!!finalSummary}
           onChange={(e) => setYoutubeUrl(e.target.value)}
         />
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded ml-4"
           onClick={handleButtonClick}
+          disabled={!!finalSummary}
         >
           Fetch
         </button>
       </div>
-      {responseData && (
+      {responseData && !finalSummary && (
         <>
           <YouTubePlayer
             videoId={videoId}
@@ -79,17 +89,26 @@ function Start() {
             )}
             changeTime={changeTime}
           />
-          <Editor
-            height="40vh"
-            language="markdown"
-            theme="vs-dark"
-            value={summary}
-            options={{
-              readOnly: true,
-              minimap: { enabled: false },
-            }}
-          />
+          {summary && (
+            <SummaryEditor 
+                summary={summary} 
+                onUpdate={(editedSummary) => {
+                    setSummary(editedSummary);
+                    setFinalSummary(editedSummary);
+                    let parsed = JSON.parse(editedSummary)
+                    if(parsed){
+                        //parsed.summary = parsed.summary.map((line, index) => ({ index, line }))
+                        store.updateSentences(parsed.summary);
+                        store.updateData({...parsed, ...videodata},'videodata');
+                    }
+                }}
+            />)}
         </>
+      )}
+      {finalSummary && (
+          <>
+            <AssetsAggregation />
+          </>
       )}
       {isLoading && (
         <div className="flex justify-center items-center">
@@ -98,6 +117,6 @@ function Start() {
       )}
     </div>
   );
-}
+})
 
 export default Start;

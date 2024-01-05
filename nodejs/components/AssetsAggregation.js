@@ -7,6 +7,7 @@ import { observer } from "mobx-react-lite";
 import { useDropzone } from "react-dropzone";
 import Dropzone from "react-dropzone";
 import AudioPlayer from "./AudioPlayer";
+import Loading from "./Loading";
 
 
 import axios from "axios";
@@ -80,9 +81,10 @@ const AssetsAggregation = observer(function AssetsAggregation() {
 
   return (
     <div className="m-4">
-      <AudioPlayer onAudioReceived={(url)=>{}}/>
-      {sentences.map((sentenceObj, index) => {
-        let { line: sentence } = sentenceObj;
+      <AudioPlayer onAudioReceived={(url)=>{ setIsLoading(false)}}/>
+      {isLoading && <Loading text={"Fetching the TTS with segments"}/>}
+      {!isLoading && sentences.map((sentenceObj, index) => {
+        let { line: sentence, start, end, assetsEnd } = sentenceObj;
         let selectedImgs = toJS(sentenceObj.selectedImgs || []);
         let selectedVids = toJS(sentenceObj.selectedVids || []);
         let isBothEmpty =
@@ -100,7 +102,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                 setSelectedSentence(toJS(sentenceObj));
               }}
             >
-              {sentence}
+              {`(${((assetsEnd || end) - start).toFixed(1)}s)${sentence}`}
             </summary>
             {
               <>
@@ -170,7 +172,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
           </details>
         );
       })}
-      {selectedSentence && (
+      {!isLoading && selectedSentence && (
         <div className="mt-4" key={selectedSentence.index}>
           <ImageSelection
             q={selectedSentence.line}

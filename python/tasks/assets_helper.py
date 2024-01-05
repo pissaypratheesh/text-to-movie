@@ -103,7 +103,7 @@ def extract_video_data(input_data):
         except Exception as e:
             print(f"An error occurred while extracting stream for video {current_item.get('id')}: {str(e)}")
             stream = None
-
+        print("\n\n\n\ncurrent_item--->",current_item)
         extracted_data = {
             "type": current_item.get("type"),
             "id": current_item.get("id"),

@@ -4,8 +4,6 @@ import TimingsInput from "./TimingsInput";
 import TranscriptSearch from "./TranscriptSearch";
 import TranscriptList from "./TranscriptList";
 import { useRef } from "react";
-//import { FixedSizeList as List } from 'react-window';
-import { FixedSizeList as List } from "react-window";
 import { useStore } from "./StoreProvider";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
@@ -96,22 +94,6 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
     playerRef.current.playVideo();
   };
 
-  const Row = ({ index, style }) => {
-    const item = filteredTranscript[index];
-    return (
-      <button
-        onClick={() => {
-          // setSeekTime(item.start);
-          // player.current.seekTo(item.start);
-          changeTime(item.start);
-        }}
-        className="w-full text-left p-2 hover:bg-gray-200"
-        style={style}
-      >
-        {`${item.start}(${item.duration}): ${item.text}`}
-      </button>
-    );
-  };
 
   if (!showModal) {
     return <></>;
@@ -155,14 +137,14 @@ const VideoModal = observer(function VideoModal({ showModal, handleClose, select
                            validateTimingsText={validateTimingsText}                                                                                                                                                  
                            errorMessage={errorMessage}                                                                                                                                                                
                          />        
-                        <TranscriptSearch
-                          searchKeyword={searchKeyword}
-                          setSearchKeyword={setSearchKeyword}
-                        />
-                        <TranscriptList
-                          filteredTranscript={filteredTranscript}
-                          changeTime={changeTime}
-                        />
+                        <TranscriptSearch                                                                                                                                                                            
+                           searchKeyword={searchKeyword}                                                                                                                                                              
+                           setSearchKeyword={setSearchKeyword}                                                                                                                                                        
+                         />   
+                         <TranscriptList                                                                                                                                                                              
+                           filteredTranscript={filteredTranscript}                                                                                                                                                    
+                           changeTime={changeTime}                                                                                                                                                                    
+                         />   
                       </>
                     )}
                   </div>

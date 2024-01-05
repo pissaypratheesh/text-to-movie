@@ -13,7 +13,7 @@ Video creation is in nodejs/others folder
 and nodejs/xml_generator/refactored/jsonGenerator.js
 
 
-
+1. have a button just above the editor by name Update, on clicking which update the jsonData state with the edited changes in the editor
 
 
 

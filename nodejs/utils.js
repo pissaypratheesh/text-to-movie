@@ -5,6 +5,9 @@ const exec = util.promisify(require('child_process').exec);
 
 const path = require('path');
 const fs = require('fs');
+var _ = require("underscore");
+_.mixin(require('./mixins'))
+
 
 function fileExists(filePath) {
   return fs.existsSync(filePath);
@@ -61,8 +64,8 @@ function createTTS({text, filename}) {
 
 
 async function createTTS({text, id, force=false}) {
-    const currentPath = path.resolve(__dirname);
-    const idpath = `${currentPath}/tts/${id}`;
+  
+    const idpath = path.join(process.cwd(), `/public/assets/tts/${id}`);
 
     createDirectoryIfNotExists(idpath);
     const outPath = `${idpath}/${id}`;
@@ -70,20 +73,22 @@ async function createTTS({text, id, force=false}) {
       return new Promise((resolve, reject) => {
         var re =  {
           status: "success",
-          path: idpath,
+          path: `${outPath}.mp3`,
           alreadyExists : 'true'
         };
         resolve(re);
       });
     }
-    const command = `edge-tts --text "${text}" --voice en-US-ChristopherNeural --write-media ${outPath}.mp3 --write-subtitles ${outPath}.vtt`;
+    //en-US-ChristopherNeural
+    //en-US-GuyNeural
+    const command = `edge-tts --text "${text}" --voice en-US-RogerNeural  --rate=+20%  --write-media ${outPath}.mp3 --write-subtitles ${outPath}.vtt`;
   
     try {
       const { stdout, stderr } = await exec(command);
       console.log(`Audio created successfully at ${outPath}.mp3`);
       return {
         status: "success",
-        path: outPath
+        path: `${outPath}.mp3`
       };
     } catch (error) {
       console.error(`Command execution failed: ${error}`);
@@ -93,15 +98,14 @@ async function createTTS({text, id, force=false}) {
 
 async function createSTT({id, force=false}) {
 
-    const currentPath = path.resolve(__dirname);
-    const idpath = `${currentPath}/tts/${id}`;
+    const idpath = path.join(process.cwd(), `/public/assets/tts/${id}`);
 
     createDirectoryIfNotExists(idpath);
     if(!force && fileExists(`${idpath}/${id}.json`)){
       return new Promise((resolve, reject) => {
         var re =  {
           status: "success",
-          path: idpath,
+          path: `${idpath}/${id}.json`,
           alreadyExists : 'true'
         };
         resolve(re);
@@ -112,12 +116,15 @@ async function createSTT({id, force=false}) {
     const command = `whisperx ${inputfile}.mp3 --compute_type int8 --output_format json --output_dir ${idpath}`;
   
     try {
-      console.log("\n\n\n\n🚀 ~ file: utils.js:57 ~ createSTT ~ command:", command)
       const { stdout, stderr } = await exec(command);
+      const filePath =  `${idpath}/${id}.json`;
+      const jsonData = fs.readFileSync(filePath, 'utf8');
+      const data = JSON.parse(jsonData);
       console.log(`Transcript created successfully at ${idpath}`);
       return {
         status: "success",
-        path: idpath
+        path: filePath,
+        data
       };
     } catch (error) {
       console.error(`Command execution failed: ${error}`);
@@ -127,24 +134,27 @@ async function createSTT({id, force=false}) {
 
   //usage example of createTTS
   async function createTTSnSTT({text, id, force=false}) {
+    text = removeEmoticons(text);
     try {
       const tts = await createTTS({
         text,
-        id, force
+        id, force: _.bool(force)
       });
-      console.log("\n\n\n\n🚀 ~ file: utils.js:116 ~ createTTSnSTT ~ tts:", tts)
       const stt = await createSTT({
-        id, force
+        id, force: _.bool(force)
       })
-      console.log("\n\n\nsttttt--->",stt)
       return {
         textToSpeech: tts,
         speechToTranscript: stt
       }
     } catch (error) {
-      console.log("\n\n\n🚀 ~ file: utils.js:124 ~ createTTSnSTT ~ error:", error)
       console.error(error);
     }
+  }
+
+  function removeEmoticons(str) {
+    const emoticonRegex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
+    return str.replace(emoticonRegex, '');
   }
   
   //runCreateTTS();
@@ -156,4 +166,65 @@ module.exports = {
     createTTSnSTT,
     fileExists,
     createDirectoryIfNotExists,
+    removeEmoticons
 }
+
+/*
+en-US-ChristopherNeural:
+
+A male English (United States) voice known for its clear and natural sound.
+en-US-DevonNeural:
+
+Another male English (United States) voice that aims to sound human-like.
+en-US-BenjaminRUS:
+
+A male English (United States) voice that may offer a distinct and natural tone.
+en-GB-RyanNeural:
+
+A male English (United Kingdom) voice known for its expressive and realistic qualities.
+en-AU-CraigNeural:
+
+A male English (Australia) voice that might provide a natural Australian accent.
+
+LINK: https://speech.microsoft.com/portal/voicegallery
+
+Microsoft Edge TTS
+
+options:
+  -h, --help            show this help message and exit
+  -t TEXT, --text TEXT  what TTS will say
+  -f FILE, --file FILE  same as --text but read from file
+  -v VOICE, --voice VOICE
+                        voice for TTS. Default: en-US-AriaNeural
+  -l, --list-voices     lists available voices and exits
+  --rate RATE           set TTS rate. Default +0%.
+  --volume VOLUME       set TTS volume. Default +0%.
+  --pitch PITCH         set TTS pitch. Default +0Hz.
+  --words-in-cue WORDS_IN_CUE
+                        number of words in a subtitle cue. Default: 10.
+  --write-media WRITE_MEDIA
+                        send media output to file instead of stdout
+  --write-subtitles WRITE_SUBTITLES
+                        send subtitle output to provided file instead of stderr
+  --proxy PROXY         use a proxy for TTS and voice list.
+
+SUPPORTED:
+en-AU-WilliamNeural
+en-CA-LiamNeural
+en-GB-RyanNeural
+en-HK-SamNeural
+en-IE-ConnorNeural
+en-IN-PrabhatNeural
+en-KE-ChilembaNeural
+en-NG-AbeoNeural
+en-NZ-MitchellNeural
+en-PH-JamesNeural
+en-SG-WayneNeural
+en-TZ-ElimuNeural
+en-US-ChristopherNeural
+en-US-EricNeural
+en-US-GuyNeural
+en-US-RogerNeural
+en-US-SteffanNeural
+en-ZA-LukeNeural
+*/

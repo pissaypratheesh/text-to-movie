@@ -7,13 +7,8 @@ export class Store {
   lastUpdate = 0
   light = false
   sentences = []
-  /* [
-    "Sun sets, warm city glow.",
-    "Forest walk, birds chirp.",
-    "Quiet library, books imagination.",
-    "Freshly baked bread aroma.",
-  ]
- */
+  videodata = {}
+
   constructor() {
     makeObservable(this, {
       lastUpdate: observable,
@@ -22,6 +17,7 @@ export class Store {
       hydrate: action,
       timeString: computed,
       sentences: observable,
+      videodata: observable,
       updateSentences: action,
     })
   }
@@ -58,6 +54,12 @@ export class Store {
   updateSentences = (newSentences) => {
     runInAction(() => {
       this.sentences = newSentences;
+    });
+  }
+
+  updateData = (newData, key) => {
+    runInAction(() => {
+      this[key] = newData;
     });
   }
 }

@@ -77,11 +77,18 @@ async def get_image(request: Request):
     else:
         return {"error": "Missing hash parameter"}
 
+
 @api.get("/ytvideos")
 async def videos(request: Request):
-    query = request.query_params.get("query")
+    query = request.query_params.get("query") or  request.query_params.get("url") 
     if query:
-         videosSearch = VideosSearch(query, limit = 5)
+         # Check if the query is a YouTube link
+         if ("youtube.com" in query or "youtu.be" in query) and (query.startswith("http://") or query.startswith("https://")):
+            limit = 1  # Set the limit to 1 for YouTube links
+         else:
+            limit = 5  # Set the default limit to 5
+
+         videosSearch = VideosSearch(query, limit)
          res = videosSearch.result()
          if res:
              return extract_video_data(res['result'])
