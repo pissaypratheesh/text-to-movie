@@ -10,7 +10,7 @@ import { observer } from "mobx-react-lite";
 var _ = require("underscore");
 _.mixin(require('../mixins'))
 
-const AudioModal = observer(function AudioModal({}) {
+const AudioModal = observer(function AudioModal({ ttsURL, toggleAudioModal }) {
   const [backgroundMusicList, setBackgroundMusicList] = useState([]);
   const [selectedMusic, setSelectedMusic] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,15 +41,20 @@ const AudioModal = observer(function AudioModal({}) {
  
 
   const handleMusicSelection = (music) => {
+    console.log("🚀 ~ file: AudioModal.js:44 ~ handleMusicSelection ~ music:", music,ttsURL)
     setSelectedMusic(music);
-    //playSelectedMusic(music);
+    if (ttsURL && music.url) {
+      console.log("🚀 ~ file: AudioModal.js:46 ~ handleMusicSelection ~ ttsURL && music.url:", ttsURL && music.url)
+      
+      
+    }
   };
 
   return (
     <Modal isOpen={true} className="bg-white p-6 rounded-lg shadow-lg relative">
       <button
         className="absolute top-0 right-0 mt-2 mr-2 text-xl font-bold text-gray-600 hover:text-gray-800"
-        onClick={() => setShowAudioModal(false)}
+        onClick={() => toggleAudioModal(false)}
       >
         &times;
       </button>
