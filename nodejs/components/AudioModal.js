@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import axios from "axios";
 import Loader from "./Loading";
 import Audio from "./Audio";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useStore } from "./StoreProvider";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
@@ -15,6 +15,7 @@ const AudioModal = observer(function AudioModal({ ttsURL, toggleAudioModal }) {
   const [selectedMusic, setSelectedMusic] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [audioPlayer, setAudioPlayer] = useState(null);
+  const [blendedAudioPath, setBlendedAudioPath] = useState(null);
   const store = useStore();
   const { sentences } = store;
 
@@ -44,9 +45,16 @@ const AudioModal = observer(function AudioModal({ ttsURL, toggleAudioModal }) {
     console.log("🚀 ~ file: AudioModal.js:44 ~ handleMusicSelection ~ music:", music,ttsURL)
     setSelectedMusic(music);
     if (ttsURL && music.url) {
-      console.log("🚀 ~ file: AudioModal.js:46 ~ handleMusicSelection ~ ttsURL && music.url:", ttsURL && music.url)
-      
-      
+      blendAudio(ttsURL, music.url);
+    }
+  };
+
+  const blendAudio = async (tts, bg) => {
+    try {
+      const response = await axios.get(`/api/blendaudio?tts=${tts}&bg=${bg}`);
+      setBlendedAudioPath(response.data.path);
+    } catch (error) {
+      console.error("Error blending audio:", error);
     }
   };
 
@@ -76,6 +84,7 @@ const AudioModal = observer(function AudioModal({ ttsURL, toggleAudioModal }) {
         </div>
       )}
       {selectedMusic && <Audio key={selectedMusic.url} src={selectedMusic.url} play={true}></Audio>}
+      {blendedAudioPath && <p className="mt-4 text-green-600">Blended audio path: {blendedAudioPath}</p>}
     </Modal>
   );
 });
