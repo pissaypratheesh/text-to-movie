@@ -50,12 +50,12 @@ const AudioModal = observer(function AudioModal({}) {
       {isLoading ? (
         <Loader text={"audio fetcing.."}/>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           {backgroundMusicList.map((music) => (
             <div
               key={music.id || music.name}
               onClick={() => handleMusicSelection(music)}
-              className={`cursor-pointer p-2 rounded-lg ${
+              className={`cursor-pointer p-2 rounded-full ${
                 selectedMusic === music ? "bg-blue-500 text-white" : "bg-gray-200"
               }`}
             >
