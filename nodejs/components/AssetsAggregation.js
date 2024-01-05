@@ -8,6 +8,7 @@ import { useDropzone } from "react-dropzone";
 import Dropzone from "react-dropzone";
 import AudioPlayer from "./AudioPlayer";
 import Loading from "./Loading";
+import AudioModal from "./AudioModal";
 
 
 import axios from "axios";
@@ -17,6 +18,7 @@ var _ = require("underscore");
 const AssetsAggregation = observer(function AssetsAggregation() {
   const [selectedSentence, setSelectedSentence] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showAudioModal, setShowAudioModal] = useState(false);
   const store = useStore();
   let { sentences, videodata } = store;
   sentences = toJS((sentences) || []);
@@ -222,8 +224,15 @@ const AssetsAggregation = observer(function AssetsAggregation() {
         </div>
       )}
     
-    </div>
-  );
+    <button
+      className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4"
+      onClick={() => setShowAudioModal(!showAudioModal)}
+    >
+      {showAudioModal ? "Close Audio Modal" : "Open Audio Modal"}
+    </button>
+    {showAudioModal && <AudioModal />}
+  </div>
+);
 });
 
 
