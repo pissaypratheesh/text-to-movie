@@ -230,7 +230,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     >
       {showAudioModal ? "Close Audio Modal" : "Open Audio Modal"}
     </button>
-    {showAudioModal && <AudioModal />}
+    {showAudioModal && <AudioModal toggleAudioModal={() => setShowAudioModal(false)} />}
   </div>
 );
 });
