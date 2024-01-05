@@ -46,3 +46,38 @@ and nodejs/xml_generator/refactored/jsonGenerator.js
 
 Youtube related:
 https://github.com/alexmercerind/youtube-search-python
+
+/*
+Background musics:
+https://www.youtube.com/watch?v=i-rJ_M7yEgI&list=PLRPR8uJQx5tFKiCDod3PjQf3f5_PiUEPU&index=6
+*/
+
+/*
+    AUdio mix command:
+    `ffmpeg -i public/assets/tts/Fbbu_GQcrwc/Fbbu_GQcrwc.mp3 -i public/assets/audio/bg/ads.mp3 -filter_complex "[0:a]volume=1[a1];[1:a]volume=0.3[a2];[a1][a2]amix=inputs=2" -c:a mp3 output.mp3`
+
+    Explanation:
+
+    -i public/assets/tts/Fbbu_GQcrwc/Fbbu_GQcrwc.mp3: Specifies the first input audio file.
+
+    -i public/assets/audio/bg/ads.mp3: Specifies the second input audio file.
+
+    -filter_complex "[0:a]volume=1[a1];[1:a]volume=0.3[a2];[a1][a2]amix=inputs=2": Applies the volume filter to set the volume of each input file (volume=1 for the first file and volume=0.3 for the second file). Then, it uses the amix filter to mix the two audio streams.
+
+    -c:a mp3: Specifies the output audio codec as MP3.
+
+    output.mp3: Specifies the output file name.
+
+*/
+
+
+/*
+ Remove silence in the start: 
+ ffmpeg -i disco.mp3 -af "silenceremove=start_periods=1:start_duration=1:start_threshold=-50dB" -c:a mp3 output.mp3
+
+ -af "silenceremove=start_periods=1:start_duration=1:start_threshold=-50dB": Applies the silenceremove filter to remove silence at the beginning of the audio. The parameters are set to start removing silence after 1 period of silence with a duration of 1 second and a threshold of -50dB. Adjust these parameters based on your specific requirements.
+
+-c:a mp3: Specifies the output audio codec as MP3.
+
+output.mp3: Specifies the output file name.
+*/

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import Modal from "react-modal";
 import axios from "axios";
-import Loader from "./Loader";
+import Loader from "./Loading";
 import Audio from "./Audio";
 import { useRef } from "react";
 import { useStore } from "./StoreProvider";
@@ -20,7 +20,7 @@ const AudioModal = observer(function AudioModal({}) {
 
   const fetchBackgroundMusic = async () => {
     try {
-      const response = await axios.get("API_URL");
+      const response = await axios.get(`http://localhost:3000/api/bglist`);
       setBackgroundMusicList(response.data);
     } catch (error) {
       console.error("Error fetching background music:", error);
@@ -55,12 +55,12 @@ const AudioModal = observer(function AudioModal({}) {
   return (
     <Modal isOpen={true} className="bg-white p-6 rounded-lg shadow-lg">
       {isLoading ? (
-        <Loader />
+        <Loader text={"audio fetcing.."}/>
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {backgroundMusicList.map((music) => (
             <div
-              key={music.id}
+              key={music.id || music.name}
               onClick={() => handleMusicSelection(music)}
               className={`cursor-pointer p-2 rounded-lg ${
                 selectedMusic === music ? "bg-blue-500 text-white" : "bg-gray-200"
