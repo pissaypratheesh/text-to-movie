@@ -48,6 +48,11 @@ const AudioModal = observer(function AudioModal({ ttsURL, toggleAudioModal }) {
     }
   };
 
+  const updateStoreAndCloseModal = () => {
+    store.setAudioPath(blendedAudioPath);
+    toggleAudioModal(false);
+  };
+
   const blendAudio = async (tts, bg) => {
     try {
       const response = await axios.get(`/api/blendaudio?tts=${tts}&bg=${bg}`);
@@ -84,6 +89,14 @@ const AudioModal = observer(function AudioModal({ ttsURL, toggleAudioModal }) {
       )}
       {blendedAudioPath && <Audio key={blendedAudioPath} src={blendedAudioPath} play={true}></Audio>}
       {blendedAudioPath && <p className="mt-4 text-green-600">Blended audio path: {blendedAudioPath}</p>}
+      {blendedAudioPath && (
+        <button
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+          onClick={updateStoreAndCloseModal}
+        >
+          Save and Close
+        </button>
+      )}
     </Modal>
   );
 });
