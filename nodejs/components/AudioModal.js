@@ -12,6 +12,7 @@ const AudioModal = observer(function AudioModal({}) {
   const [backgroundMusicList, setBackgroundMusicList] = useState([]);
   const [selectedMusic, setSelectedMusic] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [audioPlayer, setAudioPlayer] = useState(null);
   const store = useStore();
   const { sentences } = store;
 
@@ -28,14 +29,20 @@ const AudioModal = observer(function AudioModal({}) {
 
   useEffect(() => {
     fetchBackgroundMusic();
+    return () => {
+      if (audioPlayer) {
+        audioPlayer.pause();
+      }
+    };
   }, []);
 
-  const playSelectedMusic = async (music) => {
-    try {
-      await axios.post("PLAY_MUSIC_API_URL", { music });
-    } catch (error) {
-      console.error("Error playing selected music:", error);
+  const playSelectedMusic = (music) => {
+    if (audioPlayer) {
+      audioPlayer.pause();
     }
+    const newAudioPlayer = new Audio(music);
+    newAudioPlayer.play();
+    setAudioPlayer(newAudioPlayer);
   };
 
   const handleMusicSelection = (music) => {
