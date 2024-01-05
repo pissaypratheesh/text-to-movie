@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import axios from "axios";
 import Loader from "./Loader";
+import Audio from "./Audio";
 import { useRef } from "react";
 import { useStore } from "./StoreProvider";
 import { toJS } from "mobx";
@@ -65,6 +66,7 @@ const AudioModal = observer(function AudioModal({}) {
           {music.name}
         </div>
       ))}
+      <Audio src={ selectedMusic && selectedMusic.url}></Audio>
     </>
   );
 });
