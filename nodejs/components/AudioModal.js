@@ -46,7 +46,13 @@ const AudioModal = observer(function AudioModal({}) {
   };
 
   return (
-    <Modal isOpen={true} className="bg-white p-6 rounded-lg shadow-lg">
+    <Modal isOpen={true} className="bg-white p-6 rounded-lg shadow-lg relative">
+      <button
+        className="absolute top-0 right-0 mt-2 mr-2 text-xl font-bold text-gray-600 hover:text-gray-800"
+        onClick={() => setIsOpen(false)}
+      >
+        &times;
+      </button>
       {isLoading ? (
         <Loader text={"audio fetcing.."}/>
       ) : (
