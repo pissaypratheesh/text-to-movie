@@ -10,6 +10,7 @@ from youtubesearchpython import VideosSearch
 import os
 import re
 from fastapi.middleware.cors import CORSMiddleware
+import cachetools
 
 
 app = FastAPI()
@@ -80,24 +81,33 @@ async def get_image(request: Request):
 
 @api.get("/ytvideos")
 async def videos(request: Request):
-    query = request.query_params.get("query") or  request.query_params.get("url") 
+    query = request.query_params.get("query") or request.query_params.get("url")
     if query:
-         # Check if the query is a YouTube link
-         if ("youtube.com" in query or "youtu.be" in query) and (query.startswith("http://") or query.startswith("https://")):
+        # Check if the query is in the cache
+        if query in cache:
+            return cache[query]
+
+        # Check if the query is a YouTube link
+        if ("youtube.com" in query or "youtu.be" in query) and (query.startswith("http://") or query.startswith("https://")):
             limit = 1  # Set the limit to 1 for YouTube links
-         else:
+        else:
             limit = 5  # Set the default limit to 5
 
-         videosSearch = VideosSearch(query, limit)
-         res = videosSearch.result()
-         if res:
-             return extract_video_data(res['result'])
-         else:
-             return {"error": "No videos found"}
+        videosSearch = VideosSearch(query, limit)
+        res = videosSearch.result()
+        if res:
+            video_data = extract_video_data(res['result'])
+            cache[query] = video_data  # Store the result in the cache
+            return video_data
+        else:
+            return {"error": "No videos found"}
     else:
         return {"error": "Missing query parameter"}
    
 
+
+# Create a cache object with a TTL of 1 hour
+cache = cachetools.TTLCache(maxsize=100, ttl=3600)
 
 if __name__ == "__main__":
     import uvicorn
