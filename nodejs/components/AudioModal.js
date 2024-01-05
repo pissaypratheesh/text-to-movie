@@ -3,7 +3,6 @@ import Modal from "react-modal";
 import axios from "axios";
 import Loader from "./Loading";
 import Audio from "./Audio";
-import { useRef, useState } from "react";
 import { useStore } from "./StoreProvider";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
@@ -83,7 +82,7 @@ const AudioModal = observer(function AudioModal({ ttsURL, toggleAudioModal }) {
           ))}
         </div>
       )}
-      {selectedMusic && <Audio key={selectedMusic.url} src={selectedMusic.url} play={true}></Audio>}
+      {blendedAudioPath && <Audio key={blendedAudioPath} src={blendedAudioPath} play={true}></Audio>}
       {blendedAudioPath && <p className="mt-4 text-green-600">Blended audio path: {blendedAudioPath}</p>}
     </Modal>
   );
