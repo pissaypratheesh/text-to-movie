@@ -38,18 +38,11 @@ const AudioModal = observer(function AudioModal({}) {
     };
   }, []);
 
-  const playSelectedMusic = (music) => {
-    if (audioPlayer) {
-      audioPlayer.pause();
-    }
-    const newAudioPlayer = new Audio(music);
-    newAudioPlayer.play();
-    setAudioPlayer(newAudioPlayer);
-  };
+ 
 
   const handleMusicSelection = (music) => {
     setSelectedMusic(music);
-    playSelectedMusic(music);
+    //playSelectedMusic(music);
   };
 
   return (
@@ -71,7 +64,7 @@ const AudioModal = observer(function AudioModal({}) {
           ))}
         </div>
       )}
-      <Audio src={selectedMusic && selectedMusic.url}></Audio>
+      {selectedMusic && <Audio key={selectedMusic.url} src={selectedMusic.url} play={true}></Audio>}
     </Modal>
   );
 });
