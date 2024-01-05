@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import Modal from "react-modal";
 import axios from "axios";
 import Loader from "./Loader";
 import Audio from "./Audio";
@@ -51,23 +52,27 @@ const AudioModal = observer(function AudioModal({}) {
     playSelectedMusic(music);
   };
 
-  if (isLoading) {
-    return <Loader />;
-  }
-
   return (
-    <>
-      {backgroundMusicList.map((music) => (
-        <div
-          key={music.id}
-          onClick={() => handleMusicSelection(music)}
-          className={selectedMusic === music ? "selected" : ""}
-        >
-          {music.name}
+    <Modal isOpen={true} className="bg-white p-6 rounded-lg shadow-lg">
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className="grid grid-cols-1 gap-4">
+          {backgroundMusicList.map((music) => (
+            <div
+              key={music.id}
+              onClick={() => handleMusicSelection(music)}
+              className={`cursor-pointer p-2 rounded-lg ${
+                selectedMusic === music ? "bg-blue-500 text-white" : "bg-gray-200"
+              }`}
+            >
+              {music.name}
+            </div>
+          ))}
         </div>
-      ))}
-      <Audio src={ selectedMusic && selectedMusic.url}></Audio>
-    </>
+      )}
+      <Audio src={selectedMusic && selectedMusic.url}></Audio>
+    </Modal>
   );
 });
 
