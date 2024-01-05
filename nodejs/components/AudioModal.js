@@ -12,6 +12,8 @@ const AudioModal = observer(function AudioModal({}) {
   const [backgroundMusicList, setBackgroundMusicList] = useState([]);
   const [selectedMusic, setSelectedMusic] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const store = useStore();
+  const { sentences } = store;
 
   const fetchBackgroundMusic = async () => {
     try {
@@ -60,14 +62,5 @@ const AudioModal = observer(function AudioModal({}) {
   );
 });
 
-  const store = useStore();
-  const { sentences } = store;
- 
-
-  return (
-    <>
-    </>
-  );
-})
 
 export default AudioModal;
