@@ -6,7 +6,7 @@ function dataToXml(data) {
   return `<data>${data}</data>`;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { data } = req.body;
     const xml = dataToXml(data);
