@@ -10,8 +10,8 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { data } = req.body;
     const xml = dataToXml(data);
-    res.setHeader('Content-Type', 'application/xml');
-    res.status(200).send(xml);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json({ xml });
   } else {
     res.status(405).send('Method Not Allowed');
   }
