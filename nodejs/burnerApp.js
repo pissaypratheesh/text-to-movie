@@ -8,7 +8,8 @@ const outputDir = path.join(__dirname, './output/');
 const cacheDir = path.join(__dirname, './cache/');
 const { burn } = require('./burn.js')
 
-app.get('/burn', (req, res) => {
+app.get('/burn', async (req, res) => {
+  // Add await keyword where needed
   res.send('This is a dummy route');
 });
 
