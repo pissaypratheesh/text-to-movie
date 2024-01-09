@@ -22,8 +22,10 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const [showAudioModal, setShowAudioModal] = useState(false);
   const [xmlCode, setXmlCode] = useState(null);
   const [ttsURL, setTTSURL] = useState(null);
+  const [isFetchingXML, setIsFetchingXML] = useState(false);
 
   const fetchXML = async () => {
+    setIsFetchingXML(true);
     try {
       const response = await axios.post('http://localhost:3000/api/xmlgen', {
         headers: {
@@ -41,6 +43,8 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       }
     } catch (error) {
       console.error('Error fetching XML:', error);
+    } finally {
+      setIsFetchingXML(false);
     }
   };
   const store = useStore();
@@ -128,6 +132,8 @@ const AssetsAggregation = observer(function AssetsAggregation() {
           Fetch XML
         </button>
       )}
+
+      {isFetchingXML && <div>Loading...</div>}
 
       {xmlCode && (
         <div className="w-full h-64">
