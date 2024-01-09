@@ -30,7 +30,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
           'Content-Type': 'application/json',
         },
         data: {
-          data: 'Sample data',
+          data: sentences.map((item)=>{return _.omit(item,'words')}),
         },
       });
 
