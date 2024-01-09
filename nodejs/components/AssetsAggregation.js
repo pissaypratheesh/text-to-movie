@@ -87,7 +87,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   return (
     <div className="m-4">
       {isLoading && <Loading text={"Fetching the TTS with segments"}/>}
-      <div className="flex justify-center items-center space-x-4 mt-4">
+      <div className="flex justify-start items-center space-x-4 mt-4">
         <AudioPlayer onAudioReceived={(url) => { setTTSURL(url); setIsLoading(false); }} />
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded-lg"
@@ -96,16 +96,28 @@ const AssetsAggregation = observer(function AssetsAggregation() {
           {showAudioModal ? "Close Audio Modal" : "Open Audio Modal"}
         </button>
       </div>
-      <button
-        className="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4"
-        onClick={() => {
-          console.log("Update XML button clicked");
-        }}
-      >
-        Update XML
-      </button>
+      {!xmlCode && (
+        <button
+          id="xmlgen"
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
+          onClick={() => {
+            console.log("Update XML button clicked");
+          }}
+        >
+          Fetch XML
+        </button>
+      )}
+
       {xmlCode && (
         <div className="w-full h-64">
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4"
+            onClick={() => {
+              console.log("Update XML button clicked");
+            }}
+          >
+            Update XML
+          </button>
           <Editor
             height="100%"
             defaultLanguage="xml"
