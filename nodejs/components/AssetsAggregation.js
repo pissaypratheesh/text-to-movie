@@ -27,6 +27,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const fetchXML = async () => {
     setIsFetchingXML(true);
     try {
+      let sentences = toJS(store.sentences || []);
       const response = await axios.post('http://localhost:3000/api/xmlgen', {
         headers: {
           'Content-Type': 'application/json',
@@ -37,7 +38,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       });
 
       if (response.data) {
-        setXmlCode(response.data);
+        setXmlCode(response.data.xmlgen);
       } else {
         console.error('Error fetching XML');
       }
