@@ -187,7 +187,9 @@ class WebGLRenderer extends _SystemRenderer.default {
       this._activeRenderTarget = renderTarget;
       renderTarget.activate();
       if (this._activeShader) {
-        this._activeShader.uniforms.projectionMatrix = renderTarget.projectionMatrix.toArray(true);
+        if (this._activeShader) {
+          this._activeShader.uniforms.projectionMatrix = renderTarget.projectionMatrix.toArray(true);
+        }
       }
       this.stencilManager.setMaskStack(renderTarget.stencilMaskStack);
     }
