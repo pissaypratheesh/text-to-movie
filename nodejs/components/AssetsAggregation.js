@@ -96,6 +96,14 @@ const AssetsAggregation = observer(function AssetsAggregation() {
           {showAudioModal ? "Close Audio Modal" : "Open Audio Modal"}
         </button>
       </div>
+      <button
+        className="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4"
+        onClick={() => {
+          console.log("Update XML button clicked");
+        }}
+      >
+        Update XML
+      </button>
       {xmlCode && (
         <div className="w-full h-64">
           <Editor
