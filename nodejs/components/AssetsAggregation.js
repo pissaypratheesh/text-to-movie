@@ -9,6 +9,7 @@ import Dropzone from "react-dropzone";
 import AudioPlayer from "./AudioPlayer";
 import Loading from "./Loading";
 import AudioModal from "./AudioModal";
+import Editor from '@monaco-editor/react';
 
 
 import axios from "axios";
@@ -19,6 +20,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const [selectedSentence, setSelectedSentence] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showAudioModal, setShowAudioModal] = useState(false);
+  const [xmlCode, setXmlCode] = useState(null);
   const [ttsURL, setTTSURL] = useState(null);
   const store = useStore();
   let { sentences, videodata } = store;
@@ -84,8 +86,32 @@ const AssetsAggregation = observer(function AssetsAggregation() {
 
   return (
     <div className="m-4">
-      <AudioPlayer onAudioReceived={(url)=>{ setTTSURL(url);setIsLoading(false);}}/>
       {isLoading && <Loading text={"Fetching the TTS with segments"}/>}
+      <div className="flex justify-center items-center space-x-4 mt-4">
+        <AudioPlayer onAudioReceived={(url) => { setTTSURL(url); setIsLoading(false); }} />
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+          onClick={() => setShowAudioModal(!showAudioModal)}
+        >
+          {showAudioModal ? "Close Audio Modal" : "Open Audio Modal"}
+        </button>
+      </div>
+      {xmlCode && (
+        <div className="w-full h-64">
+          <Editor
+            height="100%"
+            defaultLanguage="xml"
+            defaultValue={xmlCode}
+            language="xml"
+            options={{
+              readOnly: false,
+              wordWrap: 'on',
+              automaticLayout: true,
+            }}
+          />
+        </div>
+      )}
+      {!isLoading && showAudioModal && <AudioModal ttsURL={ttsURL} toggleAudioModal={() => setShowAudioModal(false)} />}
       {!isLoading && sentences.map((sentenceObj, index) => {
         let { line: sentence, start, end, assetsEnd } = sentenceObj;
         let selectedImgs = toJS(sentenceObj.selectedImgs || []);
@@ -225,13 +251,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
         </div>
       )}
     
-    <button
-      className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4"
-      onClick={() => setShowAudioModal(!showAudioModal)}
-    >
-      {showAudioModal ? "Close Audio Modal" : "Open Audio Modal"}
-    </button>
-    {!isLoading && showAudioModal && <AudioModal ttsURL={ttsURL} toggleAudioModal={() => setShowAudioModal(false)} />}
+
   </div>
 );
 });
