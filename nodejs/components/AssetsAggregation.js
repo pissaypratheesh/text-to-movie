@@ -160,7 +160,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
         </div>
       )}
       {!isLoading && showAudioModal && <AudioModal ttsURL={ttsURL} toggleAudioModal={() => setShowAudioModal(false)} />}
-      {!isLoading && sentences.map((sentenceObj, index) => {
+      {!isLoading && (sentences.map((sentenceObj, index) => {
         let { line: sentence, start, end, assetsEnd } = sentenceObj;
         let selectedImgs = toJS(sentenceObj.selectedImgs || []);
         let selectedVids = toJS(sentenceObj.selectedVids || []);
@@ -248,7 +248,8 @@ const AssetsAggregation = observer(function AssetsAggregation() {
             }
           </details>
         );
-      })}
+      })
+      )}
       {!isLoading && selectedSentence && (
         <div className="mt-4" key={selectedSentence.index}>
           <ImageSelection
