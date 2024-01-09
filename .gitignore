@@ -4,7 +4,10 @@ OAI_CONFIG_LIST_AZURE
 OAI_CONFIG_LIST
 nodejs/.next
 nodejs/assets/
+nodejs/cache/
 nodejs/public/images/
+nodejs/output
+nodejs/node_modules_*
 nodejs/package-lock.json
 nodejs/public/
 python/.cache

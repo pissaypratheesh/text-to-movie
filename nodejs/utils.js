@@ -102,10 +102,15 @@ async function createSTT({id, force=false}) {
 
     createDirectoryIfNotExists(idpath);
     if(!force && fileExists(`${idpath}/${id}.json`)){
+      const filePath =  `${idpath}/${id}.json`;
+      const jsonData = fs.readFileSync(filePath, 'utf8');
+      const data = JSON.parse(jsonData);
+
       return new Promise((resolve, reject) => {
         var re =  {
           status: "success",
           path: `${idpath}/${id}.json`,
+          data,
           alreadyExists : 'true'
         };
         resolve(re);

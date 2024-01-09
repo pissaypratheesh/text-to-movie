@@ -10,7 +10,7 @@
  *
  * @object
  */
-const { nodeRequire } = require('../utils/utils');
+const { nodeRequire } = require('./utils');
 const rmfr = nodeRequire('rmfr');
 const fs = nodeRequire('fs-extra');
 const path = require('path');

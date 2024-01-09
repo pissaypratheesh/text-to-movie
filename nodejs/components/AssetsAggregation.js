@@ -19,10 +19,11 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const [selectedSentence, setSelectedSentence] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showAudioModal, setShowAudioModal] = useState(false);
+  const [ttsURL, setTTSURL] = useState(null);
   const store = useStore();
   let { sentences, videodata } = store;
   sentences = toJS((sentences) || []);
-  console.log("🚀 ~ file: AssetsAggregation.js:20 ~ sentences:", toJS(videodata),sentences)
+  console.log("🚀 ~ file: AssetsAggregation.js:20 ~ sentences:", JSON.stringify(toJS(videodata)),"\n\n\n\nSentences-->",sentences.map && JSON.stringify(sentences.map((item)=>{return _.omit(item,'words')})));
   const uploadFile = async (file, others) => {
   
     // Replace this URL with your backend API endpoint
@@ -83,7 +84,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
 
   return (
     <div className="m-4">
-      <AudioPlayer onAudioReceived={(url)=>{ setIsLoading(false)}}/>
+      <AudioPlayer onAudioReceived={(url)=>{ setTTSURL(url);setIsLoading(false);}}/>
       {isLoading && <Loading text={"Fetching the TTS with segments"}/>}
       {!isLoading && sentences.map((sentenceObj, index) => {
         let { line: sentence, start, end, assetsEnd } = sentenceObj;
@@ -230,7 +231,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     >
       {showAudioModal ? "Close Audio Modal" : "Open Audio Modal"}
     </button>
-    {showAudioModal && <AudioModal toggleAudioModal={() => setShowAudioModal(false)} />}
+    {!isLoading && showAudioModal && <AudioModal ttsURL={ttsURL} toggleAudioModal={() => setShowAudioModal(false)} />}
   </div>
 );
 });

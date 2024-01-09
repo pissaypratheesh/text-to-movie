@@ -11,7 +11,7 @@
  * @object
  */
 
-const { nodeRequire } = require('../utils/utils');
+const { nodeRequire } = require('./utils');
 const colors = nodeRequire('colors');
 
 const Utils = require('./utils');

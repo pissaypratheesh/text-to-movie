@@ -49,7 +49,8 @@ const AudioModal = observer(function AudioModal({ ttsURL, toggleAudioModal }) {
   };
 
   const updateStoreAndCloseModal = () => {
-    store.setAudioPath(blendedAudioPath);
+    let { videodata } = store;
+    store.updateData({...videodata, bg: selectedMusic, blendedAudioPath:blendedAudioPath},'videodata');
     toggleAudioModal(false);
   };
 

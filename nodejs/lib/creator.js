@@ -540,16 +540,20 @@ class FFCreator extends FFCon {
     const pool = this.getConf('pool');
     const render = this.getConf('render');
 
-    if (pool) {
-      this.app.destroyChildren(true);
-      Pool.put(`${this.type}_${render}`, this.app);
-    } else {
-      this.app.destroy(true, true);
-    }
+    try{
+      if (pool) {
+        this.app.destroyChildren(true);
+        Pool.put(`${this.type}_${render}`, this.app);
+      } else {
+        this.app.destroy(true, true);
+      }
 
-    // inkpaint是全局的cache, 这清就其他的实例也全没了
-    // destroyAndCleanAllCache();
-    this.app = null;
+      // inkpaint是全局的cache, 这清就其他的实例也全没了
+      // destroyAndCleanAllCache();
+      this.app = null;
+    }catch(e){
+      console.error("Exception in destroy: ",e)
+    }
   }
 
   annotate() {

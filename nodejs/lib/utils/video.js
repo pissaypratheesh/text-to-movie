@@ -3,7 +3,7 @@
 const Queue = require("./queue");
 const { genUuid } = require("./utils");
 const { isBrowser } = require("browser-or-node");
-const { isUA } = require('../utils/utils');
+const { isUA } = require('./utils');
 
 const POOL_DEFAULT = 'default';
 const POOL_PREVIEW = 'preview';

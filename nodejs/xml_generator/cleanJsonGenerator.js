@@ -36,9 +36,9 @@ const { Factory } = require('../lib/index'); // This lib folder Factory ffcreato
 const CacheUtil = require('../lib/utils/cache');
 
 
-const font1 = path.join(__dirname, '../assets/font/lf_bold.ttf');
-const tts = path.join(__dirname, '../assets/audio/3Audio.mp3');// './assets/audio/tts_output.wav');
-const bgAudio = path.join(__dirname, '../assets/audio/bg1.mp3');// './assets/audio/tts_output.wav');
+const font1 = path.join(__dirname, '../public/assets/font/lf_bold.ttf');
+const tts = path.join(__dirname, '../assets/audio/3Audio.mp3');// '../public/assets/audio/tts_output.wav');
+const bgAudio = path.join(__dirname, '../assets/audio/bg1.mp3');// '../public/assets/audio/tts_output.wav');
 const sunovid = path.join(__dirname, '../assets/video/demo3.mp4');
 
 const outputDir = path.join(__dirname, '../output/');
@@ -70,6 +70,7 @@ const fs = require("fs");
 const summary = require('../assets_sample_rahul2.json');
 //const whisperxSeq = require('../../rahulGandhiCase/AUD-20231126-WA0012.json'); // need to fetch the assets for sequences
 const { sum } = require('lodash');
+const { Model } = require('echarts');
 //const dimensions = createDimensions('720','1280');
 const dimensions = createDimensions(width,height);
 const ttsTime = 30;
@@ -496,4 +497,10 @@ async function addSpeechNSubs( {video_path,outputDir,outputFileName, song, overa
     });
 
     FFCreatorCenter.addTask(creator);
+}
+
+
+module.exports = {
+    addSpeechNSubs,
+       
 }

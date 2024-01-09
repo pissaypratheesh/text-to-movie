@@ -7,11 +7,13 @@ function genericImgOps (options, dimensions) {
         height: options.h_value ||  `${options.h || Math.floor(h/3.5)}rpx`,
         width: options.w_value || `${options.w || Math.floor(w/3.5)}rpx`,
         src: options.s,
-        duration: options.d,
+        duration: options.d || options.duration,
         ss: options.ss,
         loop: options.l || 'false',
         audio: options.a || 'true',
         preload: 'true',
+        img_h: options.img_h,
+        img_w: options.img_w
     }
 }
 module.exports = {

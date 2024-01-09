@@ -7,7 +7,24 @@ const cv = require('./opencv');
 const progressStream = require('progress-stream');
 
 // node-fetch from v3 is an ESM-only module - you are not able to import it with require().
-import fetch from 'node-fetch';
+//import fetch from 'node-fetch';
+// below line was the the line which was there
+//const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
+/* const fetch = async (...args) => {
+  const { default: fetch } = await require('node-fetch');
+  return fetch(...args);
+};
+ */
+//const fetch = require('node-fetch');
+const _importDynamic = new Function('modulePath', 'return import(modulePath)')
+
+async function fetch(...args) {
+  const {default: fetch} = await _importDynamic('node-fetch')
+  return fetch(...args)
+}
+//-------
+
 const cacheProgress = {};
 
 const CacheUtil = {

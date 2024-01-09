@@ -4,7 +4,7 @@ import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import axios from "axios";
 
-const TTS_API_URL = "http://localhost:3000/api/generate/speech?force=true";
+const TTS_API_URL = "http://localhost:3000/api/generate/speech";//?force=true";
 
 const AudioPlayer = observer(function AudioPlayer({onAudioReceived}) {
   const audioRef = useRef(null);

@@ -1,13 +1,15 @@
 function addCalculations (data){
     data.forEach(item => {
         // Calculate the duration by subtracting "start" from "end"
-        const duration = Math.floor(item.end) - Math.ceil(item.start);
+        const duration = item.end - item.start;
         // Add a new field "duration" with the calculated duration
         //item.duration = duration;
         let noOfImgs = item.images && item.images.length;
         let noOfVids = item.videos && item.videos.length;
-        let imgDuration = Math.ceil(duration/(noOfImgs ? noOfImgs : 1));
-        let vidDuration =  Math.ceil(duration/(noOfVids ? noOfVids : 1));
+        let total = (noOfImgs ? noOfImgs : 0) + (noOfVids ? noOfVids : 0);
+        total = total || 1;
+        let imgDuration = (duration/total).toFixed(2);
+        let vidDuration =  (duration/total).toFixed(2);
         item.imgDuration = imgDuration;
         item.vidDuration = vidDuration;
         item.noOfImgs = noOfImgs;
@@ -34,17 +36,17 @@ function createDimensions(w, h) {
     };
 }
 
-const { genericAudioOps } = require('./basicOptions/audiooptions');
-const { genericTxtOps } = require('./basicOptions/textoptions');
+//const { genericAudioOps } = require('./basicOptions/audiooptions');
+//const { genericTxtOps } = require('./basicOptions/textoptions');
 const { genericImgOps } = require('./basicOptions/imageoptions');
 const { genericTransitionOps } = require('./basicOptions/transitionoptions');
 const { genericVidOps } = require('./basicOptions/videooptions');
 const { createMiraMLXML } = require('./index')
-const { burn } = require('../../burn.js')
+//const { burn } = require('../burn.js')
 const path = require('path');
 const fs = require("fs");
-const summary = require('../../assets_sample_rahul2.json');
-const whisperxSeq = require('../../rahulGandhiCase/AUD-20231126-WA0012.json'); // need to fetch the assets for sequences
+const summary = require('../assets_sample_rahul2.json');
+const whisperxSeq = require('../AUD-20231126-WA0012.json'); // need to fetch the assets for sequences
 const { sum } = require('lodash');
 //const dimensions = createDimensions('720','1280');
 const dimensions = createDimensions('720','1280');
@@ -173,7 +175,7 @@ vidsForSeg.forEach((vid) => {
 console.log("🚀 ~ file: jsonGenerator.js:158 ~ segments:", segments)
 
 
-const generateJSONFromSequences = ({ summary, sequences, dimensions, mute, canvas }) =>  {
+const generateJSONFromSequences = ({ summary, sequences, dimensions, mute, canvas = canvasSeg }) =>  {
     console.log("🚀 ~ file: jsonGenerator.js:170 ~ generateJSONFromSequences ~ sequences:", sequences)
     let json = {
         dimensions: dimensions,
@@ -200,17 +202,18 @@ const generateJSONFromSequences = ({ summary, sequences, dimensions, mute, canva
 
             if(sequence.videos && sequence.videos.length){
                 sequence.videos.forEach((vid,i) => {
-                    console.log("\n\n\n🚀 ~ file: jsonGenerator.js:213 ~ sequence.videos.forEach ~ vid:", vid)
-
+                    
                      //push the video
                      jsonSequences.push({
                         type: 'video',
                         options: {
-                            ...genericVidOps({ d: vid.duration,
+                            line:sequence.line,
+                            ...genericVidOps({ 
+                                d: vid.duration || sequence.vidDuration,
                                 a: "false",
                                 s: vid.src || vid.s,
                                 ss: vid.ss || '0',
-                                x: '50vw', y: '50vh', w: '100vw', h: '100vh'}, dimensions),
+                                x: '50vw', y: '50vh', w: vid.w ||  '100vw', h: vid.h || '100vh'}, dimensions),
                         }
                      })
                     //  if(i != sequences.length-1){
@@ -224,8 +227,10 @@ const generateJSONFromSequences = ({ summary, sequences, dimensions, mute, canva
 
             //if there are images, add to seq with the transition
             if(sequence.noOfImgs){
-                let d = sequence.imgDuration
+                let d = sequence.imgDuration;
                 sequence.images.forEach((image,i) => {
+                    console.log("🚀 ~ file: jsonGenerator.js:282 ~ sequence.images.forEach ~ image:", image)
+
                     
                     //push the image 
                     //check if its first to add text
@@ -233,7 +238,15 @@ const generateJSONFromSequences = ({ summary, sequences, dimensions, mute, canva
                         jsonSequences.push({
                             type: 'image',
                             options: {
-                                ...genericImgOps({ s: image.url, d, x_value: '50vw', y_value: '50vh', w_value: '100vw', h_value: '100vh' }, dimensions),
+                                line:sequence.line,
+                                ...genericImgOps({ s: 
+                                    image.url,
+                                    d: image.duration || image.d || d,
+                                    ss: image.ss || '0',
+                                    img_h: image.height,
+                                    img_w: image.width,
+                                    x_value: '50vw',
+                                    y_value: '50vh', w_value: image.w || '100vw', h_value:  image.h || '100vh' }, dimensions),
                             },
                             textElements: [{
                                 text: summary.shortTitle,
@@ -247,9 +260,16 @@ const generateJSONFromSequences = ({ summary, sequences, dimensions, mute, canva
                         })
                     }else{
                         jsonSequences.push({
+                            line:sequence.line,
                             type: 'image',
                             options: {
-                                ...genericImgOps({ s: image.url, d, x_value: '50vw', y_value: '50vh', w_value: '100vw', h_value: '100vh' }, dimensions),
+                                ...genericImgOps({ 
+                                    s: image.url, 
+                                    d: image.duration || image.d || d,
+                                    img_h: image.height,
+                                    img_w: image.width,
+                                    ss: image.ss || '0',
+                                    x_value: '50vw', y_value: '50vh', w_value: image.w ||  '100vw', h_value:  image.h || '100vh' }, dimensions),
                             }
                         })
                     }
@@ -322,8 +342,8 @@ const newsSummary = {
   
 
 
-const outputDir = path.join(__dirname, '../../examples/output/');
-const cacheDir = path.join(__dirname, '../../examples/cache/');
+const outputDir = path.join(__dirname, '../output/');
+const cacheDir = path.join(__dirname, '../cache/');
 if (!fs.existsSync(cacheDir)) {
     fs.mkdirSync(cacheDir);
 }
@@ -428,9 +448,7 @@ let generatedJson = generateJSONFromSequences({
     mute: true,
     canvas: canvasSeg
 })
-console.log("\n\n\n\n🚀 ~ file: jsonGenerator.js:231 ~ generatedJson:",JSON.stringify( generatedJson))
 var mirmalCode = createMiraMLXML(generatedJson)//finalJSON);
-console.log("\n\nPratheesh come herrr",mirmalCode)
 
 var trynew = `<miraml author="Pratheesh PM" name="Composite">
 <canvas width="720" height="1280" mute="true">
@@ -545,7 +563,7 @@ async function someAsyncFunction(mirmalCode) {
     try {
         //  await burn({value, cacheDir, outputDir: path.dirname(miraml_file)});
         console.log("Burning started!!")
-        await burn && burn({ value: vtuber, cacheDir, outputDir: outputDir });
+        //await burn && burn({ value: vtuber, cacheDir, outputDir: outputDir });
         //console.log('Burn completed successfully.');
     } catch (error) {
         console.error('Error during burn:', error);
@@ -554,7 +572,16 @@ async function someAsyncFunction(mirmalCode) {
 
 // Call the asynchronous function
 setTimeout(()=>{
-    someAsyncFunction(mirmalCode);
+    //someAsyncFunction(mirmalCode);
 }, 1000)
 //await burn({value:JSON.stringify(finalJSON, null, 2), cacheDir, outputDir: outputDir});
 //console.log(JSON.stringify(finalJSON, null, 2));
+
+module.exports = {
+    addCalculations,
+    someAsyncFunction,
+    generateJSONFromSequences,
+    addVideoDuration,
+    createDimensions,
+    createMiraMLXML
+}
