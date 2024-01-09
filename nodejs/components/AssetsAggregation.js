@@ -137,7 +137,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       {isFetchingXML && <div>Loading...</div>}
 
       {xmlCode && (
-        <div className="w-full h-64">
+        <div className="w-full h-64 editor-container">
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4"
             onClick={() => {
