@@ -22,6 +22,27 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const [showAudioModal, setShowAudioModal] = useState(false);
   const [xmlCode, setXmlCode] = useState(null);
   const [ttsURL, setTTSURL] = useState(null);
+
+  const fetchXML = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/api/xmlgen', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: {
+          data: 'Sample data',
+        },
+      });
+
+      if (response.data) {
+        setXmlCode(response.data);
+      } else {
+        console.error('Error fetching XML');
+      }
+    } catch (error) {
+      console.error('Error fetching XML:', error);
+    }
+  };
   const store = useStore();
   let { sentences, videodata } = store;
   sentences = toJS((sentences) || []);
@@ -100,8 +121,8 @@ const AssetsAggregation = observer(function AssetsAggregation() {
         <button
           id="xmlgen"
           className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
-          onClick={() => {
-            console.log("Update XML button clicked");
+          onClick={async () => {
+            await fetchXML();
           }}
         >
           Fetch XML
