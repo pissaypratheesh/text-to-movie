@@ -160,7 +160,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
           <Editor
             height="80%"
             defaultLanguage="xml"
-            defaultValue={(xmlCode)}
+            value={formatXml(xmlCode)}
             language="xml"
             options={{
               readOnly: false,
