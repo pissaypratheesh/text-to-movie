@@ -10,8 +10,7 @@ import AudioPlayer from "./AudioPlayer";
 import Loading from "./Loading";
 import AudioModal from "./AudioModal";
 import Editor from '@monaco-editor/react';
-import prettier from 'prettier/standalone';
-import parserXml from '@prettier/plugin-xml';
+import xmlFormatter from 'xml-formatter';
 
 
 import axios from "axios";
@@ -19,10 +18,7 @@ var activeFile = 9999;
 var _ = require("underscore");
 
 function formatXml(xmlCode) {
-  const formattedXml = prettier.format(xmlCode, {
-    parser: 'xml',
-    plugins: [parserXml],
-  });
+  const formattedXml = xmlFormatter(xmlCode);
 
   return formattedXml;
 }
