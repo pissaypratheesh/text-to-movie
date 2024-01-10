@@ -10,11 +10,22 @@ import AudioPlayer from "./AudioPlayer";
 import Loading from "./Loading";
 import AudioModal from "./AudioModal";
 import Editor from '@monaco-editor/react';
+import prettier from 'prettier/standalone';
+import parserXml from '@prettier/plugin-xml';
 
 
 import axios from "axios";
 var activeFile = 9999;
 var _ = require("underscore");
+
+function formatXml(xmlCode) {
+  const formattedXml = prettier.format(xmlCode, {
+    parser: 'xml',
+    plugins: [parserXml],
+  });
+
+  return formattedXml;
+}
 
 const AssetsAggregation = observer(function AssetsAggregation() {
   const [selectedSentence, setSelectedSentence] = useState(null);
@@ -137,7 +148,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       {isFetchingXML && <div>Loading...</div>}
 
       {xmlCode && (
-        <div className="w-full h-64 editor-container">
+        <div className="w-full h-64 editor-container" style={{height:"500px"}}>
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4"
             onClick={() => {
@@ -147,109 +158,116 @@ const AssetsAggregation = observer(function AssetsAggregation() {
             Update XML
           </button>
           <Editor
-            height="100%"
+            height="80%"
             defaultLanguage="xml"
-            defaultValue={xmlCode}
+            defaultValue={(xmlCode)}
             language="xml"
             options={{
               readOnly: false,
               wordWrap: 'on',
               automaticLayout: true,
+              formatOnPaste: true,
+              formatOnType: true,
+              formatOnSave: true,
             }}
           />
         </div>
       )}
       {!isLoading && showAudioModal && <AudioModal ttsURL={ttsURL} toggleAudioModal={() => setShowAudioModal(false)} />}
-      {!isLoading && (sentences.map((sentenceObj, index) => {
-        let { line: sentence, start, end, assetsEnd } = sentenceObj;
-        let selectedImgs = toJS(sentenceObj.selectedImgs || []);
-        let selectedVids = toJS(sentenceObj.selectedVids || []);
-        let isBothEmpty =
-          selectedImgs.length === 0 && selectedVids.length === 0;
-        return (
-          <details key={index} className="mb-4">
-            <summary
-              className="cursor-pointer text-xl font-semibold"
-              onClick={() => {
-                console.log(
-                  "\n\n\nclick for symmary of sentence",
-                  index,
-                  toJS(sentenceObj)
-                );
-                setSelectedSentence(toJS(sentenceObj));
-              }}
-            >
-              {`(${((assetsEnd || end) - start).toFixed(1)}s)${sentence}`}
-            </summary>
-            {
-              <>
-                {!isBothEmpty && (
-                  <>
-                    {
-                      <h2 className="text-2xl font-semibold mb-4">
-                        Selected Images and Videos
-                      </h2>
-                    }
-                    <div
-                      className="grid grid-cols-4 gap-4 mb-8"
-                      key={`${selectedImgs.length}_${selectedVids.length}`}
-                    >
-                      {Object.values(selectedImgs).map((image, index) => (
-                        <img
-                          key={index}
-                          src={image.src}
-                          alt="Selected"
-                          className="w-full h-32 object-cover"
-                        />
-                      ))}
-                      {Object.values(selectedVids).map((video, index) => {
-                        if(video.link && video.link.indexOf('tube.com')!==-1){
-                          return (
-                            <div>
-                              <div>{`${video.title.slice(0, 25)}..` || ''}</div>
+      {!isLoading && (
+          <div key={!!xmlCode} className="border border-gray-300 rounded-lg p-4 mt-9">
+            {sentences.map((sentenceObj, index) => {
+              let { line: sentence, start, end, assetsEnd } = sentenceObj;
+              let selectedImgs = toJS(sentenceObj.selectedImgs || []);
+              let selectedVids = toJS(sentenceObj.selectedVids || []);
+              let isBothEmpty =
+                selectedImgs.length === 0 && selectedVids.length === 0;
+              return (
+                  <details key={index} className="mb-4">
+                  <summary
+                    className="cursor-pointer text-xl font-semibold"
+                    onClick={() => {
+                      console.log(
+                        "\n\n\nclick for symmary of sentence",
+                        index,
+                        toJS(sentenceObj)
+                      );
+                      setSelectedSentence(toJS(sentenceObj));
+                    }}
+                  >
+                    {`(${((assetsEnd || end) - start).toFixed(1)}s)${sentence}`}
+                  </summary>
+                  {
+                    <>
+                      {!isBothEmpty && (
+                        <>
+                          {
+                            <h2 className="text-2xl font-semibold mb-4">
+                              Selected Images and Videos
+                            </h2>
+                          }
+                          <div
+                            className="grid grid-cols-4 gap-4 mb-8"
+                            key={`${selectedImgs.length}_${selectedVids.length}`}
+                          >
+                            {Object.values(selectedImgs).map((image, index) => (
                               <img
+                                key={index}
+                                src={image.src}
+                                alt="Selected"
+                                className="w-full h-32 object-cover"
+                              />
+                            ))}
+                            {Object.values(selectedVids).map((video, index) => {
+                              if(video.link && video.link.indexOf('tube.com')!==-1){
+                                return (
+                                  <div>
+                                    <div>{`${video.title.slice(0, 25)}..` || ''}</div>
+                                    <img
+                                        key={index}
+                                        src={video.src}
+                                        alt="Selected"
+                                        className="w-full h-32 object-cover"
+                                      />
+                                  </div>
+                                )
+                              }
+                              console.log("🚀 ~ file: AssetsAggregation.js:133 ~ {Object.values ~ video:", video)
+                              return (
+                                <video
                                   key={index}
                                   src={video.src}
-                                  alt="Selected"
+                                  controls
                                   className="w-full h-32 object-cover"
                                 />
+                              );
+                            })}
+                          </div>
+                        </>
+                      )}
+                      <Dropzone  
+                        onDrop={(acceptedFiles) => {
+                          onDrop(acceptedFiles, sentenceObj);
+                        }} 
+                        accept="image/*,video/*" 
+                        multiple={true}>
+                          {({getRootProps, getInputProps}) => (
+                            <div {...getRootProps({className: 'className="border-dashed border-2 border-gray-400 p-4 cursor-pointer'})}>
+                                <input {...getInputProps()} />
+                                <span >
+                                      Drop hero image here, or click to select file
+                                </span>
                             </div>
-                          )
-                        }
-                        console.log("🚀 ~ file: AssetsAggregation.js:133 ~ {Object.values ~ video:", video)
-                        return (
-                          <video
-                            key={index}
-                            src={video.src}
-                            controls
-                            className="w-full h-32 object-cover"
-                          />
-                        );
-                      })}
-                    </div>
-                  </>
-                )}
-                <Dropzone  
-                  onDrop={(acceptedFiles) => {
-                    onDrop(acceptedFiles, sentenceObj);
-                  }} 
-                  accept="image/*,video/*" 
-                  multiple={true}>
-                    {({getRootProps, getInputProps}) => (
-                      <div {...getRootProps({className: 'className="border-dashed border-2 border-gray-400 p-4 cursor-pointer'})}>
-                          <input {...getInputProps()} />
-                          <span >
-                                Drop hero image here, or click to select file
-                          </span>
-                      </div>
-                    )}
-                </Dropzone>
-              </>
-            }
-          </details>
-        );
-      })
-      )}
+                          )}
+                      </Dropzone>
+                    </>
+                  }
+                </details>
+              );
+                })}
+            </div>
+      )
+      }
       {!isLoading && selectedSentence && (
         <div className="mt-4" key={selectedSentence.index}>
           <ImageSelection
