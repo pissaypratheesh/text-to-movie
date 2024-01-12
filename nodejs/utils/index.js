@@ -1,3 +1,5 @@
+const BASE_URL = 'http://localhost:3000';
+
 import xmlFormatter from 'xml-formatter'; 
 import axios from "axios";
 import { toJS } from "mobx";
@@ -17,7 +19,7 @@ export async function fetchXML(store) {
   try {
     let sentences = toJS(store.sentences || []);
     let videodata = toJS(store.videodata || {});
-    const response = await axios.post('http://localhost:3000/api/xmlgen', {
+    const response = await axios.post(`${BASE_URL}/api/xmlgen`, {
       headers: {
         'Content-Type': 'application/json',
       },
