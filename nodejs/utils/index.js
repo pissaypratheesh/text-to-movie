@@ -1,4 +1,5 @@
 const BASE_URL = 'http://localhost:3000';
+const BURN_URL = 'http://localhost:9999/burn';
 
 import xmlFormatter from 'xml-formatter'; 
 import axios from "axios";
@@ -15,6 +16,25 @@ export function formatXml(xmlgen) {
   })
 }
 
+export async function burnXML() {
+  const url = BURN_URL;
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  const data = {
+    data: {
+      pm: {},
+    },
+  };
+
+  try {
+    const response = await axios.post(url, data, { headers });
+    console.log('Response:', response.data);
+    return response.data
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+}
 export async function fetchXML(store) {
   try {
     let sentences = toJS(store.sentences || []);

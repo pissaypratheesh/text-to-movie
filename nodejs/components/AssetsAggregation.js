@@ -9,22 +9,13 @@ import Dropzone from "react-dropzone";
 import AudioPlayer from "./AudioPlayer";
 import Loading from "./Loading";
 import AudioModal from "./AudioModal";
+import VideoLightbox from "./SingleVideo";
 import Editor from '@monaco-editor/react';
-import xmlFormatter from 'xml-formatter'; 
+import { formatXml, fetchXML, uploadFile, burnXML } from '../utils/index';  
 
-
-import axios from "axios";
-var activeFile = 9999;
 var _ = require("underscore");
 
-function formatXml(xmlgen) {
-  return xmlFormatter(xmlgen, {
-    indentation: '  ', 
-    filter: (node) => node.type !== 'Comment', 
-    collapseContent: true, 
-    lineSeparator: '\n'
-})
-}
+
 
 const AssetsAggregation = observer(function AssetsAggregation() {
   const editorRef = useRef(null);
@@ -33,90 +24,17 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const [showAudioModal, setShowAudioModal] = useState(false);
   const [ttsURL, setTTSURL] = useState(null);
   const [isFetchingXML, setIsFetchingXML] = useState(false);
-
-  const fetchXML = async () => {
-    setIsFetchingXML(true);
-    try {
-      let sentences = toJS(store.sentences || []);
-      let videodata = toJS(store.videodata || {});
-      const response = await axios.post('http://localhost:3000/api/xmlgen', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: {
-          data: sentences.map((item)=>{return _.omit(item,'words')}),
-          meta: videodata,
-        },
-      });
-
-      if (response.data && response.data.xmlgen) {
-        store.updateData({...videodata, xmlgen: response.data.xmlgen},'videodata');
-      } else {
-        console.error('Error fetching XML');
-      }
-    } catch (error) {
-      console.error('Error fetching XML:', error);
-    } finally {
-      setIsFetchingXML(false);
-    }
-  };
-
   const store = useStore();
   let { sentences, videodata } = store;
   let { xmlgen } = videodata;
   sentences = toJS((sentences) || []);
+
   console.log("🚀 ~ file: AssetsAggregation.js:20 ~ sentences:", JSON.stringify(toJS(videodata)),"\n\n\n\nSentences-->",sentences.map && JSON.stringify(sentences.map((item)=>{return _.omit(item,'words')})));
-  xmlgen && console.log("\n\nXML-->",formatXml(xmlgen));
-  const uploadFile = async (file, others) => {
-  
-    // Replace this URL with your backend API endpoint
-    const apiUrl = "/api/upload";
-    const formData = new FormData();
-    formData.append("file", file);
 
-    try {
-      const response = await axios.post(apiUrl, formData);
-      let newSentences = [...store.sentences];
-      //let newImageArr =        newSentences[selectedSentence.index]["selectedImgs"] || [];
-      console.log(
-        "File uploaded successfully",
-        others,
-        response,
-        newSentences
-      );
-
-      if (response.data && response.data.files) {
-        let meta = toJS(others);
-        let activeIndex = meta && meta.index;
-        let files = response.data.files || [];
-        let newImageArr = newSentences[activeIndex]["selectedImgs"] || [];
-        let newVideoArr = newSentences[activeIndex]["selectedVids"] || [];
-        files.forEach((filedetails)=>{
-          let { type, url } = filedetails;
-          if (type == "image") {
-            newImageArr[newImageArr.length] = { src: url, link: url, url, index: newImageArr.length };
-          }
-          if(type == "video"){
-            newVideoArr[newVideoArr.length] = { src: url, link: url, url, index: newVideoArr.length };
-          }
-        })
-        newSentences[activeIndex]["selectedImgs"] = newImageArr;
-        newSentences[activeIndex]["selectedVids"] = newVideoArr;
-        console.log("🚀 ~ file: AssetsAggregation.js:42 ~ uploadFile ~ activeIndex:", activeIndex,newSentences)
-
-        store.updateSentences(newSentences);
-
-      } else {
-        console.error("Error uploading file");
-      }
-    } catch (error) {
-      console.error("Error uploading file:", error);
-    }
-  };
 
   const onDrop = (function(acceptedFiles, others, event){ //useCallback
     acceptedFiles.forEach((file) => {
-      uploadFile(file,others);
+      uploadFile(file,others, store);
     });
   }); //, []
 
@@ -142,7 +60,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
           id="xmlgen"
           className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
           onClick={async () => {
-            await fetchXML();
+            await fetchXML(store);
           }}
         >
           Fetch XML
@@ -168,8 +86,13 @@ const AssetsAggregation = observer(function AssetsAggregation() {
           </button>
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
-            onClick={() => {
+            id="burnxml"
+            onClick={async () => {
               console.log("Update XML button clicked");
+              let { videodata } = store;
+              let vidData = await videodata.xmlgen && burnXML(videodata.xmlgen);
+              store.updateData({...videodata, vidData: vidData},'videodata');
+              console.log("\n\n\n🚀 ~ file: AssetsAggregation.js:92 ~ onClick={ ~ vidData:", vidData)
             }}
           >
             Burn XML
