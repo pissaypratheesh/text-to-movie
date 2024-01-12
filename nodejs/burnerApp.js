@@ -28,14 +28,6 @@ app.get('/test', (req, res) => {
   return res.json({})
 })
 
-socket.on('burn', async (data) => {
-  if (!data.xml) {
-    console.log('Error: XML is required');
-    return;
-  }
-  await burn && burn({ value: data.xml, cacheDir, outputDir: outputDir, socket });
-});
-
 const server = http.createServer(app);
 const io = socketIO(server, {
   cors: {
@@ -47,6 +39,13 @@ const io = socketIO(server, {
 });
 
 io.on('connection', (socket) => {
+  socket.on('burn', async (data) => {                                                                                                                                                                                  
+    if (!data.xml) {                                                                                                                                                                                                   
+      console.log('Error: XML is required');                                                                                                                                                                           
+      return;                                                                                                                                                                                                          
+    }                                                                                                                                                                                                                  
+    await burn && burn({ value: data.xml, cacheDir, outputDir: outputDir, socket });                                                                                                                                   
+  }); 
   console.log('Client connected');
   app.set('socket', socket);
   socket.on('disconnect', () => console.log('Client disconnected'));

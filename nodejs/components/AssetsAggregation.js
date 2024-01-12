@@ -54,14 +54,18 @@ const AssetsAggregation = observer(function AssetsAggregation() {
 
 
   const [progress, setProgress] = useState(0);
-  console.log("🚀 ~ file: AssetsAggregation.js:47 ~ AssetsAggregation ~ progress:", progress)
+  console.log("🚀 ~ file: AssetsAggregation.js:47 ~ AssetsAggregation ~ progress:", progress,toJS(videodata))
 
   useEffect(() => {
     socket = io('http://localhost:9999');
     socket.on('progress', (data) => {
+      let {videodata} = store;
       console.log("🚀 ~ file: AssetsAggregation.js:51 ~ socket.on ~ data:", data)
       if (data.step === "finish") {
         console.log("Result message:", data.result);
+        let vidData = data.result;
+        store.updateData({ ...videodata, finalVid: data.output }, 'videodata');
+
       }
       setProgress(data.progress);
     });
@@ -153,7 +157,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                   ></div>
                 </div>
               </div>)}
-            {!isBurningXML && finalVid && finalVid.output && <VideoLightbox videoUrl={finalVid.output} />}
+            {finalVid && <VideoLightbox videoUrl={finalVid} />}
           </div>
           <Editor
             onMount={(editor) => {

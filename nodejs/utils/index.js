@@ -16,33 +16,23 @@ export function formatXml(xmlgen) {
   })
 }
 
-export async function burnXML() {
+export  function burnXML(xml) {
   const url = BURN_URL;
   const headers = {
     'Content-Type': 'application/json',
   };
   const data = {
     data: {
-      pm: {},
+      xml: xml,
     },
   };
-
-  try {
-    const response = await axios.post(url, data, { headers });
-    console.log('Response:', response.data);
-    return response.data
-  } catch (error) {
-    console.error('Error:', error.message);
-  }
+  return axios.post(url, data, { headers });
 }
 export async function fetchXML(store) {
   try {
     let sentences = toJS(store.sentences || []);
     let videodata = toJS(store.videodata || {});
     const response = await axios.post(`${BASE_URL}/api/xmlgen`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
       data: {
         data: sentences.map((item)=>{return _.omit(item,'words')}),
         meta: videodata,

@@ -19,6 +19,7 @@ function round(x) {
 
 const burn = async (opts, cb) => {
   const socket = opts.socket;
+  console.log("🚀 ~ file: burn.js:22 ~ burn ~ socket:", socket)
   // execSync(`find ${cacheDir}*  -name '????????????????' -type d -ctime +1 -exec rm -rf {} \\;`);//删除1天以上的缓存目录
   if (!opts['cacheDir']) opts['cacheDir'] = cacheDir
   CacheUtil.cacheDir = cacheDir;
@@ -48,7 +49,7 @@ const burn = async (opts, cb) => {
       step: "start",
     };
     onMessage(startMessage);
-    socket.emit('progress', startMessage);
+    socket && socket.emit('progress', startMessage);
   }).on('error', event => {
     console.error("creator error", event);
     onMessage({
@@ -66,7 +67,7 @@ const burn = async (opts, cb) => {
       progress: round(0.2 + number * 0.8),
     };
     onMessage(progressMessage);
-    socket.emit('progress', progressMessage);
+    socket && socket.emit('progress', progressMessage);
   }).on('preloading', (evt) => {
     console.log(`Burn preloading: ${evt.id}: ${evt.loaded}/${evt.total}`);
     console.log(`Burn preloading timestamp: ${Date.now() - t}ms`);
@@ -88,13 +89,15 @@ const burn = async (opts, cb) => {
     console.log(`Burn completed: \n USEAGE: ${e.useage} \n PATH: ${e.output} `);
     console.log(`Burn completed timestamp: ${Date.now() - t}ms`);
     //console.log("\n\n\n\nprqatheesh",cb,e)
+
     const finishMessage = {
       task_id,
       step: "finish",
       result: e.output,
+      output:`http://localhost:3000/${e.output.split('/public/')[1]}`
     };
     onMessage(finishMessage);
-    socket.emit('progress', finishMessage);
+    socket && socket.emit('progress', finishMessage);
     onComplete();
     cb && cb(e);
   }).generateOutput().start();
