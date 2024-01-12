@@ -77,17 +77,12 @@ function scaleImageToFitScreen(originalWidth, originalHeight, screenWidth, scree
   };
 }
 
-function dataToXml(data) {
-  // Convert the data to XML format
-  // This is a placeholder implementation, replace it with your desired XML conversion logic
-  return `<data>${data}</data>`;
-}
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { data } = req.body;
     const dimensions = createDimensions('720','1280');
-    let segmentedData = [...segments] || data.segments;
+    let segmentedData = data.segments || [...segments];
     let processedSegments = [];
     // Have to add default assets if not there, if image then add, if video then repeat as per the clips
     segmentedData.forEach((segment) => {

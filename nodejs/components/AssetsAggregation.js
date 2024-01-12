@@ -10,24 +10,27 @@ import AudioPlayer from "./AudioPlayer";
 import Loading from "./Loading";
 import AudioModal from "./AudioModal";
 import Editor from '@monaco-editor/react';
-import xmlFormatter from 'xml-formatter';
+import xmlFormatter from 'xml-formatter'; 
 
 
 import axios from "axios";
 var activeFile = 9999;
 var _ = require("underscore");
 
-function formatXml(xmlCode) {
-  const formattedXml = xmlFormatter(xmlCode);
-
-  return formattedXml;
+function formatXml(xmlgen) {
+  return xmlFormatter(xmlgen, {
+    indentation: '  ', 
+    filter: (node) => node.type !== 'Comment', 
+    collapseContent: true, 
+    lineSeparator: '\n'
+})
 }
 
 const AssetsAggregation = observer(function AssetsAggregation() {
+  const editorRef = useRef(null);
   const [selectedSentence, setSelectedSentence] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showAudioModal, setShowAudioModal] = useState(false);
-  const [xmlCode, setXmlCode] = useState(null);
   const [ttsURL, setTTSURL] = useState(null);
   const [isFetchingXML, setIsFetchingXML] = useState(false);
 
@@ -35,17 +38,19 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     setIsFetchingXML(true);
     try {
       let sentences = toJS(store.sentences || []);
+      let videodata = toJS(store.videodata || {});
       const response = await axios.post('http://localhost:3000/api/xmlgen', {
         headers: {
           'Content-Type': 'application/json',
         },
         data: {
           data: sentences.map((item)=>{return _.omit(item,'words')}),
+          meta: videodata,
         },
       });
 
-      if (response.data) {
-        setXmlCode(response.data.xmlgen);
+      if (response.data && response.data.xmlgen) {
+        store.updateData({...videodata, xmlgen: response.data.xmlgen},'videodata');
       } else {
         console.error('Error fetching XML');
       }
@@ -55,10 +60,13 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       setIsFetchingXML(false);
     }
   };
+
   const store = useStore();
   let { sentences, videodata } = store;
+  let { xmlgen } = videodata;
   sentences = toJS((sentences) || []);
   console.log("🚀 ~ file: AssetsAggregation.js:20 ~ sentences:", JSON.stringify(toJS(videodata)),"\n\n\n\nSentences-->",sentences.map && JSON.stringify(sentences.map((item)=>{return _.omit(item,'words')})));
+  xmlgen && console.log("\n\nXML-->",formatXml(xmlgen));
   const uploadFile = async (file, others) => {
   
     // Replace this URL with your backend API endpoint
@@ -129,7 +137,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
           {showAudioModal ? "Close Audio Modal" : "Open Audio Modal"}
         </button>
       </div>
-      {!xmlCode && (
+      {!xmlgen && (
         <button
           id="xmlgen"
           className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
@@ -143,20 +151,37 @@ const AssetsAggregation = observer(function AssetsAggregation() {
 
       {isFetchingXML && <div>Loading...</div>}
 
-      {xmlCode && (
+      {xmlgen && (
         <div className="w-full h-64 editor-container" style={{height:"500px"}}>
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
             onClick={() => {
-              console.log("Update XML button clicked");
+              if (editorRef.current) {
+                const editorInstance = editorRef.current;
+                const xmlgen = editorInstance.getValue();
+                let { videodata } = store;
+                store.updateData({...videodata, xmlgen: xmlgen},'videodata');
+              }
             }}
           >
             Update XML
           </button>
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
+            onClick={() => {
+              console.log("Update XML button clicked");
+            }}
+          >
+            Burn XML
+          </button>
           <Editor
-            height="80%"
+            onMount={(editor) => {
+              editorRef.current = editor;
+            }}
+            height="85%"
             defaultLanguage="xml"
-            value={formatXml(xmlCode)}
+            theme="vs-dark"
+            value={formatXml(xmlgen)}
             language="xml"
             options={{
               readOnly: false,
@@ -171,7 +196,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
       )}
       {!isLoading && showAudioModal && <AudioModal ttsURL={ttsURL} toggleAudioModal={() => setShowAudioModal(false)} />}
       {!isLoading && (
-          <div key={!!xmlCode} className="border border-gray-300 rounded-lg p-4 mt-9">
+          <div key={!!xmlgen} className="border border-gray-300 rounded-lg p-4 mt-9">
             {sentences.map((sentenceObj, index) => {
               let { line: sentence, start, end, assetsEnd } = sentenceObj;
               let selectedImgs = toJS(sentenceObj.selectedImgs || []);
