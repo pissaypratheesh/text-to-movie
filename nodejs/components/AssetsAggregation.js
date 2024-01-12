@@ -11,7 +11,8 @@ import Loading from "./Loading";
 import AudioModal from "./AudioModal";
 import VideoLightbox from "./SingleVideo";
 import Editor from '@monaco-editor/react';
-import { formatXml, fetchXML, uploadFile, burnXML } from '../utils/index';  
+import { formatXml, fetchXML, uploadFile, burnXML } from '../utils/index';
+import io from 'socket.io-client';
 
 var _ = require("underscore");
 
@@ -40,6 +41,18 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     });
   }); //, []
 
+
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const socket = io('http://localhost:9999');
+    socket.on('progress', (data) => {
+      setProgress(data.progress);
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   if (!(sentences && sentences.length)) {
     return <div> add query</div>;
@@ -128,9 +141,11 @@ const AssetsAggregation = observer(function AssetsAggregation() {
             </button>
             {isBurningXML && (
               <div
-                className="ease-linear rounded-full border-4 border-t-4 border-gray-500 h-6 w-6 ml-2"
-                style={{ animation: 'spin 1s linear infinite', borderTopColor: 'blue' }}
-              ></div>
+                id="burnspiner"
+                className="ml-2"
+              >
+                {progress}%
+              </div>
             )}
             {!isBurningXML && finalVid && finalVid.output && <VideoLightbox videoUrl={finalVid.output} />}
           </div>
