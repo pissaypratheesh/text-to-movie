@@ -34,7 +34,6 @@ app.post('/burn', async (req, res) => {
   if(!data.xml){
     return res.status(500).send({Error: 'XML is required'});
   }
-  const socket = req.app.get('socket');
   await burn && burn({ value: data.xml, cacheDir, outputDir: outputDir, socket }, (e) => {
     if(e){
       console.log(e)
@@ -60,6 +59,7 @@ const io = socketIO(server, {
 
 io.on('connection', (socket) => {
   console.log('Client connected');
+  app.set('socket', socket);
   socket.on('disconnect', () => console.log('Client disconnected'));
 });
 
