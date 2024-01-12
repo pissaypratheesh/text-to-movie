@@ -46,7 +46,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    socket = io('http://localhost:9999/burn');
+    socket = io('http://localhost:9999');
     socket.on('progress', (data) => {
       setProgress(data.progress);
     });
