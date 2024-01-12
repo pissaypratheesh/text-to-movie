@@ -17,7 +17,8 @@ function round(x) {
   return Math.round(x * m) / m;
 }
 
-const burn = async (opts, cb, socket) => {
+const burn = async (opts, cb) => {
+  const socket = opts.socket;
   // execSync(`find ${cacheDir}*  -name '????????????????' -type d -ctime +1 -exec rm -rf {} \\;`);//删除1天以上的缓存目录
   if (!opts['cacheDir']) opts['cacheDir'] = cacheDir
   CacheUtil.cacheDir = cacheDir;

@@ -27,7 +27,7 @@ app.post('/burn', async (req, res) => {
     return res.status(500).send({Error: 'XML is required'});
   }
   const socket = req.app.get('socket');
-  await burn && burn({ value: data.xml, cacheDir, outputDir: outputDir }, (e) => {
+  await burn && burn({ value: data.xml, cacheDir, outputDir: outputDir, socket }, (e) => {
     if(e){
       console.log(e)
       if(e.output){
