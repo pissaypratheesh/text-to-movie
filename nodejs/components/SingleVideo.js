@@ -1,7 +1,8 @@
 import ReactPlayer from 'react-player';
-import { Lightbox } from 'react-18-image-lightbox';
+import Lightbox  from 'react-18-image-lightbox';
+import React from 'react';
 
-export default function VideoLightbox({ videoUrl }) {
+function VideoLightbox({ videoUrl = "http://localhost:3000/assets/output/tevfi3olx2mlhnmf.mp4" }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -38,3 +39,5 @@ export default function VideoLightbox({ videoUrl }) {
     </div>
   );
 }
+
+export default VideoLightbox
