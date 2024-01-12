@@ -143,7 +143,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                 id="burnspiner"
                 className="ml-2"
                 now={progress}
-                label={`${progress}%`}
+                label={`${progress}`}
                 striped
                 variant="info"
               />
