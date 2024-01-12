@@ -2,6 +2,7 @@ import ReactPlayer from 'react-player';
 //import Lightbox  from 'react-image-lightbox';/
 //import Lightbox  from 'react-18-image-lightbox';  
 import Lightbox  from 'yet-another-react-lightbox'; 
+import "yet-another-react-lightbox/styles.css";
 import React from 'react';
 
 function VideoLightbox({ videoUrl = "http://localhost:3000/assets/output/tevfi3olx2mlhnmf.mp4" }) {
