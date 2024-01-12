@@ -44,10 +44,12 @@ const AssetsAggregation = observer(function AssetsAggregation() {
 
 
   const [progress, setProgress] = useState(0);
+  console.log("🚀 ~ file: AssetsAggregation.js:47 ~ AssetsAggregation ~ progress:", progress)
 
   useEffect(() => {
     socket = io('http://localhost:9999');
     socket.on('progress', (data) => {
+      console.log("🚀 ~ file: AssetsAggregation.js:51 ~ socket.on ~ data:", data)
       setProgress(data.progress);
     });
     return () => {
@@ -87,8 +89,8 @@ const AssetsAggregation = observer(function AssetsAggregation() {
 
 
       {xmlgen && (
-        <div className="w-full h-64 editor-container" key={`_${!!isBurningXML}`} style={{height:`${editorSize}vh`}}>
-          <div className="flex items-center"  key={`__${!!isBurningXML}`} >
+        <div className="w-full h-64 editor-container" style={{height:`${editorSize}vh`}}>
+          <div className="flex items-center" >
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
               onClick={() => {
@@ -135,7 +137,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
             >
               Burn XML
             </button>
-            {isBurningXML && (
+            {progress && (
               <div
                 id="burnspiner"
                 className="ml-2"
