@@ -24,6 +24,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const [showAudioModal, setShowAudioModal] = useState(false);
   const [ttsURL, setTTSURL] = useState(null);
   const [isFetchingXML, setIsFetchingXML] = useState(false);
+  const [isBurningXML, setIsBurningXML] = useState(false);
   const store = useStore();
   let { sentences, videodata } = store;
   let { xmlgen } = videodata;
@@ -84,19 +85,26 @@ const AssetsAggregation = observer(function AssetsAggregation() {
           >
             Update XML
           </button>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
-            id="burnxml"
-            onClick={async () => {
+          <div className="flex items-center">
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
+              id="burnxml"
+              onClick={async () => {
+              setIsBurningXML(true);
               console.log("Update XML button clicked");
               let { videodata } = store;
               let vidData = await videodata.xmlgen && burnXML(videodata.xmlgen);
               store.updateData({...videodata, vidData: vidData},'videodata');
-              console.log("\n\n\n🚀 ~ file: AssetsAggregation.js:92 ~ onClick={ ~ vidData:", vidData)
+              console.log("\n\n\n🚀 ~ file: AssetsAggregation.js:92 ~ onClick={ ~ vidData:", vidData);
+              setIsBurningXML(false);
             }}
-          >
-            Burn XML
-          </button>
+            >
+              Burn XML
+            </button>
+            {isBurningXML && (
+              <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-6 w-6 ml-2"></div>
+            )}
+          </div>
           <Editor
             onMount={(editor) => {
               editorRef.current = editor;
