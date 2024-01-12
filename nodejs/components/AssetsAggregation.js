@@ -140,7 +140,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
             {progress && (
               <div
                 id="burnspiner"
-                className="ml-2"
+                className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
               >
                 {progress}%
               </div>
