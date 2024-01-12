@@ -11,7 +11,8 @@ import Loading from "./Loading";
 import AudioModal from "./AudioModal";
 import VideoLightbox from "./SingleVideo";
 import Editor from '@monaco-editor/react';
-import { formatXml, fetchXML, uploadFile, burnXML } from '../utils/index';
+import axios from "axios";
+import { formatXml, fetchXML, uploadFile, burnXML } from '../utils/index';  
 import io from 'socket.io-client';
 
 var _ = require("underscore");
@@ -122,9 +123,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                     'Content-Type': 'application/json',
                   };
                   const data = {
-                    data: {
-                      xml: xml,
-                    },
+                      xml: videodata.xmlgen,
                   };
                    
 
