@@ -22,6 +22,7 @@ app.get('/test', (req, res) => {
 
 app.post('/burn', async (req, res) => {
   const data = req.body;
+  console.log("🚀 ~ file: burnerApp.js:25 ~ app.post ~ data:", data)
   if(!data.xml){
     return res.status(500).send({Error: 'XML is required'});
   }
