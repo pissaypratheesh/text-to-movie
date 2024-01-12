@@ -138,9 +138,9 @@ const AssetsAggregation = observer(function AssetsAggregation() {
               Burn XML
             </button>
             {progress && (
-              <div className="ml-2 w-full h-2 bg-blue-300 rounded-lg">
+              <div className="ml-2 w-full h-2 bg-gray-300 rounded-lg">
                 <div
-                  className="h-2 bg-blue-500 rounded-lg"
+                  className="h-2 bg-green-500 rounded-lg"
                   style={{ width: `${progress}%` }}
                 ></div>
               </div>
