@@ -14,7 +14,6 @@ import Editor from '@monaco-editor/react';
 import axios from "axios";
 import { formatXml, fetchXML, uploadFile, burnXML } from '../utils/index';  
 import io from 'socket.io-client';
-import { ProgressBar } from 'react-bootstrap';
 
 var _ = require("underscore");
 let socket; 
@@ -139,14 +138,12 @@ const AssetsAggregation = observer(function AssetsAggregation() {
               Burn XML
             </button>
             {progress && (
-              <ProgressBar
-                id="burnspiner"
-                className="ml-2"
-                now={progress}
-                label={`${progress}`}
-                striped
-                variant="info"
-              />
+              <div className="ml-2 w-full h-2 bg-blue-300 rounded-lg">
+                <div
+                  className="h-2 bg-blue-500 rounded-lg"
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
             )}
             {!isBurningXML && finalVid && finalVid.output && <VideoLightbox videoUrl={finalVid.output} />}
           </div>
