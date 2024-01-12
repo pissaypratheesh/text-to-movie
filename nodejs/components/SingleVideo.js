@@ -1,6 +1,7 @@
 import ReactPlayer from 'react-player';
-//import Lightbox  from 'react-image-lightbox';
-import Lightbox  from 'react-18-image-lightbox';  
+//import Lightbox  from 'react-image-lightbox';/
+//import Lightbox  from 'react-18-image-lightbox';  
+import Lightbox  from 'yet-another-react-lightbox'; 
 import React from 'react';
 
 function VideoLightbox({ videoUrl = "http://localhost:3000/assets/output/tevfi3olx2mlhnmf.mp4" }) {
@@ -18,21 +19,18 @@ function VideoLightbox({ videoUrl = "http://localhost:3000/assets/output/tevfi3o
     <div>
       <button onClick={handleOpen}>Open Video</button>
       {isOpen && (
-        <Lightbox
-          mainSrc={<ReactPlayer
-            url={videoUrl}
-            controls={true}
-            width="100%"
-            height="100%"
-            volume={0.8}
-            muted={false}
-            playbackRate={1}
-            pip={false}
-            loop={false}
-          />}
-          onCloseRequest={handleClose}
-          imageCaption={<a href={videoUrl} download>Download</a>}
-        />
+        <Lightbox                                                                                                                                                                                                    
+            onClose={handleClose}                                                                                                                                                                                      
+            media={[                                                                                                                                                                                                   
+            {                                                                                                                                                                                                        
+                src: videoUrl,                                                                                                                                                                                         
+                type: "video",                                                                                                                                                                                         
+                alt: "Video",                                                                                                                                                                                          
+                caption: <a href={videoUrl} download>Download</a>,                                                                                                                                                     
+            },                                                                                                                                                                                                       
+            ]}                                                                                                                                                                                                         
+            open={isOpen}                                                                                                                                                                                              
+        />        
       )}
     </div>
   );
