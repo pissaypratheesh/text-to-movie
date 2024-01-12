@@ -1,4 +1,6 @@
 const express = require('express');
+const http = require('http');
+const socketIO = require('socket.io');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
@@ -23,7 +25,8 @@ app.post('/burn', async (req, res) => {
   if(!data.xml){
     return res.status(500).send({Error: 'XML is required'});
   }
-  await burn && burn({ value: data.xml, cacheDir, outputDir: outputDir },(e)=>{
+  const socket = req.app.get('socket');
+  await burn && burn({ value: data.xml, cacheDir, outputDir: outputDir }, (e) => {
     if(e){
       console.log(e)
       if(e.output){
@@ -36,6 +39,14 @@ app.post('/burn', async (req, res) => {
   
 });
 
-app.listen(port, () => {
+const server = http.createServer(app);
+const io = socketIO(server);
+
+io.on('connection', (socket) => {
+  console.log('Client connected');
+  socket.on('disconnect', () => console.log('Client disconnected'));
+});
+
+server.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
