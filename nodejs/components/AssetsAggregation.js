@@ -17,7 +17,17 @@ import io from 'socket.io-client';
 
 var _ = require("underscore");
 let socket; 
-
+const ProgressBar = ({ progressPercentage }) => {
+  return (
+      <div className='h-1 w-full bg-gray-300'>
+          <div
+              style={{ width: `${progressPercentage}%`}}
+              className={`h-full ${
+                  progressPercentage < 70 ? 'bg-red-600' : 'bg-green-600'}`}>
+          </div>
+      </div>
+  );
+};
 
 const AssetsAggregation = observer(function AssetsAggregation() {
   const editorRef = useRef(null);
@@ -120,15 +130,9 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                 console.log("Update XML button clicked");
                 let { videodata } = store;
                 if(videodata.xmlgen){
-                  
-                  const headers = {
-                    'Content-Type': 'application/json',
-                  };
                   const data = {
                       xml: videodata.xmlgen,
                   };
-                   
-
                   socket.emit('burn', data);
                 }
                 setIsBurningXML(false);
@@ -138,13 +142,14 @@ const AssetsAggregation = observer(function AssetsAggregation() {
               Burn XML
             </button>
             {progress && (
-              <div className="ml-2 w-full h-2 bg-gray-300 rounded-lg">
-                <div
-                  className="h-2 bg-green-500 rounded-lg"
-                  style={{ width: `${progress}%` }}
-                ></div>
-              </div>
-            )}
+              <div className="ml-2 w-40">
+                <div className="w-full h-2 bg-gray-300 rounded-lg">
+                  <div
+                    className="h-2 rounded-lg"
+                    style={{ width: `${progress * 100}%`, backgroundColor: "#34D399" }}
+                  ></div>
+                </div>
+              </div>)}
             {!isBurningXML && finalVid && finalVid.output && <VideoLightbox videoUrl={finalVid.output} />}
           </div>
           <Editor
