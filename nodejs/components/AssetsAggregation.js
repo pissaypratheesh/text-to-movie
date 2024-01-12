@@ -25,12 +25,13 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const [ttsURL, setTTSURL] = useState(null);
   const [isFetchingXML, setIsFetchingXML] = useState(false);
   const [isBurningXML, setIsBurningXML] = useState(false);
+  const [editorSize , setEditorSize] = useState(55);
   const store = useStore();
   let { sentences, videodata } = store;
-  let { xmlgen } = videodata;
+  let { xmlgen, finalVid } = videodata || {};
   sentences = toJS((sentences) || []);
 
-  console.log("🚀 ~ file: AssetsAggregation.js:20 ~ sentences:", JSON.stringify(toJS(videodata)),"\n\n\n\nSentences-->",sentences.map && JSON.stringify(sentences.map((item)=>{return _.omit(item,'words')})));
+  //console.log("🚀 ~ file: AssetsAggregation.js:20 ~ sentences:", JSON.stringify(toJS(videodata)),"\n\n\n\nSentences-->",sentences.map && JSON.stringify(sentences.map((item)=>{return _.omit(item,'words')})));
 
 
   const onDrop = (function(acceptedFiles, others, event){ //useCallback
@@ -70,40 +71,68 @@ const AssetsAggregation = observer(function AssetsAggregation() {
 
       {isFetchingXML && <div>Loading...</div>}
 
+
       {xmlgen && (
-        <div className="w-full h-64 editor-container" style={{height:"500px"}}>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
-            onClick={() => {
-              if (editorRef.current) {
-                const editorInstance = editorRef.current;
-                const xmlgen = editorInstance.getValue();
-                let { videodata } = store;
-                store.updateData({...videodata, xmlgen: xmlgen},'videodata');
-              }
-            }}
-          >
-            Update XML
-          </button>
-          <div className="flex items-center">
+        <div className="w-full h-64 editor-container" key={`_${!!isBurningXML}`} style={{height:`${editorSize}vh`}}>
+          <div className="flex items-center"  key={`__${!!isBurningXML}`} >
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
+              onClick={() => {
+                if (editorRef.current) {
+                  const editorInstance = editorRef.current;
+                  const xmlgen = editorInstance.getValue();
+                  let { videodata } = store;
+                  store.updateData({ ...videodata, xmlgen: xmlgen }, 'videodata');
+                }
+              }}
+            >
+              Update XML
+            </button>
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
+              onClick={() => {
+                editorSize === 90 ? setEditorSize(55) : setEditorSize(90)
+              }}
+            >
+              Expand Editor
+            </button>
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
               id="burnxml"
               onClick={async () => {
-              setIsBurningXML(true);
-              console.log("Update XML button clicked");
-              let { videodata } = store;
-              let vidData = await videodata.xmlgen && burnXML(videodata.xmlgen);
-              store.updateData({...videodata, vidData: vidData},'videodata');
-              console.log("\n\n\n🚀 ~ file: AssetsAggregation.js:92 ~ onClick={ ~ vidData:", vidData);
-              setIsBurningXML(false);
-            }}
+                setIsBurningXML(true);
+                console.log("Update XML button clicked");
+                let { videodata } = store;
+                if(videodata.xmlgen){
+                  
+                  const headers = {
+                    'Content-Type': 'application/json',
+                  };
+                  const data = {
+                    data: {
+                      xml: xml,
+                    },
+                  };
+                   
+
+                  let vidRes = await axios.post('http://localhost:9999/burn', data, { headers });//await burnXML(videodata.xmlgen);
+                  let vidData = vidRes && vidRes.data;
+                  store.updateData({ ...videodata, finalVid: vidData }, 'videodata');
+                  console.log("\n\n\n🚀 ~ file: AssetsAggregation.js:92 ~ onClick={ ~ vidData:", vidData);
+                }
+                setIsBurningXML(false);
+  
+              }}
             >
               Burn XML
             </button>
             {isBurningXML && (
-              <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-6 w-6 ml-2"></div>
+              <div
+                className="ease-linear rounded-full border-4 border-t-4 border-gray-500 h-6 w-6 ml-2"
+                style={{ animation: 'spin 1s linear infinite', borderTopColor: 'blue' }}
+              ></div>
             )}
+            {!isBurningXML && finalVid && finalVid.output && <VideoLightbox videoUrl={finalVid.output} />}
           </div>
           <Editor
             onMount={(editor) => {
@@ -184,7 +213,6 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                                   </div>
                                 )
                               }
-                              console.log("🚀 ~ file: AssetsAggregation.js:133 ~ {Object.values ~ video:", video)
                               return (
                                 <video
                                   key={index}
