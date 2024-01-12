@@ -127,10 +127,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
                   };
                    
 
-                  let vidRes = await axios.post('http://localhost:9999/burn', data, { headers });//await burnXML(videodata.xmlgen);
-                  let vidData = vidRes && vidRes.data;
-                  store.updateData({ ...videodata, finalVid: vidData }, 'videodata');
-                  console.log("\n\n\n🚀 ~ file: AssetsAggregation.js:92 ~ onClick={ ~ vidData:", vidData);
+                  socket.emit('burn', data);
                 }
                 setIsBurningXML(false);
   

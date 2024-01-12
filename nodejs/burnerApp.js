@@ -28,23 +28,12 @@ app.get('/test', (req, res) => {
   return res.json({})
 })
 
-app.post('/burn', async (req, res) => {
-  const data = req.body;
-  console.log("🚀 ~ file: burnerApp.js:25 ~ app.post ~ data:", data)
-  if(!data.xml){
-    return res.status(500).send({Error: 'XML is required'});
+socket.on('burn', async (data) => {
+  if (!data.xml) {
+    console.log('Error: XML is required');
+    return;
   }
-  await burn && burn({ value: data.xml, cacheDir, outputDir: outputDir, socket }, (e) => {
-    if(e){
-      console.log(e)
-      if(e.output){
-        return res.send({output: `${req.protocol}://localhost:3000/${e.output.split('/public/')[1]}`, path: e.output});
-      }
-      return res.status(500).send({Error: e});
-    }
-  });
-  // Add await keyword where needed
-  
+  await burn && burn({ value: data.xml, cacheDir, outputDir: outputDir, socket });
 });
 
 const server = http.createServer(app);
