@@ -60,6 +60,9 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     socket = io('http://localhost:9999');
     socket.on('progress', (data) => {
       console.log("🚀 ~ file: AssetsAggregation.js:51 ~ socket.on ~ data:", data)
+      if (data.step === "finish") {
+        console.log("Result message:", data.result);
+      }
       setProgress(data.progress);
     });
     return () => {
