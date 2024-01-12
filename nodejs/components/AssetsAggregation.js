@@ -16,7 +16,7 @@ import { formatXml, fetchXML, uploadFile, burnXML } from '../utils/index';
 import io from 'socket.io-client';
 
 var _ = require("underscore");
-
+let socket; 
 
 
 const AssetsAggregation = observer(function AssetsAggregation() {
@@ -46,13 +46,7 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const socket = io('http://localhost:9999');
-    socket.on('progress', (data) => {
-      setProgress(data.progress);
-    });
-    return () => {
-      socket.disconnect();
-    };
+    socket = io('http://localhost:9999/burn');
     socket.on('progress', (data) => {
       setProgress(data.progress);
     });
