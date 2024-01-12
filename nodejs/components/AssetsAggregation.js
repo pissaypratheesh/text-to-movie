@@ -53,6 +53,12 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     return () => {
       socket.disconnect();
     };
+    socket.on('progress', (data) => {
+      setProgress(data.progress);
+    });
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   if (!(sentences && sentences.length)) {
