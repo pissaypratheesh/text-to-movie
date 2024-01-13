@@ -4,7 +4,12 @@ import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import axios from "axios";
 
-const TTS_API_URL = "http://localhost:3000/api/generate/speech";//?force=true";
+function removeEmoticons(str) {
+  const emoticonRegex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
+  return str.replace(emoticonRegex, '');
+}
+
+const TTS_API_URL = "http://localhost:3000/api/generate/speech?force=true";
 
 const AudioPlayer = observer(function AudioPlayer({onAudioReceived}) {
   const audioRef = useRef(null);
@@ -17,9 +22,10 @@ const AudioPlayer = observer(function AudioPlayer({onAudioReceived}) {
       if(videodata && sentences){
         videodata = toJS(videodata)
         let { videoId } = videodata || {};
+        let plainSummary = removeEmoticons(Array.isArray(sentences) ? sentences.map((item) => item.line).join(" ") : sentences);
         const data = {
           id: videoId,
-          summary: Array.isArray(sentences) ? sentences.map((item) => item.line).join(" ") : sentences,
+          summary: plainSummary,
         };
         console.log("🚀 ~ file: AssetsAggregation.js:97 ~ fetchAudioURL ~ data:", data)
 
@@ -45,7 +51,7 @@ const AudioPlayer = observer(function AudioPlayer({onAudioReceived}) {
           if(tts){
             tts = tts.split('/public/')[1];
             let ttspath = `http://localhost:3000/${tts}`
-            store.updateData({tts: ttspath, ...videodata},'videodata')
+            store.updateData({tts: ttspath, subtitle: plainSummary, ...videodata},'videodata')
             audioRef.current.src = ttspath;
             setAudioUrl(ttspath)
             onAudioReceived(ttspath)

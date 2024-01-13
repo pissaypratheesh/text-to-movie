@@ -419,14 +419,21 @@ async function someAsyncFunction(mirmalCode) {
 
 // Call the asynchronous function
 setTimeout(()=>{
-    someAsyncFunction(mirmalCode);
-    // var path = '/Users/pratheesh.pm/Documents/codebase/text-to-movie/nodejs/output/rczqnjsww4d0wp82.mp4'
-    // addSpeechNSubs( {video_path: path, outputDir:  outputDir,outputFileName: 'test2.mp4',song, overall_duration:24, font1, tts })
+  //  someAsyncFunction(mirmalCode);
+     //var path = '/Users/pratheesh.pm/Documents/codebase/text-to-movie/nodejs/output/adbfjicnejij55qu.mp4'
+   // addSpeechNSubs( {video_path: path, outputDir:  outputDir,outputFileName: 'test2.mp4',song, overall_duration:24, font1, tts })
 }, 1000)
 
 
-async function addSpeechNSubs( {video_path,outputDir,outputFileName, song, overall_duration=24, font1, tts }){
-    console.log("\n\n\n in addSpeechNSubs", `${outputDir}${outputFileName}`)
+async function addSpeechNSubs( opts){
+    let {video_path,outputDir,outputFileName, song, overall_duration, tts, socket, bg } = opts || {};
+    console.log("🚀 ~ file: cleanJsonGenerator.js:430 ~ addSpeechNSubs ~ video_path,outputDir,outputFileName, song, overall_duration=40, tts, socket, bg :", video_path,outputDir,outputFileName, song, overall_duration, tts, bg )
+    console.log("\n\n\n in addSpeechNSubs",overall_duration, `${outputDir}${outputFileName}`)
+
+    const onMessage = typeof opts['onMessage'] === 'function'    ? opts['onMessage']    : ()=>{};
+    const onComplete = typeof opts['onComplete'] === 'function'    ? opts['onComplete']    : ()=>{};
+    const task_id = opts['task_id'] || 1;
+    let t = Date.now();
     const creator = new FFCreator({
         cacheDir,
         output: `${outputDir}${outputFileName}`,
@@ -435,10 +442,12 @@ async function addSpeechNSubs( {video_path,outputDir,outputFileName, song, overa
         debug: false,
       });
     
-      creator.addAudio(new FFAudio({ path: bgAudio, volume: 0.2, fadeIn: 4, fadeOut: 4, loop: true }));
+      creator.addAudio(new FFAudio({ path: bg, volume: 0.1, fadeIn: 4, fadeOut: 4, loop: true }));
     
       // create FFScene
       const scene1 = new FFScene();
+
+      //add video
       const fvideo = new FFVideo({
         path: video_path,
         width: width * 1,
@@ -454,44 +463,84 @@ async function addSpeechNSubs( {video_path,outputDir,outputFileName, song, overa
       fvideo.setAudio(false);
       fvideo.setLoop(true)
       scene1.addChild(fvideo);
+
+
       scene1.addAudio(tts);
-      const title = splitStringIntoLines(song.toUpperCase(),10)
+      
+      
+      //add subtitle
+      const title = splitStringIntoLines(song.toUpperCase(),28)
       const subtitle = new FFSubtitle({
         comma: true, // 是否逗号分割
         backgroundColor: '#00219C',
         color: '#fff',
-        fontSize: 55,
+        fontSize: 35,
         wrap: "true" ,
-        x: width * .3,
-        y: height * .9,
+        x: width * .5,
+        y: height * .7,
         width: width/2,
       });
       subtitle.setText(title);
       subtitle.setFont(font1);
       subtitle.setSpeech(tts); // 语音配音-tts
-      subtitle.frameBuffer = overall_duration;
+      subtitle.frameBuffer = 24;
       scene1.addChild(subtitle);
-      scene1.setDuration(24);
+      scene1.setDuration(Math.ceil(overall_duration));
+
+      // add scene
       creator.addChild(scene1);
       creator.start();
     creator.closeLog();
 
     creator.on('start', () => {
         console.log(`FFCreator start`);
+        const startMessage = {
+            task_id,
+            status: "start",
+            step: "start",
+        };
+        onMessage(startMessage);
+        socket && socket.emit('progress', startMessage);
     });
 
-    creator.on('error', e => {
-        console.log(`FFCreator error: ${JSON.stringify(e)}`);
+    creator.on('error', event => {
+        console.log(`FFCreator error: ${JSON.stringify(event)}`);
+        console.error("creator error", event);
+        onMessage({
+          task_id,
+          step:"error",
+          result: {type: event.type, pos: event.pos, error: event.error},
+        });
     });
 
     creator.on('progress', e => {
         console.log(colors.yellow(`FFCreator progress: ${(e.percent * 100) >> 0}%`));
+        let number = e.percent || 0;
+        console.log(`Burn progress: ${(number * 100) >> 0}%`);
+        console.log(`Burn progress timestamp: ${Date.now() - t}ms`);
+        const progressMessage = {
+            task_id,
+            step: "progress",
+            progress: round(0.2 + number * 0.8),
+        };
+        onMessage(progressMessage);
+        socket && socket.emit('progress', progressMessage);
     });
 
     creator.on('complete', e => {
         console.log(
-        colors.magenta(`FFCreator completed: \n USEAGE: ${e.useage} \n PATH: ${e.output} `),
+        colors.magenta(`FFCreator completed: \n USEAGE: ${e.useage} \n PATH: ${e.output}`),
         );
+
+        const finishMessage = {
+            task_id,
+            step: "finish",
+            result: e.output,
+            output:`http://localhost:3000/${e.output.split('/public/')[1]}`
+        };
+        onMessage(finishMessage);
+        socket && socket.emit('progress', finishMessage);
+        onComplete();
 
         console.log(colors.green(`\n --- You can press the s key or the w key to restart! --- \n`));
     });
@@ -502,5 +551,4 @@ async function addSpeechNSubs( {video_path,outputDir,outputFileName, song, overa
 
 module.exports = {
     addSpeechNSubs,
-       
 }

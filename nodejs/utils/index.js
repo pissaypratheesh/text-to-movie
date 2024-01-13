@@ -34,7 +34,7 @@ export async function fetchXML(store) {
     let videodata = toJS(store.videodata || {});
     const response = await axios.post(`${BASE_URL}/api/xmlgen`, {
       data: {
-        data: sentences.map((item)=>{return _.omit(item,'words')}),
+        segments: sentences.map((item)=>{return _.omit(item,'words')}),
         meta: videodata,
       },
     });

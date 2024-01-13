@@ -16,6 +16,7 @@ function genericVidOps (options, dimensions = {}) {
         src: options.s,
         duration: options.d || '10',
         ss: options.ss || '0',
+        text: options.t,
         loop: options.l || 'false',
         audio: options.a || 'true',
         preload: 'true',

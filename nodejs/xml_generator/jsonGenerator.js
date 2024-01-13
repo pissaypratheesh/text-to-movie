@@ -210,6 +210,7 @@ const generateJSONFromSequences = ({ summary, sequences, dimensions, mute, canva
                             line:sequence.line,
                             ...genericVidOps({ 
                                 d: vid.duration || sequence.vidDuration,
+                                t: sequence.text || '',
                                 a: "false",
                                 s: vid.src || vid.s,
                                 ss: vid.ss || '0',
@@ -242,6 +243,7 @@ const generateJSONFromSequences = ({ summary, sequences, dimensions, mute, canva
                                 ...genericImgOps({ s: 
                                     image.url,
                                     d: image.duration || image.d || d,
+                                    t: sequence.text || '',
                                     ss: image.ss || '0',
                                     img_h: image.height,
                                     img_w: image.width,
@@ -265,6 +267,7 @@ const generateJSONFromSequences = ({ summary, sequences, dimensions, mute, canva
                             options: {
                                 ...genericImgOps({ 
                                     s: image.url, 
+                                    t: sequence.text || '',
                                     d: image.duration || image.d || d,
                                     img_h: image.height,
                                     img_w: image.width,

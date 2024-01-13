@@ -2,6 +2,7 @@ import sys
 import logging
 
 from typing import Dict
+import random
 import autogen
 import time
 from autogen.agentchat.contrib.teachable_agent import TeachableAgent
@@ -18,25 +19,26 @@ def run_summarization_flow( prompt: str, id: str = None, title: str = None) -> N
             'api_version': '2023-07-01-preview',
         }
     ]
-    numeric_hash = create_numeric_hash(prompt)
+    random_number = random.randint(1, 100) 
+    numeric_hash_ = create_numeric_hash(prompt)
+    numeric_hash = numeric_hash_ + random_number
     print("\n\n\n🚀 ~ file: summarization.py:22 ~ numeric_hash:", numeric_hash,prompt)
 
     start_time = time.time()
+    #You should give a kickass 5 titles to the summary.
+    #"titles": ["title 1", "title 2", "title 3", "title 4", "title 5"],
     assistant = autogen.AssistantAgent(
         name="assistant",
-        system_message="""You are a helpful AI assistant who is an expert in long text summarization with long summary with emoticons in a little funny way with genZ lingo to make it kickass.
+        system_message="""You are a helpful AI assistant who is an expert in long text summarization with long summary in a little funny way with genZ lingo to make it kickass.
             Each sentence in summary should not exceed 15 words.
-            Keep the emoticons at the start of the line.
-            Give me a long summary in around 150 words.
+            Give me a long summary in around 200 words.
             You don't miss out any details.
             You should not make up any sentences.
-            You should give a kickass 5 titles to the summary.
             You will always return as JSON with the following format:
             `{
-                "summary": "summary here has to be around 150 words",
-                "titles": ["title 1", "title 2", "title 3", "title 4", "title 5"],
+                "summary": "summary here has to be around 200 words",
             }`
-            The summary part of the json should be around 120 words and less than that if only the given text itself is less.  
+            The summary part of the json should be around 200 words and less than that if only the given text itself is less.  
             Don't create or execute any code.
             And exit chat with "TERMINATE"
         """,

@@ -7,6 +7,7 @@ function genericImgOps (options, dimensions) {
         height: options.h_value ||  `${options.h || Math.floor(h/3.5)}rpx`,
         width: options.w_value || `${options.w || Math.floor(w/3.5)}rpx`,
         src: options.s,
+        text: options.t,
         duration: options.d || options.duration,
         ss: options.ss,
         loop: options.l || 'false',

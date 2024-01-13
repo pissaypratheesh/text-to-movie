@@ -34,6 +34,7 @@ const burn = async (opts, cb) => {
   const onMessage = typeof opts['onMessage'] === 'function'
     ? opts['onMessage']
     : ()=>{};
+    
   const onComplete = typeof opts['onComplete'] === 'function'
     ? opts['onComplete']
     : ()=>{};

@@ -15,6 +15,7 @@ const AudioModal = observer(function AudioModal({ ttsURL, toggleAudioModal }) {
   const [isLoading, setIsLoading] = useState(true);
   const [audioPlayer, setAudioPlayer] = useState(null);
   const [blendedAudioPath, setBlendedAudioPath] = useState(null);
+  const [blendedAudioUrl, setBlendedAudioUrl] = useState(null);
   const store = useStore();
   const { sentences } = store;
 
@@ -50,7 +51,7 @@ const AudioModal = observer(function AudioModal({ ttsURL, toggleAudioModal }) {
 
   const updateStoreAndCloseModal = () => {
     let { videodata } = store;
-    store.updateData({...videodata, bg: selectedMusic, blendedAudioPath:blendedAudioPath},'videodata');
+    store.updateData({...videodata, bg: selectedMusic, blendedAudioPath:blendedAudioPath,blendedAudioUrl:blendedAudioUrl},'videodata');
     toggleAudioModal(false);
   };
 
@@ -58,6 +59,7 @@ const AudioModal = observer(function AudioModal({ ttsURL, toggleAudioModal }) {
     try {
       const response = await axios.get(`/api/blendaudio?tts=${tts}&bg=${bg}`);
       setBlendedAudioPath(response.data.path);
+      setBlendedAudioUrl(response.data.url);
     } catch (error) {
       console.error("Error blending audio:", error);
     }

@@ -17,17 +17,7 @@ import io from 'socket.io-client';
 
 var _ = require("underscore");
 let socket; 
-const ProgressBar = ({ progressPercentage }) => {
-  return (
-      <div className='h-1 w-full bg-gray-300'>
-          <div
-              style={{ width: `${progressPercentage}%`}}
-              className={`h-full ${
-                  progressPercentage < 70 ? 'bg-red-600' : 'bg-green-600'}`}>
-          </div>
-      </div>
-  );
-};
+
 
 const AssetsAggregation = observer(function AssetsAggregation() {
   const editorRef = useRef(null);
@@ -53,8 +43,8 @@ const AssetsAggregation = observer(function AssetsAggregation() {
   }); //, []
 
 
-  const [progress, setProgress] = useState(0);
-  console.log("🚀 ~ file: AssetsAggregation.js:47 ~ AssetsAggregation ~ progress:", progress,toJS(videodata))
+  const [progress, setProgress] = useState(null);
+  console.log("🚀 ~ file: AssetsAggregation.js:47 ~ AssetsAggregation ~ progress:", (sentences),toJS(videodata))
 
   useEffect(() => {
     socket = io('http://localhost:9999');
@@ -65,7 +55,6 @@ const AssetsAggregation = observer(function AssetsAggregation() {
         console.log("Result message:", data.result);
         let vidData = data.result;
         store.updateData({ ...videodata, finalVid: data.output }, 'videodata');
-
       }
       setProgress(data.progress);
     });
@@ -130,24 +119,29 @@ const AssetsAggregation = observer(function AssetsAggregation() {
               Expand Editor
             </button>
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg m-4"
+              className={`bg-blue-${progress ? 100 : 500} text-white px-4 py-2 rounded-lg m-4`}
               id="burnxml"
+              disabled={!!progress}
               onClick={async () => {
                 setIsBurningXML(true);
-                console.log("Update XML button clicked");
-                let { videodata } = store;
+                let { videodata , sentences} = store;
+                sentences = toJS((sentences) || []);
+                console.log("🚀 ~ file: AssetsAggregation.js:127 ~ onClick={ ~ videodata:", videodata)
                 if(videodata.xmlgen){
-                  const data = {
-                      xml: videodata.xmlgen,
-                  };
-                  socket.emit('burn', data);
+                  socket.emit('burn', {
+                    xml: videodata.xmlgen,
+                    subtitle: videodata.subtitle,
+                    bg: videodata.bg.url,
+                    tts: videodata.tts,
+                    overall_duration: sentences[sentences.length - 1] && sentences[sentences.length - 1].end,
+                  });
                 }
                 setIsBurningXML(false);
-  
               }}
             >
               Burn XML
             </button>
+            {progress && progress.step == "start" && <div>Starting to burn..</div>}
             {progress && (
               <div className="ml-2 w-40">
                 <div className="w-full h-2 bg-gray-300 rounded-lg">
