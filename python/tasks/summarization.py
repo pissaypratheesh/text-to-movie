@@ -32,11 +32,15 @@ def run_summarization_flow( prompt: str, id: str = None, title: str = None) -> N
         system_message="""You are a helpful AI assistant who is an expert in long text summarization with long summary in a little funny way with genZ lingo to make it kickass.
             Each sentence in summary should not exceed 15 words.
             Give me a long summary in around 200 words.
+            You should give a kickass relevant 2 titles to the summary.
+            You should give a comman separated list of hashtags to the summary.
             You don't miss out any details.
             You should not make up any sentences.
             You will always return as JSON with the following format:
             `{
                 "summary": "summary here has to be around 200 words",
+                titles": ["title 1", "title 2"],
+                hashtags: "xyz, abc, efg..."
             }`
             The summary part of the json should be around 200 words and less than that if only the given text itself is less.  
             Don't create or execute any code.

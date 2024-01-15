@@ -37,6 +37,7 @@ const CacheUtil = require('../lib/utils/cache');
 
 
 const font1 = path.join(__dirname, '../public/assets/font/lf_bold.ttf');
+const logo2 = path.join(__dirname, '../public/assets/imgs/logo/ai_logo.png');
 const tts = path.join(__dirname, '../assets/audio/3Audio.mp3');// '../public/assets/audio/tts_output.wav');
 const bgAudio = path.join(__dirname, '../assets/audio/bg1.mp3');// '../public/assets/audio/tts_output.wav');
 const sunovid = path.join(__dirname, '../assets/video/demo3.mp4');
@@ -466,6 +467,13 @@ async function addSpeechNSubs( opts){
 
 
       scene1.addAudio(tts);
+
+        // add logo
+        const flogo2 = new FFImage({ path: logo2, x: width * .82, y: 70 });
+        flogo2.setScale(0.4);
+        flogo2.addEffect('fadeInDown', 1, 1.2);
+        scene1.addChild(flogo2);
+
       
       
       //add subtitle
@@ -477,7 +485,7 @@ async function addSpeechNSubs( opts){
         fontSize: 35,
         wrap: "true" ,
         x: width * .5,
-        y: height * .7,
+        y: height * .73,
         width: width/2,
       });
       subtitle.setText(title);

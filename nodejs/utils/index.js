@@ -67,10 +67,10 @@ export async function uploadFile(file, others, store) {
       files.forEach((filedetails)=>{
         let { type, url } = filedetails;
         if (type == "image") {
-          newImageArr[newImageArr.length] = { src: url, link: url, url, index: newImageArr.length };
+          newImageArr[newImageArr.length] = { src: url, link: url, url, index: newImageArr.length,  height:"481px", width:"720px"  };
         }
         if(type == "video"){
-          newVideoArr[newVideoArr.length] = { src: url, link: url, url, index: newVideoArr.length };
+          newVideoArr[newVideoArr.length] = { src: url, link: url, url, index: newVideoArr.length,  height:"481px", width:"720px"   };
         }
       })
       newSentences[activeIndex]["selectedImgs"] = newImageArr;
