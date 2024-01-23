@@ -70,7 +70,8 @@ export async function uploadFile(file, others, store) {
           newImageArr[newImageArr.length] = { src: url, link: url, url, index: newImageArr.length,  height: 481, width: 720  };
         }
         if(type == "video"){
-          newVideoArr[newVideoArr.length] = { src: url, link: url, url, index: newVideoArr.length,  height: 481, width:720   };
+          //876 × 720
+          newVideoArr[newVideoArr.length] = { src: url, link: url, url, index: newVideoArr.length,  height: 720, width:876   };
         }
       })
       newSentences[activeIndex]["selectedImgs"] = newImageArr;

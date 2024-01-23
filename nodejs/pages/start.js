@@ -11,7 +11,7 @@ import { observer } from "mobx-react-lite";
 import { toJS } from "mobx";
 const Start = observer(function Start() {
   const store = useStore();  
-  const [youtubeUrl, setYoutubeUrl] = useState('https://www.youtube.com/watch?v=Fbbu_GQcrwc');
+  const [youtubeUrl, setYoutubeUrl] = useState(null)//'https://www.youtube.com/watch?v=Fbbu_GQcrwc');
   const playerRef = useRef(null);
   const [responseData, setResponseData] = useState("");
   const [videoId, setVideoId] = useState("");

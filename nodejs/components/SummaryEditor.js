@@ -5,6 +5,7 @@ import Loading from './Loading';
                                                                                                                                                                                                
 function SummaryEditor({ summary, onUpdate }) {                                                                                                                                                                                                  
   const [searchTerm, setSearchTerm] = useState(summary || '');                                                                                                                                                                  
+  console.log("🚀 ~ file: SummaryEditor.js:8 ~ SummaryEditor ~ searchTerm:", searchTerm)
   const [jsonData, setJsonData] = useState('');  
   const [loading, setLoading] = useState(false);  
   const editorRef = useRef(null);   
@@ -17,7 +18,7 @@ function SummaryEditor({ summary, onUpdate }) {
     onUpdate(editorRef.current.getValue());
   };
   const fetchJsonData = async () => {
-    let data = JSON.stringify({ "q": summary });
+    let data = JSON.stringify({ "q": searchTerm})//summary });
     let config = {
       method: 'post',
       maxBodyLength: Infinity,

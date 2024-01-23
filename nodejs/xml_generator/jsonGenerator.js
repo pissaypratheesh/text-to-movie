@@ -136,8 +136,8 @@ let vidsForSeg = [
             "src": "/Users/pratheesh.pm/Documents/codebase/diffModels/jsBased/FFCreator/dh_hackathon/youtubevids/J65z-4LU0jc.mp4"
         }
     ]
-let canvasSeg = [
-    {   
+let canvasSeg = []
+/*     {   
         "type":"video",
         "title": "Can Rahul Gandhi fight election & become PM? #shortsvideo #shorts #reels #rahulgandhi",
         "thumbnail": {
@@ -158,7 +158,7 @@ let canvasSeg = [
         "link":"/Users/pratheesh.pm/Documents/codebase/diffModels/jsBased/FFCreator/examples/assets/vtuber/fvt.mp4",
         "s":"/Users/pratheesh.pm/Documents/codebase/diffModels/jsBased/FFCreator/examples/assets/vtuber/fvt.mp4"
     }
-]
+] */
 canvasSeg = addVideoDuration(canvasSeg, ttsTime);
 
 vidsForSeg = addVideoDuration(vidsForSeg, ttsTime);

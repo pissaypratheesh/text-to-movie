@@ -42,6 +42,12 @@ const AssetsAggregation = observer(function AssetsAggregation() {
     });
   }); //, []
 
+  const handleEditorChange = (value, event) => {
+    console.log("🚀 ~ file: AssetsAggregation.js:48 ~ handleEditorChange ~ value, event:", value, event)
+    // Update the state variable with the current content of the editor
+   // setEditorContent(value);
+  };
+
 
   const [progress, setProgress] = useState(null);
   console.log("🚀 ~ file: AssetsAggregation.js:47 ~ AssetsAggregation ~ progress:", (sentences),toJS(videodata))
@@ -121,7 +127,6 @@ const AssetsAggregation = observer(function AssetsAggregation() {
             <button
               className={`bg-blue-${progress ? 100 : 500} text-white px-4 py-2 rounded-lg m-4`}
               id="burnxml"
-              disabled={!!progress}
               onClick={async () => {
                 setIsBurningXML(true);
                 let { videodata , sentences} = store;
